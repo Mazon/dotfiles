@@ -13,7 +13,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-smooth-scroll'
 Plug '908th/vim-auto-save'
 Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline-themes'
 " Initialize plugin system. Run :PlugInstall to install.
 call plug#end()
 
@@ -61,9 +61,9 @@ set nomodeline "disable modelines, use securemodelines.vim instead
 " Search
 " -----------------------------------------------------------------------------
 set incsearch "incremental search
-set ignorecase
-set infercase
-set hlsearch
+set ignorecase "ignore case
+set infercase  " infers case in insert mode and autocomplete.
+set hlsearch " hightligths search, <CR> after search to remove.
 set showmatch "Highlight matching parentes
 hi Search cterm=NONE ctermfg=grey ctermbg=blue
 set showfulltag "Show full tags when doing search completion
@@ -74,7 +74,7 @@ set showfulltag "Show full tags when doing search completion
 set guicursor+=a:blinkon0
 set expandtab "Make tab always spaces.
 set scrolloff=8
-set signcolumn=yes
+set signcolumn=no " Column to left for signs etc.
 set tabstop=4
 set softtabstop=4
 set backspace=indent,eol,start "Make backspace delete lots of things
@@ -87,7 +87,7 @@ let &inc.=' ["<]'
 " -----------------------------------------------------------------------------
 " Statusline
 " -----------------------------------------------------------------------------
-let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline_powerline_fonts=1
