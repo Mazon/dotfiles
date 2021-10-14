@@ -1,50 +1,52 @@
-"Plugins 
+" -----------------------------------------------------------------------------
+" Vimrc focused on optimized functionality while
+" still being understandble and contained in a single file.
+" -----------------------------------------------------------------------------
+
+" -----------------------------------------------------------------------------
+" Plugins
+" -----------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')
 Plug 'fatih/vim-go'
-Plug 'neoclide/coc.nvim', {'do': 'yarn insatll --frozen-lockfile'}
+Plug 'neoclide/coc.nvim'
 Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-smooth-scroll'
 Plug '908th/vim-auto-save'
-Plug 'lambdalisue/fern.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-" Initialize plugin system
+"Plug 'vim-airline/vim-airline-themes'
+" Initialize plugin system. Run :PlugInstall to install.
 call plug#end()
 
-"System
+" -----------------------------------------------------------------------------
+" System
+" -----------------------------------------------------------------------------
 let g:auto_save = 1 "Make sure we autosave always.
 set nocompatible "Don't be compatible with old vi.
 set t_Co=256 "256 colors
 set noswapfile "Dont want any .swp laying around.
-set nobackup
+set nobackup " Dont create any backup files.
 set undodir=~/.vim/undodir "persistent undo
 set undofile
-"set clipboard=unnamed "Clipboard sync os x
 set viminfo='1000,f1,:1000,/1000 "Enable a nice big viminfo file
 set history=500
-" if hidden is not set, TextEdit might fail.
-"set hidden
-" Better display for messages
-"set cmdheight=2
-" Smaller updatetime for CursorHold & CursorHoldI
-"set updatetime=300
-" don't give |ins-completion-menu| messages.
-"set shortmess+=c
-" always show signcolumns
-"set signcolumn=yes
+" this is handled by LanguageClient [LC]
+let g:go_def_mapping_enabled = 0
 
-"Look & Feel
+
+" -----------------------------------------------------------------------------
+" Look & Feel
+" -----------------------------------------------------------------------------
 colorscheme palenight "https://github.com/drewtempelmeyer/palenight.vim.git
 let g:palenight_terminal_italics=1 "Italics for my favorite color scheme
 syntax on "Syntax on for showing colors from scheme.
 filetype on "Detect file type.
 filetype plugin indent on
 set showcmd "Show us the command we're typing
+set noshowmode "Hide default message when entering modes.
 set cursorline "Make clear what line we are on.
 let &t_SI = "\<esc>[5 q" " I beam cursor for insert mode
 let &t_EI = "\<esc>[2 q" " block cursor for normal mode
 let &t_SR = "\<esc>[3 q" " underline cursor for replace mode
-autocmd InsertLeave * highlight CursorLine guibg=#004000 guifg=fg
 set formatoptions-=ro
 set visualbell t_vb= "No bell
 set noerrorbells
@@ -53,8 +55,11 @@ set winminheight=1 "1 height windows
 set relativenumber "use relativenumber.
 set number "absolute number on current line.
 set nomodeline "disable modelines, use securemodelines.vim instead
+"autocmd InsertLeave * highlight CursorLine guibg=#004000 guifg=fg
 
-"Search
+" -----------------------------------------------------------------------------
+" Search
+" -----------------------------------------------------------------------------
 set incsearch "incremental search
 set ignorecase
 set infercase
@@ -63,7 +68,9 @@ set showmatch "Highlight matching parentes
 hi Search cterm=NONE ctermfg=grey ctermbg=blue
 set showfulltag "Show full tags when doing search completion
 
-"Text behaviour
+" -----------------------------------------------------------------------------
+" Text Objects
+" -----------------------------------------------------------------------------
 set guicursor+=a:blinkon0
 set expandtab "Make tab always spaces.
 set scrolloff=8
@@ -77,7 +84,9 @@ set whichwrap+=<,>,[,] "Wrap on these
 set path+=Documents/ "Better include path handling
 let &inc.=' ["<]'
 
-"Statusline
+" -----------------------------------------------------------------------------
+" Statusline
+" -----------------------------------------------------------------------------
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = ''
@@ -86,28 +95,28 @@ let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline_theme = "onedark"
 
-set noshowmode "Hide default message when entering modes.
-set showtabline=2
-
-"Keymappings
+" -----------------------------------------------------------------------------
+" Keymappings
+" -----------------------------------------------------------------------------
 let mapleader = " " "Set leader key
 
-"General
+" General
 :nnoremap Y yg_
 :nnoremap <CR> :nohlsearch<cr>
-"Sudo Save
+
+" Sudo Save
 cmap w!! w !sudo tee % >/dev/null
 
-"Keeping it centered.
+" Keeping it centered.
 :nnoremap n nzzzv
 :nnoremap N Nzzzv
 :nnoremap J mzJ`z
 
-"Movement
+" Movement
 :nnoremap <silent> <c-k> :call smooth_scroll#up(&scroll, 3, 2)<CR>
 :nnoremap <silent> <c-j> :call smooth_scroll#down(&scroll, 3, 2)<CR>
 
-"FZF
+" FZF
 :nnoremap <leader>g :Rg<cr>
 :nnoremap <leader>f :GFiles<cr>
 :nnoremap <leader>F :Files<cr>
@@ -115,36 +124,30 @@ cmap w!! w !sudo tee % >/dev/null
 :nnoremap <Leader>l :BLines<CR>
 :nnoremap <Leader>L :Lines<CR>
 
-"Fern
-:nnoremap <Leader>p :Fern . -drawer -toggle<CR>
-"Buffers
+" Buffers
 :nnoremap <Tab> :bnext<cr>
 :nnoremap <S-Tab> :bprevious<cr>
-"Golang
+
+" Golang
 :nnoremap <Leader><CR> :GoBuild<CR>
 :nnoremap <Leader>r :GoRun<CR>
 
-"Coc
-
+" Coc
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use `[c` and `]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
-
 " Remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-
 " Use U to show documentation in preview window
 nnoremap <silent> U :call <SID>show_documentation()<CR>
-
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
-
 " Remap for format selected region
 vmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
@@ -165,16 +168,6 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-
-
-
-" this is handled by LanguageClient [LC]
-let g:go_def_mapping_enabled = 0
-
-" -------------------------------------------------------------------------------------------------
-" coc.nvim
-" -------------------------------------------------------------------------------------------------
-
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
@@ -183,6 +176,11 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
+
+
+" -----------------------------------------------------------------------------
+" Functions
+" -----------------------------------------------------------------------------
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
