@@ -64,11 +64,11 @@ set ignorecase "ignore case
 set infercase  "infers case in insert mode and autocomplete.
 set hlsearch "hightligths search, <CR> after search to remove.
 set showmatch "highlight matching parentes
-hi Search cterm=NONE ctermfg=grey ctermbg=blue
+"hi Search cterm=NONE ctermfg=grey ctermbg=blue
 set showfulltag "show full tags when doing search completion
 
 " -----------------------------------------------------------------------------
-" Text Objects
+" Text Settings
 " -----------------------------------------------------------------------------
 set scrolloff=8 "make page start scroll before reach bottom.
 set signcolumn=no "column to left for signs etc.
