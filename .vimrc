@@ -11,11 +11,17 @@ Plug 'fatih/vim-go'
 Plug 'neoclide/coc.nvim'
 Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-smooth-scroll'
-Plug '908th/vim-auto-save'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-"initialize plugin system. :PlugInstall to install.
+Plug '907th/vim-auto-save'
+Plug 'itchyny/lightline.vim'
+"initialize plugin system.
 call plug#end()
+
+" -----------------------------------------------------------------------------
+" Plugins Settings
+" -----------------------------------------------------------------------------
+let g:auto_save = 1 "make sure we autosave always. - vim-auto-save
+let g:go_def_mapping_enabled = 0 " this is handled by LanguageClient [LC] - vim-go
+let g:lightline = { 'colorscheme': 'darcula' } "statusline configuraton - lightline
 
 " -----------------------------------------------------------------------------
 " System
@@ -28,9 +34,6 @@ set undodir=~/.vim/undodir "persistent undo
 set undofile
 set viminfo='1000,f1,:1000,/1000 "enable a nice big viminfo file
 set history=500
-
-let g:auto_save = 1 "make sure we autosave always. 908th/vim-auto-save
-let g:go_def_mapping_enabled = 0 " this is handled by LanguageClient [LC]
 
 " -----------------------------------------------------------------------------
 " Look & Feel
@@ -55,7 +58,6 @@ set winminheight=1 "1 height windows
 set relativenumber "use relativenumber.
 set number "absolute number on current line.
 set nomodeline "disable modelines, use securemodelines.vim instead
-"autocmd InsertLeave * highlight CursorLine guibg=#004000 guifg=fg
 
 " -----------------------------------------------------------------------------
 " Search
@@ -64,6 +66,8 @@ set incsearch "incremental search
 set ignorecase "ignore case
 set infercase  "infers case in insert mode and autocomplete.
 set hlsearch "highlights search results.
+hi Search cterm=NONE ctermfg=8787AF ctermbg=87AF87
+"set nohlsearch
 set showmatch "highlight matching parentes
 "hi Search cterm=NONE ctermfg=grey ctermbg=blue
 set showfulltag "show full tags when doing search completion
@@ -82,17 +86,6 @@ set smartindent
 set whichwrap+=<,>,[,] "wrap on these
 set path+=Documents/ "better include path handling
 let &inc.=' ["<]'
-
-" -----------------------------------------------------------------------------
-" Statusline
-" -----------------------------------------------------------------------------
-let g:airline#extensions#tabline#enabled = 0
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = ''
-let g:airline_powerline_fonts=1
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline_theme = "onedark"
 
 " -----------------------------------------------------------------------------
 " Keymappings
