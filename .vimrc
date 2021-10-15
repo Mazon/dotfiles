@@ -1,6 +1,5 @@
 " -----------------------------------------------------------------------------
-" Vimrc focused on optimized functionality while
-" still being understandble and contained in a single file.
+"  .vimrc
 " -----------------------------------------------------------------------------
 
 " -----------------------------------------------------------------------------
@@ -13,14 +12,13 @@ Plug 'junegunn/fzf.vim'
 Plug 'terryma/vim-smooth-scroll'
 Plug '907th/vim-auto-save'
 Plug 'itchyny/lightline.vim'
-"initialize plugin system.
-call plug#end()
+call plug#end() 
 
 " -----------------------------------------------------------------------------
-" Plugins Settings
+" Plugin Configuration
 " -----------------------------------------------------------------------------
 let g:auto_save = 1 "make sure we autosave always. - vim-auto-save
-let g:go_def_mapping_enabled = 0 " this is handled by LanguageClient [LC] - vim-go
+let g:go_def_mapping_enabled = 0 "definition handled by languageclient - vim-go
 let g:lightline = { 'colorscheme': 'deus' } "statusline configuraton - lightline
 
 " -----------------------------------------------------------------------------
@@ -65,16 +63,14 @@ set nomodeline "disable modelines, use securemodelines.vim instead
 set incsearch "incremental search
 set ignorecase "ignore case
 set infercase  "infers case in insert mode and autocomplete.
-set hlsearch "highlights search results.
-hi Search cterm=NONE ctermfg=8787AF ctermbg=87AF87
-"set nohlsearch
+set nohlsearch "remove highlights search results.
+"hi Search cterm=NONE ctermfg=black ctermbg=grey
 set showmatch "highlight matching parentes
-"hi Search cterm=NONE ctermfg=grey ctermbg=blue
 set showfulltag "show full tags when doing search completion
 
 " -----------------------------------------------------------------------------
-" Text Settings
-" -----------------------------------------------------------------------------
+" Text Settings 
+" ----------------------------------------------------------------------------
 set scrolloff=8 "make page start scroll before reach bottom.
 set signcolumn=no "column to left for signs etc.
 set expandtab "make tab always spaces.
@@ -83,7 +79,7 @@ set softtabstop=4 "number of spaces when inserting a tab.
 set backspace=indent,eol,start "make backspace delete lots of things
 set autoindent "do clever indent things. Don't make a # force column zero.
 set smartindent
-set whichwrap+=<,>,[,] "wrap on these
+set whichwrap+=<,>,[,] "wrap on this.
 set path+=Documents/ "better include path handling
 let &inc.=' ["<]'
 
@@ -94,7 +90,7 @@ let mapleader = " " "set leader key
 
 "general
 :nnoremap Y yg_
-:nnoremap <CR> :nohlsearch<cr>
+":nnoremap <CR> :nohlsearch<cr>
 "sudo save
 cmap w!! w !sudo tee % >/dev/null
 "keeping it centered.
