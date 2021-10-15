@@ -21,7 +21,7 @@ call plug#end()
 " -----------------------------------------------------------------------------
 let g:auto_save = 1 "make sure we autosave always. - vim-auto-save
 let g:go_def_mapping_enabled = 0 " this is handled by LanguageClient [LC] - vim-go
-let g:lightline = { 'colorscheme': 'darcula' } "statusline configuraton - lightline
+let g:lightline = { 'colorscheme': 'deus' } "statusline configuraton - lightline
 
 " -----------------------------------------------------------------------------
 " System
