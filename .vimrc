@@ -48,8 +48,8 @@ let &t_SI = "\<esc>[5 q" "I beam cursor for insert mode
 let &t_EI = "\<esc>[2 q" "block cursor for normal mode
 let &t_SR = "\<esc>[3 q" "underline cursor for replace mode
 set formatoptions-=ro
-set visualbell t_vb= "no bell
-set noerrorbells
+set visualbell t_vb= "no visual bell
+set noerrorbells "no error bells
 set guicursor+=a:blinkon0 "no blinking cursor.
 set hidden "allow edit buffers to be hidden
 set winminheight=1 "1 height windows
@@ -64,7 +64,6 @@ set incsearch "incremental search
 set ignorecase "ignore case
 set infercase  "infers case in insert mode and autocomplete.
 set nohlsearch "remove highlights search results.
-"hi Search cterm=NONE ctermfg=black ctermbg=grey
 set showmatch "highlight matching parentes
 set showfulltag "show full tags when doing search completion
 
@@ -86,18 +85,16 @@ let &inc.=' ["<]'
 " -----------------------------------------------------------------------------
 " Keymappings
 " -----------------------------------------------------------------------------
-let mapleader = " " "set leader key
-
-"general
+let mapleader = " " "set leader key to space.
+"make Y yank without <CR>
 :nnoremap Y yg_
-":nnoremap <CR> :nohlsearch<cr>
 "sudo save
 cmap w!! w !sudo tee % >/dev/null
 "keeping it centered.
 :nnoremap n nzzzv
 :nnoremap N Nzzzv
 :nnoremap J mzJ`z
-"movement
+"smooth scroll
 :nnoremap <silent> <c-k> :call smooth_scroll#up(&scroll, 3, 2)<CR>
 :nnoremap <silent> <c-j> :call smooth_scroll#down(&scroll, 3, 2)<CR>
 "search
@@ -110,6 +107,7 @@ cmap w!! w !sudo tee % >/dev/null
 "golang
 :nnoremap <Leader><CR> :GoBuild<CR>
 :nnoremap <Leader>r :GoRun<CR>
+
 "coc
 "use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
