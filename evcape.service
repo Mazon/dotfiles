@@ -1,0 +1,13 @@
+[Unit]
+Description=evcape
+
+[Service]
+ExecStart=/usr/local/bin/evcape.py \
+	press:leftctrl,release:leftctrl=press:esc,release:esc \
+	press:capslock,release:capslock=press:esc,release:esc \
+	press:rightshift,release:rightshift=press:backspace,release:backspace \
+	press:rightctrl,release:rightctrl=press:backspace,release:backspace
+Restart=always
+
+[Install]
+WantedBy=default.target
