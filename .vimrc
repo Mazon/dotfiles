@@ -238,7 +238,7 @@ set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 " -----------------------------------------------------------------------------
 " Keymappings
 " -----------------------------------------------------------------------------
-let mapleader = "," "set leader key to space.
+let mapleader = " " "set leader key to space.
 "make Y yank without <CR>
 :nnoremap Y yg_
 "sudo save
