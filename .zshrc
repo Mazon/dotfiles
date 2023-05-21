@@ -51,16 +51,25 @@ setopt PUSHD_SILENT         # Do not print the directory stack after pushd or po
 # -----------------------------------------------------------------------------
 # Environment
 # -----------------------------------------------------------------------------
-export PROMPT='[%1~] %:'
+#export PROMPT='[%1~] %:'
+export PROMPT='%n@%m %F%/%f $ '
+#export PROMPT="%n@%m %/ $ "
 export LC_ALL=en_US.UTF-8
 export EDITOR=nvim
 export TERM="xterm-256color"  # 256 color mode
-export GOPATH=/home/mazon/docs/golang
-export PATH='/usr/local/bin:~/bin:/opt/coreutils/libexec/gnubin:/usr/local/sbin:/sbin:/usr/bin:/usr/sbin:/bin':$PATH
-export PASSWORD_STORE_DIR=~/.password-store
+#export GOPATH=/home/mazon/docs/golang
+export PATH='~/.local/bin;/usr/local/bin:~/bin:/opt/coreutils/libexec/gnubin:/usr/local/sbin:/sbin:/usr/bin:/usr/sbin:/bin':$PATH
+export PASSWORD_STORE_DIR=/home/mazon/docs/.password-store/
 # GPG
 export GPG_TTY="$(tty)"
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+# NNN
+export NNN_COLORS="2136"                           # use a different color for each
+export NNN_FCOLORS='0000E6310000000000000000'
+export NNN_BMS='c:~/dev/self/mygame;h:~;'
+# alias ls "nnn -e"
+alias nnn "nnn -e"
+set --export NNN_FIFO "/tmp/nnn.fifo"
 
 # FZF
 source /usr/share/fzf/completion.zsh
@@ -89,6 +98,8 @@ fh() {
 
 # Custom
 # -----------------------------------------------------------------------------
-xcape -e 'Control_L=Escape' # Remap CTRL and ESC.
 #gpg-connect-agent updatestartuptty /bye
+# CAPS_LOCK as ESC when push and CTRL when pressed.
+setxkbmap -option "ctrl:nocaps"
+sudo /usr/local/bin/evcape.py &
 
