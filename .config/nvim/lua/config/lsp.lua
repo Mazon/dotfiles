@@ -3,7 +3,6 @@ local lsp = require("lsp-zero")
 lsp.preset("recommended")
 
 lsp.ensure_installed({
-  'tsserver',
   'rust_analyzer',
 })
 
@@ -39,16 +38,22 @@ lsp.set_preferences({
 
 lsp.on_attach(function(client, bufnr)
   local opts = {buffer = bufnr, remap = false}
-
+  -- Jumps to definition.
   vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+  -- Displays hover information about the symbol under the cursor
   vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
   vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+  -- Show diagnostics in a floating window
   vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
   vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
   vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-  vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+  -- Selects a code action available at the current cursor position
+  vim.keymap.set("n", ":leader>vca", function() vim.lsp.buf.code_action() end, opts)
+  -- Lists all the references
   vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+  -- Renames all references to the symbol under the cursor
   vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+  -- Displays a function's signature information
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
