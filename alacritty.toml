@@ -1,0 +1,12 @@
+import = [
+  #"~/.config/alacritty/catppuccin/catppuccin-mocha.toml"
+  "~/.config/alacritty/themes/themes/breeze.toml"
+]
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 20.0
+
+

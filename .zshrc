@@ -7,6 +7,9 @@
 autoload -U colors; colors # Let's have some colors first
 autoload -U edit-command-line
 
+# Autocomplete
+autoload -Uz compinit
+compinit
 # -----------------------------------------------------------------------------
 # System
 # -----------------------------------------------------------------------------
@@ -51,34 +54,26 @@ setopt PUSHD_SILENT         # Do not print the directory stack after pushd or po
 # -----------------------------------------------------------------------------
 # Environment
 # -----------------------------------------------------------------------------
-#export PROMPT='[%1~] %:'
-export PROMPT='%n@%m %F%/%f $ '
-#export PROMPT="%n@%m %/ $ "
+export PROMPT='[%1~] %:'
 export LC_ALL=en_US.UTF-8
 export EDITOR=nvim
 export TERM="xterm-256color"  # 256 color mode
-#export GOPATH=/home/mazon/docs/golang
-export PATH='~/.local/bin;/usr/local/bin:~/bin:/opt/coreutils/libexec/gnubin:/usr/local/sbin:/sbin:/usr/bin:/usr/sbin:/bin':$PATH
-export PASSWORD_STORE_DIR=/home/mazon/docs/.password-store/
+export GOPATH=~/go
+export PATH='/opt/homebrew/bin:/opt/homebrew/sbin:/Users/hardy/.cargo/bin:/usr/local/bin:~/bin:/opt/coreutils/libexec/gnubin:/usr/local/sbin:/sbin:/usr/bin:/usr/sbin:/bin':$PATH
+export PASSWORD_STORE_DIR=~/.password-store
 # GPG
 export GPG_TTY="$(tty)"
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-# NNN
-export NNN_COLORS="2136"                           # use a different color for each
-export NNN_FCOLORS='0000E6310000000000000000'
-export NNN_BMS='c:~/dev/self/mygame;h:~;'
-# alias ls "nnn -e"
-alias nnn "nnn -e"
-set --export NNN_FIFO "/tmp/nnn.fifo"
 
 # FZF
-source /usr/share/fzf/completion.zsh
-source /usr/share/fzf/key-bindings.zsh
+#source /usr/share/fzf/completion.zsh
+#source /usr/share/fzf/key-bindings.zsh
+bindkey '^R' history-incremental-search-backward
 
 # -----------------------------------------------------------------------------
 # Alias
 # -----------------------------------------------------------------------------
-alias ls="ls --color=auto" 
+#alias ls="ls --color=auto" 
 alias diff="diff -u" # Make unified diff syntax the default
 alias sudo="sudo "   # expand sudo aliases
 alias config='/usr/bin/git --git-dir=$HOME/dev/self/dotfiles/ --work-tree=$HOME'
@@ -86,6 +81,9 @@ alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %
 alias vim="nvim"
 alias v="nvim"
 alias vi="nvim"
+alias mkubectl="minikube kubectl --"
+
+
 
 # -----------------------------------------------------------------------------
 # Functions
@@ -98,8 +96,46 @@ fh() {
 
 # Custom
 # -----------------------------------------------------------------------------
-#gpg-connect-agent updatestartuptty /bye
-# CAPS_LOCK as ESC when push and CTRL when pressed.
-setxkbmap -option "ctrl:nocaps"
-sudo /usr/local/bin/evcape.py &
+#xcape -e 'Control_L=Escape' # Remap CTRL and ESC.
+gpg-connect-agent updatestartuptty /bye
 
+export JAVA_HOME=/opt/homebrew/opt/openjdk@19/libexec/openjdk.jdk/Contents/Home
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/hardy/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+#
+#### Kubernetes ####################3
+plugins=(
+  kube-ps1
+)
+
+PROMPT='$(kube_ps1)'$PROMPT # or RPROMPT='$(kube_ps1)'
+
+alias kubectl=kubecolor
+# make completion work with kubecolor
+#compdef kubecolor=kubectl
+# alias k='kubectl'
+
+# For switching context between different clusters
+#alias kswitch-maryam='kubectl config use-context maryam'
+#alias kswitch-mary='kubectl config use-context mary'
+
+alias kpod='kubectl get pods -A'
+alias knode='kubectl get nodes'
+alias kdesp='kubectl describe pod'
+alias kdp='kubectl delete pod'
+alias kgd='kubectl get deployments'
+
+source <(kubectl completion zsh)
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh) # add autocomplete permanently to your zsh shell
+# make completion work with kubecolor
+compdef kubecolor=kubectl
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
