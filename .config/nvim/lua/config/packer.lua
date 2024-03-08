@@ -4,11 +4,14 @@
 vim.cmd.packadd('packer.nvim')
 
 return require('packer').startup(function(use)
+    use {
+    "christoomey/vim-tmux-navigator",
+  }
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
 
   use {
-	  'nvim-telescope/telescope.nvim', tag = '0.1.0',
+	  'nvim-telescope/telescope.nvim', tag = '0.1.4',
 	  -- or                            , branch = '0.1.x',
 	  requires = { {'nvim-lua/plenary.nvim'} }
   }
@@ -74,15 +77,15 @@ return require('packer').startup(function(use)
         require("toggleterm").setup()
 end})
 
-    use({
-        "Pocco81/auto-save.nvim",
-        config = function()
-             require("auto-save").setup {
+   -- use({
+   --     "Pocco81/auto-save.nvim",
+   --     config = function()
+   --          require("auto-save").setup {
                 -- your config goes here
                 -- or just leave it empty :)
-             }
-        end,
-    })
+  --           }
+  --      end,
+  --  })
 
 end)
 
