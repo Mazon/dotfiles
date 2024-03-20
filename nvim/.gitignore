@@ -1,0 +1,21 @@
+# Ignore Logs
+*.log
+
+# .DSStore Mac file
+.DS_Store
+
+# Lazy log file
+lazy-lock.json
+
+# Some dummy folders
+test/
+test2/
+
+# Logo folder
+logo/
+
+# Java Degug folders
+debug/
+vscode-java-test/
+java-debug/
+js-debug/
