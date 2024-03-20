@@ -1,7 +1,9 @@
 import = [
-  #"~/.config/alacritty/catppuccin/catppuccin-mocha.toml"
   "~/.config/alacritty/themes/themes/breeze.toml"
 ]
+
+[shell]
+program = "tmux"
 
 [env]
 TERM = "xterm-256color"
@@ -9,4 +11,7 @@ TERM = "xterm-256color"
 [font]
 size = 20.0
 
+[window]
+dimensions = { columns = 100, lines = 100 }
+title = ""
 
