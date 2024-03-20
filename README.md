@@ -1,15 +1,20 @@
 # Usage
 
-- Swap Alt and Meta
-- Use alacritty as terminal
-- Use Ioseveka font
-- Use space as leader key in vim and tmux
+Trying to be a clean and functional stack for engineering command line.
+alacritty as terminal, zsh, tmux and nvim configuration. Can use the configurations separate or together.
+
+Highlights:
+- leader <space> for vim and tmux.
+- tmux and nvim integration, use ctrl + hjkl to move between apps.
+
+## Alacritty
 
 ## Tmux
 
-ctrl + space then shift + I to install plugins
+`ctrl + space then shift + I` to install plugins
 
-## Nvim
+## nvim
 
-:Lazy to install all plugins
+`:Lazy` to install all plugins
+
 
