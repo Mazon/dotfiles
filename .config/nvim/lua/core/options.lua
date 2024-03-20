@@ -83,9 +83,6 @@ vim.g.python3_host_prog = '/Library/Frameworks/Python.framework/Versions/3.11/bi
 -- Markdown
 vim.g.markdown_fenced_languages = { 'html', 'python', 'lua', 'js=javascript' }
 
--- Greek langmap
--- stylua: ignore
-vim.opt.langmap = 'ΑA,ΒB,ΨC,ΔD,ΕE,ΦF,ΓG,ΗH,ΙI,ΞJ,ΚK,ΛL,ΜM,ΝN,ΟO,ΠP,QQ,ΡR,ΣS,ΤT,ΘU,ΩV,WW,ΧX,ΥY,ΖZ,αa,βb,ψc,δd,εe,φf,γg,ηh,ιi,ξj,κk,λl,μm,νn,οo,πp,qq,ρr,σs,τt,θu,ωv,ςw,χx,υy,ζz'
 
 -- Open telescope file_browser if nvim has no arguments
 -- if vim.fn.argc() == 0 then
