@@ -3,7 +3,8 @@ import = [
 ]
 
 [shell]
-program = "tmux"
+program = "/usr/bin/zsh"
+args    = [ "--login", ]
 
 [env]
 TERM = "xterm-256color"
@@ -15,3 +16,5 @@ size = 20.0
 dimensions = { columns = 100, lines = 100 }
 title = ""
 
+[bell]
+duration = 0
