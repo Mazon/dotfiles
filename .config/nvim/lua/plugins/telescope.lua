@@ -1,26 +1,26 @@
 return {
     'nvim-telescope/telescope.nvim',
     cmd = { 'Telescope' },
-    keys = {
-        { '<leader>fb', '<cmd>Telescope buffers<cr>', desc = 'Find Buffers' },
-        { '<leader>fc', ":lua require'telescope.builtin'.commands{}<cr>", desc = 'List Commands' },
-        { '<leader>fd', '<cmd>Telescope diagnostics<cr>', desc = 'Find Diagnostics' },
-        { '<leader>fe', '<cmd>Telescope file_browser<cr>', desc = 'File Browser' },
-        { '<leader>ff', '<cmd>Telescope find_files<cr>', desc = 'Find Files' },
-        { '<leader>fg', '<cmd>Telescope live_grep<cr>', desc = 'Find Word' },
-        { '<leader>fh', '<cmd>Telescope help_tags<cr>', desc = 'Find Help' },
-        { '<leader>fi', '<cmd>Telescope import<cr>', desc = 'Find Imports' },
-        { '<leader>fj', '<cmd>Telescope emoji<cr>', desc = 'Find emoji' },
-        { '<leader>fk', '<cmd>Telescope keymaps<cr>', desc = 'Find Keymaps' },
-        { '<leader>fl', '<cmd>Telescope highlights<cr>', desc = 'Find Highlights' },
-        { '<leader>fo', '<cmd>Telescope oldfiles<cr>', desc = 'Recently opened files' },
-        { '<leader>fp', '<cmd>Telescope spell_suggest<cr>', desc = 'Find Spell Suggest' },
-        { '<leader>fr', '<cmd>Telescope grep_string<cr>', desc = 'Find Word Under Cursor' },
-        { '<leader>fs', '<cmd>Telescope symbols<cr>', desc = 'Find Symbols' },
-        { '<leader>ft', '<cmd>Telescope git_files<cr>', desc = 'Find Git Files' },
-        { '<leader>fu', '<cmd>Telescope undo<cr>', desc = 'Find Undo' },
-        { '<leader>fz', '<cmd>Telescope zoxide list<cr>', desc = 'Find Directory' },
-    },
+    --keys = {
+    --    { '<leader>fb', '<cmd>Telescope buffers<cr>', desc = 'Find Buffers' },
+    -- --   { '<leader>fc', ":lua require'telescope.builtin'.commands{}<cr>", desc = 'List Commands' },
+    --    { '<leader>fd', '<cmd>Telescope diagnostics<cr>', desc = 'Find Diagnostics' },
+--  --      { '<leader>fe', '<cmd>Telescope file_browser<cr>', desc = 'File Browser' },
+    --    { '<leader>ff', '<cmd>Telescope find_files<cr>', desc = 'Find Files' },
+    --    { '<leader>fg', '<cmd>Telescope live_grep<cr>', desc = 'Find Word' },
+ -- --      { '<leader>fh', '<cmd>Telescope help_tags<cr>', desc = 'Find Help' },
+ -- --      { '<leader>fi', '<cmd>Telescope import<cr>', desc = 'Find Imports' },
+ -- --      { '<leader>fj', '<cmd>Telescope emoji<cr>', desc = 'Find emoji' },
+ -- --      { '<leader>fk', '<cmd>Telescope keymaps<cr>', desc = 'Find Keymaps' },
+ -- --      { '<leader>fl', '<cmd>Telescope highlights<cr>', desc = 'Find Highlights' },
+ -- --      { '<leader>fo', '<cmd>Telescope oldfiles<cr>', desc = 'Recently opened files' },
+ -- --      { '<leader>fp', '<cmd>Telescope spell_suggest<cr>', desc = 'Find Spell Suggest' },
+    --    { '<leader>fr', '<cmd>Telescope grep_string<cr>', desc = 'Find Word Under Cursor' },
+ -- --      { '<leader>fs', '<cmd>Telescope symbols<cr>', desc = 'Find Symbols' },
+    --    { '<leader>ft', '<cmd>Telescope git_files<cr>', desc = 'Find Git Files' },
+ -- --      { '<leader>fu', '<cmd>Telescope undo<cr>', desc = 'Find Undo' },
+ -- --      { '<leader>fz', '<cmd>Telescope zoxide list<cr>', desc = 'Find Directory' },
+    --},
     branch = '0.1.x',
     dependencies = {
         'nvim-lua/plenary.nvim',
@@ -34,6 +34,7 @@ return {
     config = function()
         local trouble = require('trouble.providers.telescope')
         local fb_actions = require('telescope').extensions.file_browser.actions
+        --local project = require('telescope').extensions.project.project{}
         local actions = require('telescope.actions')
         local action_layout = require('telescope.actions.layout')
 
@@ -134,8 +135,9 @@ return {
         require('telescope').load_extension('advanced_git_search')
         require('telescope').load_extension('zoxide')
         require('telescope').load_extension('import')
+        require('telescope').load_extension('projects')
         -- require('telescope').load_extension('heading')
         -- require('telescope').load_extension('neoclip')
-        require('telescope').load_extension('noice')
+        --require('telescope').load_extension('noice')
     end,
 }

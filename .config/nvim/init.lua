@@ -14,10 +14,10 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-require('core.options')
-require('core.keymaps')
-require('core.autocommands')
-require('core.usercommands')
+require('config.options')
+require('config.keymaps')
+--require('core.autocommands')
+--require('core.usercommands')
 
 local opts = {
     ui = {

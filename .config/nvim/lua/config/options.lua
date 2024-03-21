@@ -30,7 +30,7 @@ vim.opt.listchars:append({ trail = '·' })
 vim.opt.listchars:append({ extends = '»' })
 vim.opt.listchars:append({ precedes = '«' })
 vim.opt.fillchars:append({ eob = ' ', fold = ' ', foldsep = ' ', foldopen = '', foldclose = '' })
-vim.opt.confirm = true
+vim.opt.confirm = false
 vim.opt.pumheight = 10
 
 -- Text
@@ -39,15 +39,6 @@ vim.opt.wrap = false
 vim.opt.linebreak = true
 vim.opt.breakindent = true
 -- vim.opt.encoding = 'utf-8'
-
--- Folding
---vim.o.foldcolumn = '1'
---vim.o.foldlevel = 99
---vim.o.foldlevelstart = 99
---vim.o.foldenable = true
--- vim.opt.foldmethod = 'expr'
--- vim.opt.foldtext = 'v:lua.vim.treesitter.foldtext()'
--- vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 -- Clipboard
 vim.opt.clipboard = 'unnamedplus'
@@ -67,7 +58,7 @@ vim.opt.guicursor = {
 
 -- Spell
 vim.opt.spell = false
-vim.opt.spelllang = { 'de' }
+vim.opt.spelllang = { 'us' }
 
 -- Split
 vim.opt.splitright = true
@@ -77,19 +68,13 @@ vim.opt.splitbelow = true
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- Python
-vim.g.python3_host_prog = '/Library/Frameworks/Python.framework/Versions/3.11/bin/python3'
-
--- Markdown
-vim.g.markdown_fenced_languages = { 'html', 'python', 'lua', 'js=javascript' }
-
 
 -- Open telescope file_browser if nvim has no arguments
--- if vim.fn.argc() == 0 then
---     vim.defer_fn(function()
---         vim.cmd('Telescope file_browser')
---     end, 0)
--- end
+if vim.fn.argc() == 0 then
+     vim.defer_fn(function()
+         vim.cmd('Telescope file_browser')
+     end, 0)
+ end
 
 -- For treesitter commentstring
 vim.opt.updatetime = 100

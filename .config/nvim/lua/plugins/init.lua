@@ -1,28 +1,22 @@
-    --  ╭──────────────────────────────────────────────────────────╮
-    --  │                       COLORSCHEME                        │
-    --  ╰──────────────────────────────────────────────────────────╯
-    -- === Catppuccin ===
-    --    {
-    --        'catppuccin/nvim',
-    --        lazy = false,
-    --        name = 'catppuccin',
-    --        priority = 1000,
-    --        config = function()
-    --            require('plugins.theme.catppuccin')
-    --            vim.cmd('colorscheme catppuccin')
-    --        end,
-    --    },
-    -- === Rose-Pine ===
+    -- colorscheme
     return {
-    --{ "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, config = function()
-    --}, 
-    { 'rose-pine/neovim', lazy = false, name = 'rose-pine', priority = 1000, config = function() require('plugins.theme.rose-pine') vim.cmd('colorscheme rose-pine')
+    { 
+      'rose-pine/neovim', lazy = false, name = 'rose-pine', priority = 1000, config = function() require('plugins.theme.rose-pine') vim.cmd('colorscheme rose-pine')
         end,
     },
+    {
+    "aserowy/tmux.nvim",
+        config = function() return require("tmux").setup() end
+    },
+    { "echasnovski/mini.bracketed", 
+        config = function() return require("mini.bracketed").setup() end
+    },
+    {
+      "ahmedkhalf/project.nvim",
+      config = function() return require("project_nvim").setup() end
+    },
 
-    --  ╭──────────────────────────────────────────────────────────╮
-    --  │                           LSP                            │
-    --  ╰──────────────────────────────────────────────────────────╯
+-- LSP
     {
         'neovim/nvim-lspconfig',
         event = { 'BufReadPre', 'BufReadPost', 'BufNewFile' },
@@ -41,80 +35,17 @@
             'williamboman/mason-lspconfig.nvim',
         },
     },
-    --{
-    --    'SmiteshP/nvim-navic',
-    --    enabled = false,
-    --    event = 'BufReadPre',
-    --    dependencies = {
-    --        'neovim/nvim-lspconfig',
-    --    },
-    --    opts = {
-    --        highlight = true,
-    --    },
-    --},
     {
         'folke/trouble.nvim',
-        keys = {
-            { '<leader>xx', '<cmd>TroubleToggle<cr>', desc = 'Trouble Toggle' },
-            { 'gr', '<cmd>TroubleToggle lsp_references<cr>' },
-        },
+        --keys = {
+        --    { '<leader>xx', '<cmd>TroubleToggle<cr>', desc = 'Trouble Toggle' },
+        --    { 'gr', '<cmd>TroubleToggle lsp_references<cr>' },
+        --},
         dependencies = 'nvim-tree/nvim-web-devicons',
         config = function()
             require('trouble').setup()
         end,
     },
-    {
-        'dnlhc/glance.nvim',
-        keys = {
-            { '<leader>br', '<cmd>Glance references<cr>', desc = 'Glance references' },
-            { '<leader>bd', '<cmd>Glance definitions<cr>', desc = 'Glance definitions' },
-            { '<leader>by', '<cmd>Glance type_definitions<cr>', desc = 'Glance type_definitions' },
-            { '<leader>bm', '<cmd>Glance implementations<cr>', desc = 'Glance implementations' },
-        },
-        config = function()
-            require('glance').setup()
-        end,
-    },
-    {
-        'simrat39/symbols-outline.nvim',
-        enabled = true,
-        cmd = 'SymbolsOutline',
-        config = true,
-        opts = {
-            width = 40,
-            symbols = {
-                File = { icon = '󰈔', hl = '@text.uri' }, -- change
-                Module = { icon = '󰆧', hl = '@namespace' }, -- change
-                Namespace = { icon = '󰅪', hl = '@namespace' }, -- change
-                Field = { icon = '󰆨', hl = '@field' }, -- change
-                Interface = { icon = '󰜰', hl = '@type' }, -- change
-                Array = { icon = '󰅪', hl = '@constant' }, -- change
-                Event = { icon = '', hl = '@type' }, -- change
-                Component = { icon = '󰅴', hl = '@function' }, -- change
-            },
-        },
-        -- config = function()
-        --     require('symbols-outline').setup()
-        -- end,
-    },
-    --{
-    --    'stevearc/aerial.nvim',
-    --    enabled = true,
-    --    cmd = 'AerialToggle',
-    --    dependencies = {
-    --        'nvim-treesitter/nvim-treesitter',
-    --        'nvim-tree/nvim-web-devicons',
-    --    },
-    --    opts = {
-    --        layout = {
-    --            width = 60,
-    --        },
-    --    },
-    --},
-
-    --  ╭──────────────────────────────────────────────────────────╮
-    --  │                           CMP                            │
-    --  ╰──────────────────────────────────────────────────────────╯
     {
         'hrsh7th/nvim-cmp',
         event = 'InsertEnter',
@@ -287,17 +218,6 @@
     --        end,
     --    },
     --},
-    {
-        'ellisonleao/glow.nvim',
-        cmd = 'Glow',
-        config = true,
-        opts = {
-            border = 'single',
-            style = 'dracula',
-            width = 120,
-            width_ratio = 0.8,
-        },
-    },
     --{
     --    'yaocccc/nvim-hl-mdcodeblock.lua',
     --    enabled = false,
@@ -325,13 +245,13 @@
 --        },
 --        config = true,
 --    },
-    {
-        'rlane/pounce.nvim',
-        enabled = false,
-        keys = {
-            { 'S', '<cmd>Pounce<CR>', mode = { 'n', 'v' } },
-        },
-    },
+--    {
+--        'rlane/pounce.nvim',
+--        enabled = false,
+--        keys = {
+--            { 'S', '<cmd>Pounce<CR>', mode = { 'n', 'v' } },
+--        },
+--    },
     {
         'declancm/cinnamon.nvim',
         keys = {
@@ -347,10 +267,7 @@
             -- vim.keymap.set({ 'n', 'x' }, '0', "<Cmd>lua Scroll('0')<CR>")
             -- vim.keymap.set({ 'n', 'x' }, '^', "<Cmd>lua Scroll('^')<CR>")
             -- vim.keymap.set({ 'n', 'x' }, '$', "<Cmd>lua Scroll('$', 0, 1)<CR>")
-            vim.keymap.set('n', 'zz', "<Cmd>lua Scroll('zz', 0, 1)<CR>")
-            vim.keymap.set('n', 'zt', "<Cmd>lua Scroll('zt', 0, 1)<CR>")
-            vim.keymap.set('n', 'zb', "<Cmd>lua Scroll('zb', 0, 1)<CR>")
-            require('cinnamon').setup({
+           require('cinnamon').setup({
                 always_scroll = true,
                 scroll_limit = 200,
             })
@@ -363,15 +280,15 @@
     {
         'mfussenegger/nvim-dap',
         cmd = { 'DapToggleBreakpoint' },
-        keys = {
-            { '<leader>db', '<cmd>DapToggleBreakpoint<cr>', desc = 'Add Breakpoint' },
-        },
+       -- keys = {
+       --     { '<leader>db', '<cmd>DapToggleBreakpoint<cr>', desc = 'Add Breakpoint' },
+       -- },
         dependencies = {
             {
                 'rcarriga/nvim-dap-ui',
-                keys = {
-                    { '<leader>du', '<cmd>lua require("dapui").toggle()<CR>', desc = 'DAP UI Toggle' },
-                },
+ --               keys = {
+ --                   { '<leader>du', '<cmd>lua require("dapui").toggle()<CR>', desc = 'DAP UI Toggle' },
+ --               },
                 config = true,
             },
             {
@@ -387,12 +304,4 @@
         end,
     },
 
-    --  ╭──────────────────────────────────────────────────────────╮
-    --  │                        REST-HTML                         │
-    --  ╰──────────────────────────────────────────────────────────╯
-   --- {
-   --     'diepm/vim-rest-console',
-   --     enabled = false,
-   --     ft = 'rest',
-   -- },
 }

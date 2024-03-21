@@ -1,5 +1,5 @@
-require('luasnip/loaders/from_lua').load({ paths = '~/.config/nvim/snippets/' })
-require('luasnip/loaders/from_vscode').lazy_load()
+--require('luasnip/loaders/from_lua').load({ paths = '~/.config/nvim/snippets/' })
+--require('luasnip/loaders/from_vscode').lazy_load()
 
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
@@ -43,22 +43,22 @@ local kind_icons = {
 }
 
 -- For luasnips integration
-local has_words_before = function()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
-end
+--local has_words_before = function()
+--    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+--    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+--end
 
-local luasnip = require('luasnip')
+--local luasnip = require('luasnip')
 
 -- Setup nvim-cmp
 local cmp = require('cmp')
 
 cmp.setup({
-    snippet = {
-        expand = function(args)
-            require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-        end,
-    },
+--    snippet = {
+--        expand = function(args)
+--            require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+--        end,
+--    },
     window = {
         -- completion = cmp.config.window.bordered(),
         completion = {
@@ -145,7 +145,7 @@ cmp.setup({
                     sources = {
                         { name = 'nvim_lsp' },
                         { name = 'nvim_lsp_signature_help' },
-                        { name = 'luasnip' },
+ --                       { name = 'luasnip' },
                         { name = 'buffer' },
                         { name = 'path' },
                         { name = 'nvim_lua' },
@@ -160,7 +160,7 @@ cmp.setup({
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'nvim_lsp_signature_help' },
-        { name = 'luasnip' },
+  --      { name = 'luasnip' },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'nvim_lua' },
@@ -193,7 +193,7 @@ cmp.setup({
             vim_item.menu = ({
                 nvim_lsp = '( LSP )',
                 nvim_lsp_signature_help = '( Signature )',
-                luasnip = '( LuaSnip )',
+   --             luasnip = '( LuaSnip )',
                 buffer = '( Buffer )',
                 path = '( Path )',
                 nvim_lua = '( Lua )',
