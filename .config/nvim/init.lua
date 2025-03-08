@@ -67,6 +67,11 @@ vim.opt.scrolloff = 10
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { desc = 'Center cursor on up'})
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { desc = 'Center cursor on down'})
+vim.keymap.set('n', '<leader>w', ':w<CR>')
+vim.keymap.set('n', '<leader>+', '<C-a>', { desc = 'Increment number' })
+vim.keymap.set('n', '<leader>-', '<C-x>', { desc = 'Decrement numbre' })
 
 vim.diagnostic.disable()
 -- Diagnostic keymaps
