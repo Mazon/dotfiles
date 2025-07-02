@@ -1,0 +1,36 @@
+general.import = [
+  #"~/.config/alacritty/catppuccin/catppuccin-mocha.toml"
+  "~/.config/alacritty/themes/themes/breeze.toml"
+]
+
+[terminal.shell]
+program = "/bin/zsh"
+
+[env]
+TERM = "xterm-256color"
+
+[window]
+title = ""
+opacity = 0.75
+
+[mouse]
+hide_when_typing = true
+
+[font]
+size = 14.0
+
+[font.bold]
+family = "firacode"
+style = "Bold"
+
+[font.bold_italic]
+family = "firacode"
+style = "Bold Italic"
+
+[font.italic]
+family = "firacode"
+style = "Italic"
+
+[font.normal]
+family = "firacode"
+style = "Regular"
