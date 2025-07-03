@@ -8,6 +8,9 @@ return {
       reuse = 'all',
     },
     modes = {
+      search = {
+        enabled = true,
+      },
       char = {
         jump_labels = true,
         keys = { 'f', 'F', 't', 'T' },
@@ -25,14 +28,14 @@ return {
   },
   keys = {
     {
-      's',
+      '<CR>',
       mode = { 'n', 'x', 'o' },
       function()
         require('flash').jump()
       end,
     },
     {
-      '<Space>R',
+      '<leader>R',
       mode = { 'n', 'o', 'x' },
       function()
         require('flash').treesitter()
