@@ -19,9 +19,9 @@ end)
 -- Colorscheme
 vim.opt.termguicolors = true
 vim.o.background = 'dark'
-vim.cmd 'colorscheme hardy'
-vim.g.hardy_floatboarder = true
-vim.g.hardy_dim_comments = true
+vim.cmd 'colorscheme default'
+-- vim.g.hardy_floatboarder = true
+-- vim.g.hardy_dim_comments = true
 -- Save undo history
 vim.opt.undofile = true
 vim.opt.swapfile = false
