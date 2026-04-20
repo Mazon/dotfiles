@@ -1,0 +1,152 @@
+
+/* --- Color Definitions (Dracula) --- */
+@define-color foreground   #f8f8f2;
+@define-color background   rgba(30, 31, 41, 0.9);
+@define-color surface      rgba(68, 71, 90, 0.5);
+@define-color gray         #44475a;
+@define-color red          #ff5555;
+@define-color green        #50fa7b;
+@define-color yellow       #f1fa8c;
+@define-color purple       #bd93f9;
+@define-color pink         #ff79c6;
+@define-color cyan         #8be9fd;
+@define-color black        #000000;
+@define-color arch_blue    #89b4fa;
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "monospace";
+    font-weight: bold;
+    font-size: 15px;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+/* --- Left Group: Workspaces & Logic --- */
+#workspaces {
+    background: @background;
+    margin: 5px 0 5px 15px;
+    padding: 0 5px;
+    border-radius: 10px 0 0 10px;
+    border: 1px solid @gray;
+    border-right: none;
+}
+
+#workspaces button {
+    color: @foreground;
+    padding: 0 10px;
+    /* Increase font size slightly to match visual weight of the bar */
+    font-size: 17px; 
+}
+
+#workspaces button.active {
+    color: @green;
+    background: @surface;
+    border-radius: 5px;
+    margin: 4px 2px;
+}
+
+#window {
+    background: @surface;
+    color: @foreground;
+    margin: 5px 10px 5px 0;
+    padding: 0 15px;
+    border-radius: 0 10px 10px 0; /* Round only the right side */
+    border: 1px solid @gray;
+    border-left: 1px solid @gray;
+}
+
+
+#custom-workspace-logic {
+    background: @surface;
+    color: @foreground;
+    margin: 5px 15px 5px 0;
+    padding: 0 15px;
+    border-radius: 0 10px 10px 0;
+    border: 1px solid @gray;
+    /* No border-left to make it look connected to workspaces */
+}
+
+/* --- The Seamless Right "Super-Strip" --- */
+/* Unified logic: No margins between these modules */
+
+#custom-fuzzel, #cpu, #memory, #disk, #temperature,
+#pulseaudio, #tray, #network, #battery, #backlight, #clock, #custom-power, #custom-swaync {
+    background: @background;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 0 12px;
+    border-top: 1px solid @gray;
+    border-bottom: 1px solid @gray;
+}
+
+/* 1. Start of Strip */
+#custom-fuzzel {
+    color: @arch_blue;
+    border-radius: 10px 0 0 10px;
+    border-left: 1px solid @gray;
+    padding-left: 15px;
+}
+
+/* 2. Hardware Group (Subtle background shift) */
+#cpu, #memory, #disk, #temperature {
+    background: rgba(68, 71, 90, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 3. Audio & Tray Fusion (One consistent background) */
+#pulseaudio, #tray {
+    background: @surface;
+    border-left: 1px solid @gray;
+}
+
+#pulseaudio {
+    color: @yellow;
+}
+
+#tray {
+    padding: 0 10px;
+}
+
+/* 4. Connectivity */
+#network {
+    color: @pink;
+    border-left: 1px solid @gray;
+}
+
+/* 5. Time (Distinct Highlight) */
+#clock {
+    color: @cyan;
+    background: @surface;
+    border-left: 1px solid @gray;
+}
+
+/* 6. End of Strip (Power) */
+#custom-power {
+    color: @red;
+    border-radius: 0 10px 10px 0;
+    border-right: 1px solid @gray;
+    margin-right: 20px; /* Safe distance from screen edge */
+    padding-right: 15px;
+}
+#custom-swaync {
+    color: @arch_blue;
+    border-radius: 0 10px 10px 0;
+    border-right: 1px solid @gray;
+    margin-right: 20px; /* Safe distance from screen edge */
+    padding-right: 15px;
+}
+
+/* --- Tooltip Polish --- */
+tooltip {
+    background: @black;
+    border: 1px solid @purple;
+    border-radius: 8px;
+}
+
+tooltip label {
+    padding: 5px;
+}

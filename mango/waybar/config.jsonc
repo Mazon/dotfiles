@@ -1,0 +1,102 @@
+{
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 36,
+    "margin-right": 0,
+    "margin-left": 0, 
+
+    "modules-left": [
+        "custom/workspace-logic",
+    ],
+
+    "modules-center": [
+        "ext/workspaces",
+        "dwl/window#layout"
+    ],
+
+    "modules-right": [
+        "pulseaudio",
+        "pulseaudio#microphone",
+        "tray",
+        "clock",
+        "custom/swaync"
+        /*"custom/power"*/
+    ],
+    "custom/power": {
+        "format": "",
+        "on-click": "systemctl poweroff",
+        "tooltip": false
+    },
+    "custom/swaync": {
+        "format": "\uf0f3",
+        "on-click": "swaync-client -t",
+        "tooltip": false
+    },
+    "ext/workspaces": {
+      "format": "{icon}",
+      "ignore-hidden": true,
+      "on-click": "activate",
+      "sort-by-id": true,
+      "format-icons": {
+        "1":"\uf121",
+        "2":"\uf0ac",
+        "3":"\uf144",
+        "4":"\uf120",
+        "5":"\uf27a",
+        "6":"\uf1b6",
+    }
+  },
+    "dwl/window#layout": {
+      "format": "[{layout}]"
+  },
+    "tray": {
+        "icon-size": 22,
+        "spacing": 10
+    },
+    "pulseaudio": {
+        //"format": "{icon}",
+        "format": "{icon} {volume}%",
+        "format-muted": "",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
+        "on-scroll-down": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%-",
+        "scroll-step": 5,
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "tooltip": true,
+        "tooltip-format": "{icon} at {volume}%"
+    },
+    "pulseaudio#microphone": {
+        "format": "{format_source}",
+        "format-source": "",
+        "format-source-muted": "",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+        "on-scroll-up": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ 5%+",
+        "on-scroll-down": "wpctl set-volume -l 1 @DEFAULT_AUDIO_SOURCE@ 5%-",
+        "scroll-step": 5,
+        "tooltip": true,
+        "tooltip-format": " at {volume}%"
+    },
+  "custom/workspace-logic": {
+    "format": "{}",
+    "return-type": "json",
+    "exec": "~/.config/mango/scripts/windowtags.sh",
+    "interval": 1,
+},
+    "clock": {
+        "format": "{:%H:%M}",
+        "tooltip-format": "{:%A, %B %e %Y}"
+    },
+
+}
