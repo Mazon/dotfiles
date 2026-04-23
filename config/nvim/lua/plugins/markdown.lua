@@ -1,0 +1,23 @@
+return {
+  --  'MeanderingProgrammer/render-markdown.nvim',
+  --  ft = { 'markdown', 'codecompanion' },
+  --  config = function()
+  --    require('render-markdown').setup({
+  --      html = {
+  --        enabled = true,
+  --        tag = {
+  --          buf         = { icon = ' ', highlight = 'CodeCompanionChatVariable' },
+  --          file        = { icon = ' ', highlight = 'CodeCompanionChatVariable' },
+  --          help        = { icon = '󰘥 ', highlight = 'CodeCompanionChatVariable' },
+  --          image       = { icon = ' ', highlight = 'CodeCompanionChatVariable' },
+  --          symbols     = { icon = ' ', highlight = 'CodeCompanionChatVariable' },
+  --          url         = { icon = '󰖟 ', highlight = 'CodeCompanionChatVariable' },
+  --          var         = { icon = ' ', highlight = 'CodeCompanionChatVariable' },
+  --          tool        = { icon = ' ', highlight = 'CodeCompanionChatTool' },
+  --          user_prompt = { icon = ' ', highlight = 'CodeCompanionChatTool' },
+  --          group       = { icon = ' ', highlight = 'CodeCompanionChatToolGroup' },
+  --        },
+  --      },
+  --    })
+  --  end,
+}
