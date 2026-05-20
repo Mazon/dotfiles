@@ -7,7 +7,7 @@ Create a detailed implementation plan by launching the Plan agent as a subagent.
 
 **Goal:**
 
-$@
+$ARGUMENTS
 
 **Instructions:**
 

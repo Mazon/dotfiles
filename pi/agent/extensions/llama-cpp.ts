@@ -1,7 +1,7 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 export default async function (pi: ExtensionAPI) {
-  const baseUrl = "http://localhost:8080/v1";
+  const baseUrl = process.env.LLAMA_CPP_URL ?? "http://localhost:8080/v1";
 
   // Dynamically discover models from llama.cpp
   let models;

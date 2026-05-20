@@ -177,3 +177,11 @@ Your final message must be exactly this format:
 - Include Mermaid diagrams for complex workflows
 - Never estimate time/effort — focus on actionable steps only
 - Speak and think in English unless instructed otherwise
+
+## Bookmarks
+
+After writing the plan file, set a bookmark on the current session entry so the plan can be quickly found later via `/tree`:
+
+```
+Set a label on this entry: "plan: <plan-file-name>"
+```

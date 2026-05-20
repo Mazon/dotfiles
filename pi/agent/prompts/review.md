@@ -2,7 +2,7 @@
 description: Review current changes and complete the board task
 ---
 
-Review the current code changes using the Reviewer agent, then move the associated board task to completed.
+Review the current code changes using the Reviewer agent, then update the board task status based on findings.
 
 Execute these steps exactly in order:
 
@@ -18,8 +18,11 @@ Use the `Agent` tool with:
 - `description`: "Review: <task title>"
 - `prompt`: "Review the current code changes in this repository. Focus on the most recent commits and any uncommitted changes. Provide your findings in the standard review format."
 
-**Step 4 — Move to completed**
-After the review completes, call `board_update_task` with `{ "id": <task_id>, "status": "completed" }`.
+**Step 4 — Conditionally update task status**
+After the review completes, check the findings:
+
+- If the reviewer found **no critical or high** issues → call `board_update_task` with `{ "id": <task_id>, "status": "completed" }` and add a comment: `board_add_comment({ taskId: <task_id>, body: "✅ Reviewed and approved" })`
+- If the reviewer found **critical or high** issues → call `board_update_task` with `{ "id": <task_id>, "status": "in-progress" }` and add a comment listing each critical/high issue: `board_add_comment({ taskId: <task_id>, body: "⚠️ Review found issues:\n- [list each critical/high finding]" })`
 
 **Step 5 — Report**
-Report the review findings summary and confirm the task has been moved to completed. If the reviewer found critical or high-severity issues, flag them prominently.
+Report the review findings summary and the task's new status. If issues were found, clearly list what needs to be fixed before the task can be completed.

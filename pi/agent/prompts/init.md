@@ -1,66 +1,37 @@
 ---
-description: Initialize the project with git, AGENTS.md, and README.md
+description: Initialize the project with git, .gitignore, AGENTS.md, and README.md
 ---
 
-Initialize this project. Do the following in order:
+Initialize this project with sensible defaults.
 
-## 1. Ensure git repo with initial commit
+## 1. .gitignore
 
-Check if the current directory is a git repository. If not, initialize one:
+If `.gitignore` doesn't exist, create one covering: env files (`.env`, `.env.*`), dependencies (`node_modules/`, `vendor/`, `__pycache__/`), build outputs (`dist/`, `build/`, `target/`), IDE files (`.idea/`, `.vscode/`, `.DS_Store`), logs (`*.log`), and coverage (`coverage/`). Skip if already present.
 
+## 2. Git repo
+
+If not a git repo, run `git init`. If there are zero commits, create one:
 ```bash
-git init
+git add .gitignore
+git commit -m "Initial commit with .gitignore"
 ```
 
-Then check if there is at least one commit. If there are zero commits (e.g. `git log` fails or shows nothing), create an initial commit so that git worktrees can be used later:
+## 3. AGENTS.md
 
-```bash
-git add -A
-git commit -m "Initial commit"
-```
+If `AGENTS.md` doesn't exist, explore the codebase and write a concise one covering: project overview, tech stack, directory structure, build/test/run commands, conventions, and gotchas. Base it on what you find — if the project is empty, write a minimal template.
 
-If there are already commits, skip this step.
+## 4. README.md
 
-## 2. Create AGENTS.md
+If `README.md` doesn't exist, write one based on the codebase and `AGENTS.md`: project name, prerequisites, getting started, usage, and development. Keep it concise.
 
-Create an `AGENTS.md` file in the project root if it doesn't already exist. This file should describe the project for AI agents. Look at the codebase to understand what the project is about, then write a concise `AGENTS.md` with:
-
-- **Project overview**: What this project is and does.
-- **Tech stack**: Languages, frameworks, build tools.
-- **Project structure**: Key directories and their purposes.
-- **Build & run commands**: How to build, test, and run the project.
-- **Conventions**: Code style, naming conventions, patterns used.
-- **Gotchas**: Anything non-obvious that an AI agent should know.
-
-Keep it factual and based on what you find in the codebase. If the project is empty or just starting, write a minimal `AGENTS.md` as a starting template.
-
-## 3. Create README.md
-
-Create a `README.md` file in the project root if it doesn't already exist. This is the human-facing documentation. Look at the codebase and the `AGENTS.md` you just created, then write a `README.md` with:
-
-- **Project name & description**
-- **Prerequisites**: What's needed to build/run (language version, tools, etc.)
-- **Getting started**: Clone, install, build, run instructions.
-- **Usage**: How to use the project.
-- **Development**: How to develop, test, and contribute.
-
-Keep it concise and accurate. If the project is empty, write a minimal starter `README.md`.
-
-## 4. Commit if needed
+## 5. Commit
 
 If you created or modified files, commit them:
-
 ```bash
-git add AGENTS.md README.md
-git commit -m "Add AGENTS.md and README.md"
+git add .gitignore AGENTS.md README.md
+git commit -m "Add .gitignore, AGENTS.md, and README.md"
 ```
 
-If both files already existed and are unchanged, skip this step.
+## Report
 
-## Final output
-
-Report what you did:
-- Whether git was already initialized or you ran `git init`.
-- Whether an initial commit was created or already existed.
-- Whether `AGENTS.md` and `README.md` were created or already existed.
-- Any commits made.
+Briefly state what was created vs. already existed, and any commits made.

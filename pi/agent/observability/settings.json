@@ -3,7 +3,7 @@
   "preset": "performance",
   "segments": {
     "modelThink": true,
-    "runtime": true,
+    "runtime": false,
     "pwd": false,
     "git": false,
     "contextUsage": true,
@@ -12,7 +12,7 @@
     "contextNumbers": true,
     "tokens": false,
     "tps": true,
-    "cost": true
+    "cost": false
   },
   "contextZones": {
     "expert": 70,

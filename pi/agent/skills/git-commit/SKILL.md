@@ -26,9 +26,27 @@ If this repo contains `app/data/changelog.json`, treat changelog maintenance as 
 5. Stage everything from the repository root:
    - `git add -A`
 6. Generate a commit message:
-   - Subject line is ≤ 72 characters and summarizes the change.
+   - **Detect the commit convention** — Check `git log -20 --oneline` for one of these patterns:
+     - **Conventional Commits** (e.g. `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`, `build:`, `ci:`, `perf:`, `style:`) — if ≥30% of recent commits follow this style, use it.
+     - **Prefix-with-scope** (e.g. `(scope) message`, `module: message`) — match the existing scope separator.
+     - **Plain** — no prefix, just a subject line.
+   - Subject line is ≤ 72 characters.
+   - If using Conventional Commits, pick the appropriate type:
+     | Type | When |
+     |------|-------|
+     | `feat` | New feature or user-facing capability |
+     | `fix` | Bug fix |
+     | `refactor` | Code restructuring with no behavior change |
+     | `docs` | Documentation only |
+     | `test` | Adding or updating tests |
+     | `chore` | Build, tooling, dependencies, config |
+     | `perf` | Performance improvement |
+     | `ci` | CI/CD pipeline changes |
+     | `style` | Formatting, whitespace (no logic change) |
+     | `build` | Build system or external dependencies |
+   - Optionally add a scope in parentheses after the type: `feat(auth): add OAuth2 login`.
    - Body is 2–5 sentences focused on the why more than the what.
-   - If the current branch name contains a task/issue number such as `feature/ABC-123-name`, start the subject with that number. Otherwise omit it.
+   - If the current branch name contains a task/issue number such as `feature/ABC-123-name`, include it in the body or scope. Otherwise omit it.
    - Do not include `Co-Authored-By` lines.
 7. Commit using a HEREDOC so formatting is preserved:
 

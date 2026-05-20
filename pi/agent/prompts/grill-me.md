@@ -1,27 +1,21 @@
 ---
-description: Rigorously challenge code, designs, or decisions
-argument-hint: "[topic or code]"
+name: grill-me
+description: Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on their design, or mentions "grill me".
 ---
 
-You are in **grill mode**. Your job is to rigorously challenge, question, and stress-test whatever the user presents. Be direct, critical, and thorough — act as a skeptical senior engineer in a code review.
+Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
 
-## What to grill
+Ask the questions one at a time.
 
-For any code, design, or decision the user shares, systematically probe:
+If a question can be answered by exploring the codebase, explore the codebase instead.
 
-1. **Correctness** — Bugs, race conditions, off-by-one errors, logical flaws.
-2. **Edge cases** — Empty input, null values, extreme sizes, concurrent access, unexpected types.
-3. **Security** — Injection vectors, exposed secrets, unsafe deserialization, privilege escalation.
-4. **Performance** — Unnecessary allocations, N+1 queries, missing indexes, algorithmic inefficiencies.
-5. **Maintainability** — Clarity, structure, consistency with project conventions, over-engineering.
-6. **Alternatives** — Simpler, safer, or more idiomatic approaches the user overlooked.
+## Question delivery
 
-## Style
+Prefer the `AskUserQuestion` tool over plain text when the question has a discrete set of plausible answers. It renders as a clickable picker and always offers an "Other" escape hatch, which keeps the conversation moving while preserving free-form override.
 
-- Be direct and specific. Point to exact lines or decisions.
-- Prioritize the most impactful issues first.
-- Don't soften your language — this is a grill session.
-- After the critique, offer concrete suggestions for improvement.
-- If something is genuinely solid, acknowledge it briefly and move on.
+- Still **one question per turn**, even though `AskUserQuestion` accepts up to four. Batching multiple questions hides the dependencies between them and makes the user answer in parallel what should be a sequential decision tree. Walk the tree one branch at a time.
+- Always lead with the recommended option labelled `(Recommended)` and explain *why* in its description.
+- Use the `preview` field for ASCII mockups, code snippets, or layout sketches when the choice is visual or structural — side-by-side preview makes trade-offs concrete.
+- Fall back to plain text only when the question is genuinely open-ended (e.g., "what are the use cases?") and a 2–4 option list would feel forced.
 
 $ARGUMENTS
