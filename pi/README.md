@@ -15,10 +15,6 @@ This is my personal configuration directory for [pi](https://github.com/nicepkg/
 │   ├── settings.json    # Agent-level settings (model, theme, packages)
 │   ├── auth.json        # Provider credentials (gitignored)
 │   └── observability/   # Usage history and monitoring config
-├── .pi/
-│   ├── board.db         # Task board database (SQLite)
-│   └── plans/           # Implementation plans created by the Plan agent
-└── .gitignore
 ```
 
 ## How It Works
