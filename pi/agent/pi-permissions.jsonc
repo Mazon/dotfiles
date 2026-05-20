@@ -3,7 +3,7 @@
   // Allows read-only tools by default, prompts for destructive operations
   "defaultPolicy": {
     "tools": "allow",
-    "bash": "allow",
+    "bash": "ask",
     "mcp": "ask",
     "skills": "allow",
     "special": "ask"
@@ -20,7 +20,7 @@
     "get_subagent_*": "allow",
     "Agent": "allow",
     // Destructive tools — require confirmation
-    "write": "allow",
-    "edit": "allow"
+    "write": "deny",
+    "edit": "deny"
   }
 }

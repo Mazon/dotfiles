@@ -11,7 +11,8 @@
 * {
     font-family: "HYLeMiaoTiJ";
     font-weight: bold;
-	font-size: 20px
+	font-size: 20px;
+	cursor: default;
 }
  
 .control-center .notification-row:focus,

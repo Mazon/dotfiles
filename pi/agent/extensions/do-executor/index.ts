@@ -8,7 +8,7 @@
  *
  * The extension parses the plan programmatically and generates precise
  * instructions for the LLM to call the Agent tool. After completion,
- * it instructs the LLM to merge worktree branches and move board tasks
+ * it instructs the LLM to merge worktree branches into main, clean up merged branches,
  * to code-review.
  *
  * This approach avoids deadlocking pi's event loop by delegating the
@@ -172,9 +172,11 @@ function buildSingleInstructions(
 	msg += `- \`isolation\`: "worktree"\n\n`;
 
 	msg += `### After the agent completes:\n\n`;
-	msg += `**1. Merge the branch** — The agent's result will indicate if it created a branch (e.g. "Changes saved to branch \`pi-agent-xxx\`"). If so:\n`;
-	msg += `   - Run \`git merge <branch-name>\`\n`;
-	msg += `   - Resolve any conflicts if they arise\n\n`;
+	msg += `**1. Merge the branch into main** — The agent's result will indicate if it created a branch (e.g. "Changes saved to branch \`pi-agent-xxx\`"). If so:\n`;
+	msg += `   - Run \`git checkout main && git merge <branch-name>\`\n`;
+	msg += `   - Resolve any conflicts if they arise\n`;
+	msg += `   - Run \`git branch -d <branch-name>\` to delete the merged branch\n`;
+	msg += `   - Run \`git worktree prune\` to clean up any stale worktree metadata\n\n`;
 
 	msg += `**2. Update the board**\n`;
 	if (taskId !== null) {
@@ -213,9 +215,11 @@ function buildMultiInstructions(
 
 		msg += `**Step B — Wait** for ALL tasks in wave ${wave.index} to complete (use \`get_subagent_result\` with \`wait: true\` for each agent).\n\n`;
 
-		msg += `**Step C — Merge** wave ${wave.index} branches. For each completed agent that created a branch (shown in its result as "Changes saved to branch \`...\`"):\n`;
-		msg += `- Run \`git merge <branch-name>\`\n`;
+		msg += `**Step C — Merge** wave ${wave.index} branches into main. For each completed agent that created a branch (shown in its result as "Changes saved to branch \`...\`"):\n`;
+		msg += `- Run \`git checkout main && git merge <branch-name>\`\n`;
 		msg += `- Resolve any conflicts before proceeding to the next wave\n`;
+		msg += `- Run \`git branch -d <branch-name>\` to delete the merged branch\n`;
+		msg += `- Run \`git worktree prune\` to clean up any stale worktree metadata\n`;
 		msg += `- If any merge fails, report the issue and ask whether to continue\n\n`;
 	}
 

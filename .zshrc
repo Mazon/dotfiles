@@ -2,54 +2,15 @@
 #  .zshrc — CachyOS zsh config (vanilla, no oh-my-zsh, no p10k)
 # ──────────────────────────────────────────────────────────────────────────────
 #
-# Suggestion: Move EDITOR/VISUAL/PAGER/PATH to ~/.zshenv so they're available
-# in non-interactive shells too. See: https://zsh.sourceforge.io/Guide/zshguide02.html
-
 # ┌─────────────────────────────────────────────────────────────────────────────┐
-# │  Environment                                                               │
+# │  Environment (interactive-only)                                            │
 # └─────────────────────────────────────────────────────────────────────────────┘
-export DISABLE_MAGIC_FUNCTIONS=true        # fix pasting URLs and other text
-export FZF_BASE=/usr/share/fzf
+# Env vars for ALL shells (EDITOR, PATH, API keys, etc.) are in ~/.zshenv.
 
-# ── Editor ───────────────────────────────────────────────────────────────────
-if command -v nvim &>/dev/null; then
-  export EDITOR=nvim
-  export VISUAL=nvim
-elif command -v vim &>/dev/null; then
-  export EDITOR=vim
-  export VISUAL=vim
-fi
-
-# ── Pager (bat if available) ────────────────────────────────────────────────
-if command -v bat &>/dev/null; then
-  export PAGER="bat --paging=always"
-  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-  export MANROFFOPT="-c"                # disable roff formatting for bat
-  export BAT_THEME="base16"
-else
-  export PAGER=less
-fi
-
-# ── GPG Agent as SSH Agent ──────────────────────────────────────────────────
-# Uses GPG agent for SSH authentication (works with YubiKeys/smartcards).
-# Call `gpgtty` after creating new terminal splits (e.g. in tmux) to refresh.
-export GPG_TTY=$(tty)
-gpgtty() { export GPG_TTY=$(tty); }
-
+# ── GPG Agent (interactive-only) ────────────────────────────────────────────
 if [[ -o interactive ]]; then
   gpgconf --launch gpg-agent &>/dev/null
-  export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-  # Add default key if no keys are loaded
-  if ! ssh-add -l &>/dev/null; then
-    ssh-add ~/.ssh/id_ed25519 2>/dev/null
-  fi
 fi
-
-# ── PATH ─────────────────────────────────────────────────────────────────────
-typeset -U path                           # deduplicate
-[[ -d ~/.local/bin ]]   && path=(~/.local/bin   $path)
-[[ -d ~/.cargo/bin ]]   && path=(~/.cargo/bin   $path)
-[[ -d ~/go/bin ]]       && path=(~/go/bin       $path)
 
 # ┌─────────────────────────────────────────────────────────────────────────────┐
 # │  Shell options                                                             │

@@ -21,14 +21,15 @@
     "modules-right": [
         "pulseaudio",
         "pulseaudio#microphone",
+        "backlight",
         "tray",
         "clock",
-        "custom/swaync"
-        /*"custom/power"*/
+        "custom/swaync",
+        "custom/power"
     ],
     "custom/power": {
         "format": "",
-        "on-click": "systemctl poweroff",
+        "on-click": "wlogout",
         "tooltip": false
     },
     "custom/swaync": {
@@ -98,5 +99,10 @@
         "format": "{:%H:%M}",
         "tooltip-format": "{:%A, %B %e %Y}"
     },
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": [""],
+        "tooltip": true
+    }
 
 }

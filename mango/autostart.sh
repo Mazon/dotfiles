@@ -12,7 +12,7 @@ dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 swaync -c ~/.config/mango/swaync/config.json -s ~/.config/mango/swaync/style.css >/dev/null 2>&1 &
 
 # night light
-wlsunset -T 3501 -t 3500 >/dev/null 2>&1 &
+wlsunset -T 6500 -t 3500 >/dev/null 2>&1 &
 
 # wallpaper
 swaybg -i ~/.config/mango/wallpaper/wallpaper.png --mode fill >/dev/null 2>&1 &
@@ -54,9 +54,7 @@ swayosd-server >/dev/null 2>&1 &
 
 # Apps
 firefox 2>&1 &
-alacritty -e "jftui" 2>&1 &
-alacritty -e "nvim" 2>&1 &
-alacritty 2>&1 &
+alacritty -e "tmux" 2>&1 &
 signal-desktop --password-store='kwallet6' 2>&1 &
 #steam 2>&1 &
 

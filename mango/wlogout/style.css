@@ -1,3 +1,7 @@
+* {
+    cursor: default;
+}
+
 window {
     font-family: HYLeMiaoTiJ,CaskaydiaCove Nerd Font, monospace;
     font-size: 12pt;

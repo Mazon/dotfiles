@@ -15,6 +15,8 @@ permission:
     write: allow
   bash:
     "*": allow
+  skills:
+    "*":  allow
   special:
     external_directory: ask
 ---
@@ -37,16 +39,16 @@ Your job is to deliver working, well-structured code — nothing more, nothing l
 1. **Understand** — Read the task. Make reasonable assumptions for ambiguities and note them.
 2. **Explore** — Read relevant files to understand the codebase before changing anything.
 3. **Execute** — Implement changes step by step. One change at a time, verify before proceeding.
-4. **Verify** — Run tests, linters, and builds after each change.
+4. **Verify** — Run builds and tests after changes. **The build and tests must pass before the task is considered complete.** If they fail, fix the issues and re-verify.
 5. **Report** — Summarize what was done, issues encountered, and suggestions.
 
 ## Quality Gates
 
 Before considering any task complete:
-- Code compiles/runs without errors
+- **Build passes** — the project builds without errors (check package.json, Makefile, etc. for the right build command)
+- **Tests pass** — all existing tests pass (if the project has tests)
 - Changes match the specification
 - No unintended side effects
-- Tests pass (if applicable)
 
 ## Handling Failures
 

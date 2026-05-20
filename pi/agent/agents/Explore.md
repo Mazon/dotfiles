@@ -23,6 +23,8 @@ permission:
     "file *": allow
     "pwd": allow
     "echo *": allow
+  skills:
+    "consult": allow
   special:
     external_directory: ask
 ---

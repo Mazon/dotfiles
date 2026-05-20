@@ -73,8 +73,7 @@ window#waybar {
 /* --- The Seamless Right "Super-Strip" --- */
 /* Unified logic: No margins between these modules */
 
-#custom-fuzzel, #cpu, #memory, #disk, #temperature,
-#pulseaudio, #tray, #network, #battery, #backlight, #clock, #custom-power, #custom-swaync {
+#pulseaudio, #tray, #backlight, #clock, #custom-swaync, #custom-power {
     background: @background;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -83,21 +82,7 @@ window#waybar {
     border-bottom: 1px solid @gray;
 }
 
-/* 1. Start of Strip */
-#custom-fuzzel {
-    color: @arch_blue;
-    border-radius: 10px 0 0 10px;
-    border-left: 1px solid @gray;
-    padding-left: 15px;
-}
-
-/* 2. Hardware Group (Subtle background shift) */
-#cpu, #memory, #disk, #temperature {
-    background: rgba(68, 71, 90, 0.2);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* 3. Audio & Tray Fusion (One consistent background) */
+/* 1. Audio & Tray Fusion (Start of Strip) */
 #pulseaudio, #tray {
     background: @surface;
     border-left: 1px solid @gray;
@@ -105,35 +90,30 @@ window#waybar {
 
 #pulseaudio {
     color: @yellow;
+    border-radius: 10px 0 0 10px;
 }
 
 #tray {
     padding: 0 10px;
 }
 
-/* 4. Connectivity */
-#network {
-    color: @pink;
-    border-left: 1px solid @gray;
-}
-
-/* 5. Time (Distinct Highlight) */
+/* 2. Backlight & Clock */
 #clock {
     color: @cyan;
     background: @surface;
     border-left: 1px solid @gray;
 }
 
-/* 6. End of Strip (Power) */
-#custom-power {
-    color: @red;
-    border-radius: 0 10px 10px 0;
-    border-right: 1px solid @gray;
-    margin-right: 20px; /* Safe distance from screen edge */
-    padding-right: 15px;
-}
+/* 3. Notification Center */
 #custom-swaync {
     color: @arch_blue;
+    border-left: 1px solid @gray;
+}
+
+/* 4. End of Strip (Power) */
+#custom-power {
+    color: @red;
+    border-left: 1px solid @gray;
     border-radius: 0 10px 10px 0;
     border-right: 1px solid @gray;
     margin-right: 20px; /* Safe distance from screen edge */

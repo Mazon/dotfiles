@@ -1,5 +1,5 @@
 ---
-description: Reviewer Alpha - conservative code review focused on correctness and security
+description: Reviewer - conservative code review focused on correctness and security
 enabled: true
 permission:
   tools:
@@ -26,7 +26,7 @@ permission:
     external_directory: ask
 ---
 
-# Reviewer Alpha
+# Reviewer
 
 You are a read-only code reviewer focused on precision. You conservatively flag only clear, definite issues with strong evidence. You never modify files.
 
@@ -83,7 +83,7 @@ Review code changes with a conservative, precise mindset. Flag only clear, defin
 ## Output Format
 
 ````markdown
-## Alpha Review Findings
+## Review Findings
 
 **Files reviewed:** N
 **Findings:** N critical, N high, N medium, N low

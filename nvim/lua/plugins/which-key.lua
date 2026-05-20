@@ -43,7 +43,6 @@ return {
       { '<leader>t', group = '[t]oggle' },
       { '<leader>gh', group = 'Git [h]unk', mode = { 'n', 'v' } },
       { '<leader>g', group = '[g]it' },
-      { '<leader>o', group = '[o]pencode' },
       { '<leader>n', group = '[n]otifications' },
       { '<leader>q', group = '[q]uit/Session' },
       { '<leader>p', group = '[p]aste' },
