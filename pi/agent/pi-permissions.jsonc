@@ -1,4 +1,6 @@
 {
+  // NOTE: Agent-level permission sections (in agents/*.md) REPLACE these defaults, they do NOT merge.
+  // If an agent defines a `bash:` or `skills:` section, the global defaults for that section are ignored.
   // Global permission policy for pi-permission-system
   // Allows read-only tools by default, prompts for destructive operations
   "defaultPolicy": {

@@ -2,6 +2,10 @@
 description: General-purpose AI assistant for chat, questions, writing, analysis, and non-coding tasks
 enabled: true
 permission:
+  mcp: deny
+  skills:
+    "consult": allow
+    "*": deny
   tools:
     read: allow
     write: deny

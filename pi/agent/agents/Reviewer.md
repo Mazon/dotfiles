@@ -2,6 +2,11 @@
 description: Reviewer - conservative code review focused on correctness and security
 enabled: true
 permission:
+  mcp: deny
+  skills:
+    "consult": allow
+    "review-task": allow
+    "*": deny
   tools:
     board_*: allow
     read: allow

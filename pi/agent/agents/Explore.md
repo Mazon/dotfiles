@@ -22,6 +22,7 @@ permission:
     "echo *": allow
   skills:
     "consult": allow
+  mcp: deny
   special:
     external_directory: ask
 ---

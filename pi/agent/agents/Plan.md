@@ -3,6 +3,9 @@ description: Planning agent - gathers context, creates actionable plans with dep
 run_in_background: true
 enabled: true
 permission:
+  mcp: deny
+  skills:
+    "*": deny
   tools:
     read: allow
     grep: allow
@@ -23,7 +26,7 @@ permission:
     "which *": allow
     "file *": allow
     "pwd": allow
-    "echo *": ask
+    "echo *": allow
   special:
     external_directory: ask
 ---
