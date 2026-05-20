@@ -7,7 +7,7 @@
     "bash": "ask",
     "tools": "allow",
     "mcp": "ask",
-    "skills": "allow",
+    "skills": "ask",
     "special": "ask"
   },
   "bash": {
