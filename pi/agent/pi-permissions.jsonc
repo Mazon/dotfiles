@@ -2,20 +2,30 @@
   // Global permission policy for pi-permission-system
   // Allows read-only tools by default, prompts for destructive operations
   "defaultPolicy": {
-    "tools": "allow",
     "bash": "ask",
+    "tools": "allow",
     "mcp": "ask",
     "skills": "allow",
     "special": "ask"
   },
+  "bash": {
+    "*": "ask",
+    "cd": "allow",
+    "git *": "allow",
+    "diff": "allow",
+    "tree": "allow",
+    "sort": "allow",
+    "uniq": "allow",
+    "fd": "allow",
+    "ag": "allow",
+    "grep": "allow",
+    "ls": "allow",
+    "find": "allow",
+  },
   "tools": {
     // Read-only tools — always allowed
     "read": "allow",
-    "grep": "allow",
-    "find": "allow",
-    "ls": "allow",
     // Board tools — always allowed
-    "git *": "allow",
     "board_*": "allow",
     "get_subagent_*": "allow",
     "Agent": "allow",

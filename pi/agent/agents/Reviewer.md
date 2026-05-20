@@ -3,13 +3,11 @@ description: Reviewer - conservative code review focused on correctness and secu
 enabled: true
 permission:
   tools:
+    board_*: allow
     read: allow
-    grep: allow
-    find: allow
-    ls: allow
-    bash: allow
     write: deny
     edit: deny
+    bash: allow
   bash:
     "*": ask
     "git *": allow

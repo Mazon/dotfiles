@@ -4,9 +4,6 @@ enabled: true
 permission:
   tools:
     read: allow
-    grep: allow
-    find: allow
-    ls: allow
     bash: allow
     write: deny
     edit: deny

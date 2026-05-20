@@ -7,9 +7,6 @@ permission:
   tools:
     board_*: allow
     read: allow
-    grep: allow
-    find: allow
-    ls: allow
     bash: allow
     edit: allow
     write: allow
