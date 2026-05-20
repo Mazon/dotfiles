@@ -1,0 +1,35 @@
+{
+  "lastChangelogVersion": "0.74.0",
+  "defaultProvider": "llama-cpp",
+  "defaultModel": "Qwen3.6-27B-Q6_K-MTP.gguf",
+  "defaultThinkingLevel": "high",
+  "enabledModels": [
+    "zai/glm-5.1",
+    "zai/glm-5-turbo",
+    "llama-cpp/Qwen3.6-27B-Q6_K-MTP.gguf",
+    "google/gemini-3.1-pro-preview",
+    "google/gemini-3.1-flash-lite"
+  ],
+  "packages": [
+    "npm:@tintinweb/pi-subagents",
+    "npm:pi-ask-user",
+    "npm:pi-observability",
+    "npm:pi-board",
+    "npm:pi-permission-system",
+    "npm:@alexanderfortin/pi-zai-usage",
+    "npm:@dustydonkey/pi-spinner"
+  ],
+  "theme": "dark",
+  "compaction": {
+    "enabled": true
+  },
+  "hideThinkingBlock": true,
+  "enableSkillCommands": true,
+  "showHardwareCursor": false,
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "treeFilterMode": "default",
+  "transport": "auto",
+  "followUpMode": "one-at-a-time"
+}

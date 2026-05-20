@@ -1,0 +1,8 @@
+{
+  "showTraces": true,
+  "showStats": true,
+  "showTtft": false,
+  "colorPreset": "theme",
+  "maxTraces": 100,
+  "maxDetailed": 6
+}
