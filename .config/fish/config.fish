@@ -44,5 +44,10 @@ fzf --fish | source
 # zoxide init fish | source  # uncomment after: sudo pacman -S zoxide
 starship init fish | source
 
+# ── Autosuggestion keybindings ──────────────────────────
+bind \cy accept-autosuggestion
+bind \ce forward-word
+bind \cf forward-char
+
 # ── Dotfiles bare repo ──────────────────────────────────
-alias dotfiles="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
+alias dot="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"

@@ -1,0 +1,299 @@
+#!/usr/bin/env bash
+#
+# bootstrap — install all dependencies tracked in dotfiles.
+# Supports: Arch Linux (pacman), macOS (brew).
+#
+# Usage:
+#   chmod +x ~/.local/bin/bootstrap
+#   ~/.local/bin/bootstrap
+#
+# What it installs:
+#   - Shell/editor:   fish, neovim, tmux, starship, fzf, fd, bat, zoxide
+#   - Terminal/font:  alacritty, nerd fonts (Iosevka)
+#   - TUI:            btop, htop
+#   - Dev tools:      git, tmux-plugin-manager, gitmux
+#   - macOS extras:   rectangle, signal, firefox
+#
+#   Linux-only (Wayland/mango compositor):
+#     mango-wm, waybar, wlogout, swaync, fuzzel, swaybg,
+#     swaylock, swayidle, swayosd, sway-audio-idle-inhibit,
+#     wl-clip-persist, cliphist, wl-paste, wlsunset, wlr-randr,
+#     dimland, grim, slurp, swappy, pamixer, playerctl,
+#     blueman, network-manager-applet, xfce-polkit, fcitx5,
+#     Bibata-Modern-Ice cursor theme
+#
+#   macOS alternatives for shared tools are handled via brew.
+
+set -euo pipefail
+
+# ── helpers ────────────────────────────────────────────────────────────────────
+GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
+
+info()  { printf "${GREEN}[+]${NC} %s\n" "$*"; }
+warn()  { printf "${YELLOW}[!]${NC} %s\n" "$*"; }
+err()   { printf "${RED}[✗]${NC} %s\n" "$*"; }
+
+has() { command -v "$1" &>/dev/null; }
+
+# ── detect OS ──────────────────────────────────────────────────────────────────
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    OS="macos"
+elif [[ -f /etc/arch-release ]]; then
+    OS="arch"
+else
+    err "Unsupported OS. Only Arch Linux and macOS are supported."
+    exit 1
+fi
+
+info "Detected OS: $OS"
+
+# ── package manager setup ──────────────────────────────────────────────────────
+setup_pacman() {
+    info "Updating pacman..."
+    sudo pacman -Syu --noconfirm
+}
+
+setup_brew() {
+    if ! has brew; then
+        info "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        eval "$(brew shellenv)"
+    fi
+    info "Updating Homebrew..."
+    brew update
+}
+
+# ── install functions ──────────────────────────────────────────────────────────
+
+install_arch() {
+    # ── Core CLI tools ─────────────────────────────────────────────────────
+    local cli=(
+        fish
+        neovim
+        tmux
+        starship
+        fzf
+        fd
+        bat
+        zoxide
+        gitmux
+        btop
+        htop
+        git
+        curl
+        wget
+        jq
+        ripgrep
+        unzip
+        tar
+        base-devel
+    )
+    info "Installing core CLI tools..."
+    sudo pacman -S --needed --noconfirm "${cli[@]}"
+
+    # ── Terminal & fonts ───────────────────────────────────────────────────
+    local terminal=(
+        alacritty
+        ttf-iosevka-nerd
+    )
+    info "Installing terminal & fonts..."
+    sudo pacman -S --needed --noconfirm "${terminal[@]}"
+
+    # ── Wayland / mango compositor stack ───────────────────────────────────
+    local wayland=(
+        # compositor
+        mango-wm
+
+        # bar & UI
+        waybar
+        wlogout
+        swaync
+        fuzzel
+
+        # wallpaper & lock
+        swaybg
+        swaylock
+        swayidle
+
+        # OSD & audio idle
+        swayosd
+        sway-audio-idle-inhibit
+
+        # clipboard
+        wl-clip-persist
+        cliphist
+        wl-clipboard
+
+        # night light & display
+        wlsunset
+        wlr-randr
+        dimland
+
+        # screenshots
+        grim
+        slurp
+        swappy
+
+        # audio
+        pamixer
+        playerctl
+        wireplumber
+
+        # system tray applets
+        blueman
+        network-manager-applet
+        xfce-polkit
+
+        # input method
+        fcitx5
+        fcitx5-gtk
+        fcitx5-qt
+        fcitx5-configtool
+
+        # cursor theme
+        bibata-cursor-theme
+    )
+    info "Installing Wayland/mango compositor stack..."
+    # Install what's available; skip packages not in official repos
+    for pkg in "${wayland[@]}"; do
+        if pacman -Si "$pkg" &>/dev/null; then
+            sudo pacman -S --needed --noconfirm "$pkg"
+        else
+            warn "Skipping '$pkg' (not in repos — may need AUR)"
+        fi
+    done
+
+    # ── Apps ───────────────────────────────────────────────────────────────
+    local apps=(
+        firefox
+        signal-desktop
+    )
+    info "Installing apps..."
+    for pkg in "${apps[@]}"; do
+        if pacman -Si "$pkg" &>/dev/null; then
+            sudo pacman -S --needed --noconfirm "$pkg"
+        else
+            warn "Skipping '$pkg' (not in repos — may need AUR)"
+        fi
+    done
+}
+
+install_macos() {
+    # ── Core CLI tools ─────────────────────────────────────────────────────
+    local cli=(
+        fish
+        neovim
+        tmux
+        starship
+        fzf
+        fd
+        bat
+        zoxide
+        gitmux
+        btop
+        htop
+        git
+        jq
+        ripgrep
+        curl
+        wget
+    )
+    info "Installing core CLI tools..."
+    brew install "${cli[@]}"
+
+    # ── Terminal & fonts ───────────────────────────────────────────────────
+    info "Installing terminal & fonts..."
+    brew install --cask alacritty
+    brew install --cask font-iosevka-nerd-font
+
+    # ── Apps ───────────────────────────────────────────────────────────────
+    local apps=(
+        firefox
+        signal
+        rectangle
+    )
+    info "Installing apps..."
+    brew install --cask "${apps[@]}"
+}
+
+# ── tmux plugin manager ────────────────────────────────────────────────────────
+install_tpm() {
+    local tpm_dir="$HOME/.tmux/plugins/tpm"
+    if [[ -d "$tpm_dir" ]]; then
+        info "tpm already installed, updating..."
+        (cd "$tpm_dir" && git pull -q)
+    else
+        info "Installing tmux plugin manager (tpm)..."
+        git clone https://github.com/tmux-plugins/tpm "$tpm_dir"
+    fi
+}
+
+# ── fish as default shell ─────────────────────────────────────────────────────
+set_fish_default() {
+    local fish_path
+    fish_path=$(command -v fish)
+    if ! grep -q "$fish_path" /etc/shells 2>/dev/null; then
+        info "Adding fish to /etc/shells..."
+        echo "$fish_path" | sudo tee -a /etc/shells
+    fi
+    if [[ "$SHELL" != *"fish"* ]]; then
+        info "Setting fish as default shell..."
+        sudo chsh -s "$fish_path" "$USER"
+    fi
+}
+
+# ── clone dotfiles if missing ─────────────────────────────────────────────────
+clone_dotfiles() {
+    if [[ ! -d "$HOME/.dotfiles" ]]; then
+        info "Cloning dotfiles bare repo..."
+        git clone --bare git@github.com:Mazon/dotfiles.git "$HOME/.dotfiles"
+        git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" checkout
+        git --git-dir="$HOME/.dotfiles" --work-tree="$HOME" config status.showUntrackedFiles no
+        info "Dotfiles checked out."
+    else
+        info "Dotfiles repo already present."
+    fi
+}
+
+# ── main ───────────────────────────────────────────────────────────────────────
+
+main() {
+    info "=== Bootstrapping system ==="
+
+    # 1. Clone dotfiles first so configs are in place
+    clone_dotfiles
+
+    # 2. Package manager
+    case "$OS" in
+        arch)  setup_pacman ;;
+        macos) setup_brew   ;;
+    esac
+
+    # 3. Install packages
+    case "$OS" in
+        arch)  install_arch  ;;
+        macos) install_macos ;;
+    esac
+
+    # 4. Cross-platform setup
+    install_tpm
+
+    # 5. Optional: set fish as default shell
+    if ! has fish; then
+        warn "fish not found, skipping default shell setup"
+    else
+        read -rp "$(printf "${YELLOW}Set fish as default shell? [y/N]${NC} ")" answer
+        if [[ "$answer" =~ ^[Yy]$ ]]; then
+            set_fish_default
+        fi
+    fi
+
+    # 6. Install tmux plugins
+    info "Installing tmux plugins..."
+    "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+
+    info "=== Done! ==="
+    info "Log out/in or restart to pick up all changes."
+}
+
+main "$@"

@@ -21,12 +21,12 @@ add_newline = true
 [line_break]
 disabled = true
 
-# You can also replace your username with a neat symbol like  to save some space
+# You can also replace your username with a neat symbol like  to save some space
 [username]
 show_always = true
 style_user = "fg:#CAA9E0 bg:#2C2B3C"
 style_root = "fg:#CAA9E0 bg:#2C2B3C"
-format = '[ ]($style)' # $user
+format = '[ ]($style)' # $user
 
 [directory]
 style = "fg:#91B1F0 bg:#313041"
@@ -37,12 +37,17 @@ truncation_symbol = "…/"
 # Here is how you can shorten some long paths by text replacement
 # similar to mapped_locations in Oh My Posh:
 [directory.substitutions]
-"~" = " ~"
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = "󰝚 "
-"Pictures" = " "
-"Videos" = " "
+"~" = " ~"
+"Documents" = " "
+"Downloads" = " "
+"Music" = "🎜 "
+"Pictures" = " "
+"Videos" = " "
+# Keep in mind that the order matters. For example:
+# "Important Documents" = "  "
+# will not be replaced, because "Documents" was already substituted before.
+# So either put "Important Documents" before "Documents" or use the substituted version:
+# "Important  " = "  "
 
 [git_branch]
 symbol = ""
@@ -59,17 +64,17 @@ format = '[$all_status$ahead_behind ]($style)'
 
 
 [aws]
-symbol = " "
+symbol = " "
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [conda]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [dart]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
@@ -79,12 +84,12 @@ style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [docker_context]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol $context]($style) $path '
 
 [elixir]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
@@ -94,7 +99,7 @@ style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [golang]
-symbol = ""
+symbol = "ﳑ"
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
@@ -104,7 +109,7 @@ style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [java]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
@@ -119,22 +124,22 @@ style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [nim]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [nix_shell]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [nodejs]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [perl]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
@@ -149,7 +154,7 @@ style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [ruby]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
@@ -159,12 +164,12 @@ style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [swift]
-symbol = ""
+symbol = "ﯣ"
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = '[ $symbol ($version )]($style)'
 
 [package]
-symbol = ""
+symbol = ""
 style = "fg:#cba6f7 bg:#3E3D4F"
 format = "[ $symbol $version]($style)"
 disabled = true
@@ -177,16 +182,16 @@ format = "[ $duration]($style)"
 disabled = true
 
 [jobs]
-symbol = ""
+symbol = "華"
 style = "fg:#f9e2af bg:#333a56"
 format = "[ $symbol]($style)"
 
 [battery]
-full_symbol = " "
-charging_symbol = " "
-discharging_symbol = " "
-unknown_symbol = " "
-empty_symbol = " "
+full_symbol = " "
+charging_symbol = " "
+discharging_symbol = " "
+unknown_symbol = " "
+empty_symbol = " "
 format = "[ $symbol$percentage ]($style bg:#333a56)"
 disabled = true
 
@@ -207,10 +212,10 @@ style = "bold #a6e3a1"
 disabled = true
 time_format = "%R"
 style = "bg:#3b4363"
-format = '[](fg:#333a56 $style)[  $time ](fg:#94e2d5 $style)'
+format = '[](fg:#333a56 $style)[  $time ](fg:#94e2d5 $style)'
 
 # Last param in the first line/row
 # fg:#3b4363 if time enabled
 [character]
-success_symbol = "[ ](fg:#3E3D4F)"
-error_symbol = "[ ](fg:#3E3D4F)"
+success_symbol = "[ ](fg:#3E3D4F)"
+error_symbol = "[ ](fg:#3E3D4F)"
