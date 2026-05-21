@@ -1,0 +1,5 @@
+.pi
+agent/auth.json
+.env
+agent/observability/history.jsonl
+agent/sessions

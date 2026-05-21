@@ -1,0 +1,45 @@
+{
+  // NOTE: Agent-level permission sections (in agents/*.md) REPLACE these defaults, they do NOT merge.
+  // If an agent defines a `bash:` or `skills:` section, the global defaults for that section are ignored.
+  // Global permission policy for pi-permission-system
+  // Allows read-only tools by default, prompts for destructive operations
+  "defaultPolicy": {
+    "bash": "allow",
+    "tools": "allow",
+    "mcp": "ask",
+    "skills": "allow",
+    "special": "ask"
+  },
+  "bash": {
+    "cd *": "allow",
+    "git *": "allow",
+    "diff": "allow",
+    "echo": "allow",
+    "tree": "allow",
+    "sort": "allow",
+    "uniq": "allow",
+    "fd": "allow",
+    "ag": "allow",
+    "grep": "allow",
+    "ls": "allow",
+    "find": "allow",
+    "*": "ask"
+  },
+  "tools": {
+    // Read-only tools — always allowed
+    "read": "allow",
+    // Task tools — always allowed
+    "TaskCreate": "allow",
+    "TaskList": "allow",
+    "TaskGet": "allow",
+    "TaskUpdate": "allow",
+    "TaskOutput": "allow",
+    "TaskStop": "allow",
+    "TaskExecute": "allow",
+    "get_subagent_*": "allow",
+    "Agent": "allow",
+    // Destructive tools — require confirmation
+    "write": "deny",
+    "edit": "deny"
+  }
+}

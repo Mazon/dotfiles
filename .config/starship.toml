@@ -179,7 +179,7 @@ disabled = true
 min_time = 1
 style = "fg:#f9e2af bg:#333a56"
 format = "[ $duration]($style)"
-disabled = true
+disabled = false
 
 [jobs]
 symbol = "華"

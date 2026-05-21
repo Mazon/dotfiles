@@ -1,0 +1,10 @@
+{
+  "workingSpinner": {
+    "frames": "none",
+    "frameIntervalMs": 0,
+    "verbs": "claude",
+    "verbRotationIntervalMs": 3000,
+    "showCompletionVerb": true,
+    "completionVerbDurationMs": 2000
+  }
+}
