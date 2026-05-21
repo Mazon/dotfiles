@@ -2,7 +2,7 @@
   "workingSpinner": {
     "frames": "none",
     "frameIntervalMs": 0,
-    "verbs": "claude",
+    "verbs": "none",
     "verbRotationIntervalMs": 3000,
     "showCompletionVerb": true,
     "completionVerbDurationMs": 2000

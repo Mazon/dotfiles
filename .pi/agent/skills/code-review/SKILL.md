@@ -20,7 +20,7 @@ Review code like a senior engineer: understand the intent, inspect the diff in c
 ```bash
 /skill:code-review https://github.com/OWNER/REPO/pull/123
 /skill:code-review
-Review the current branch against main
+Review the current branch against the primary branch
 ```
 
 ## Review Target Detection
@@ -60,11 +60,12 @@ Use the severity scale: Critical, High, Medium, Low/Nit.
 ### For Local Branch Reviews
 
 ```
-Review the current branch changes against main. Gather the diff with:
+Review the current branch changes against the primary branch (main, master, or develop). Gather the diff with:
 
 git status --short
 git branch --show-current
-git merge-base HEAD origin/main 2>/dev/null || git merge-base HEAD main
+# Determine primary branch (e.g. main, master, or develop)
+git merge-base HEAD origin/<primary-branch> 2>/dev/null || git merge-base HEAD <primary-branch>
 git diff <merge-base>...HEAD
 
 Then review the changes following your standard review process. Focus on:

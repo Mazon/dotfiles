@@ -1,18 +1,18 @@
 ---
 name: git-merge
-description: Merge unmerged branches into main and update tasks. Use when the user asks to merge a branch, clean up branches, or mentions "merge".
+description: Merge unmerged branches into the primary branch and update tasks. Use when the user asks to merge a branch, clean up branches, or mentions "merge".
 argument-hint: "branch name or 'all' to list options"
 ---
 
 # Merge
 
-Merge completed feature branches into main and update the corresponding tasks.
+Merge completed feature branches into the primary branch and update the corresponding tasks.
 
 ## Delegation
 
 **Always delegate to a Do subagent.** Use the `Agent` tool with:
 - `subagent_type`: "Do"
-- `description`: "Merge branches into main"
+- `description`: "Merge branches into the primary branch"
 - `prompt`: the merge instructions below, customized with the user's argument
 
 ## Building the Subagent Prompt
@@ -23,20 +23,25 @@ Determine the argument:
 - The user's argument: `$ARGUMENTS`
 
 ```
-Merge branches into main and update tasks.
+Merge branches into the primary branch and update tasks.
 
 **Argument:** $ARGUMENTS
 
+## Step 0 — Determine Primary Branch
+
+Run: git remote show origin | sed -n '/HEAD branch/s/.*: //p'
+(If that fails, use `git branch --show-current` or fallback to main/master/develop). Let's call it <primary-branch>.
+
 ## Step 1 — Find Unmerged Branches
 
-Run: git branch --no-merged main
+Run: git branch --no-merged <primary-branch>
 Filter to task branches if any exist, otherwise show all unmerged.
 
 ## Step 2 — If no argument or "all" — List Options
 
 For each unmerged branch:
-- git rev-list --count main..<branch>
-- git diff main...<branch> --stat
+- git rev-list --count <primary-branch>..<branch>
+- git diff <primary-branch>...<branch> --stat
 - Try to extract a task ID from branch name or commit messages.
 
 Report the list and let the user pick which to merge.
@@ -52,8 +57,8 @@ Report the list and let the user pick which to merge.
      - **Do NOT merge.** STOP here.
      - Update the related task (if found) via TaskUpdate with description append: "❌ Merge blocked: build/test failed"
    - If build and tests pass, proceed to merge.
-3. Merge into main:
-   - git checkout main
+3. Merge into the primary branch:
+   - git checkout <primary-branch>
    - git merge --no-ff <branch> -m "Merge branch '<branch>'"
    - If conflicts occur, report them and STOP — do not auto-resolve.
 4. Delete the branch: git branch -d <branch>

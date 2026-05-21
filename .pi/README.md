@@ -30,6 +30,7 @@ Configuration for [pi](https://github.com/nicepkg/pi-coding-agent), the AI codin
 |---------|---------|
 | `/init` | Initialize a project |
 | `/plan <goal>` | Create an implementation plan |
+| `/do <task-id>` | Execute a task (single) or plan (multi) |
 | `/ask <question>` | Route to assistant |
 | `/add-task <title>` | Add a pending task |
 | `/grill-me <topic>` | Interview-style design deep-dive |

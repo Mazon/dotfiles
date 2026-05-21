@@ -5,7 +5,6 @@
 !.gitignore
 
 # === Allowlisted dotfiles ===
-!.zshrc
 !.gitconfig
 
 # === Allow .config subdirs (must allow parent to traverse) ===
@@ -67,6 +66,7 @@
 .pi/agent/pi-crash.log
 .pi/agent/npm
 .pi/agent/bin
+.pi/.pi
 
 # === Sensitive files — always ignore ===
 # SSH keys

@@ -4,30 +4,36 @@
   // Global permission policy for pi-permission-system
   // Allows read-only tools by default, prompts for destructive operations
   "defaultPolicy": {
-    "bash": "allow",
-    "tools": "allow",
+    "bash": "ask",
+    "tools": "ask",
     "mcp": "ask",
-    "skills": "allow",
+    "skills": "ask",
     "special": "ask"
   },
   "bash": {
+    "*": "ask",
     "cd *": "allow",
     "git *": "allow",
-    "diff": "allow",
-    "echo": "allow",
-    "tree": "allow",
-    "sort": "allow",
-    "uniq": "allow",
-    "fd": "allow",
-    "ag": "allow",
-    "grep": "allow",
-    "ls": "allow",
-    "find": "allow",
-    "*": "ask"
+    "diff *": "allow",
+    "echo *": "allow",
+    "tree *": "allow",
+    "sort *": "allow",
+    "uniq *": "allow",
+    "fd *": "allow",
+    "cat *": "allow",
+    "ag *": "allow",
+    "grep *": "allow",
+    "ls *": "allow",
+    "find *": "allow"
   },
   "tools": {
+    "*": "ask",
     // Read-only tools — always allowed
     "read": "allow",
+    "grep": "allow",
+    "find": "allow",
+    "ls": "allow",
+    "parse_plan_waves": "allow",
     // Task tools — always allowed
     "TaskCreate": "allow",
     "TaskList": "allow",
@@ -35,11 +41,15 @@
     "TaskUpdate": "allow",
     "TaskOutput": "allow",
     "TaskStop": "allow",
-    "TaskExecute": "allow",
+    "TaskExecute": "ask",
     "get_subagent_*": "allow",
-    "Agent": "allow",
+    "Agent": "ask",
     // Destructive tools — require confirmation
-    "write": "deny",
-    "edit": "deny"
+    "write": "ask",
+    "edit": "ask"
+  },
+  "skills": {
+    "*": "ask",
+    "consult": "allow"
   }
 }
