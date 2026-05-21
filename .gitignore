@@ -5,7 +5,7 @@
 !.gitignore
 
 # === Allowlisted dotfiles ===
-!.gitconfig
+#!.gitconfig
 
 # === Allow .config subdirs (must allow parent to traverse) ===
 !.config/
