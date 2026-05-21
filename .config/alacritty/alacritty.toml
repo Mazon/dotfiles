@@ -35,3 +35,6 @@ lines = 24
 [window.padding]
 x = 8
 y = 6
+
+[terminal]
+shell = { program = "/usr/bin/fish" }
