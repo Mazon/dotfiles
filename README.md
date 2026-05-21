@@ -2,13 +2,6 @@
 
 Personal dotfiles managed with a [bare Git repo](https://www.atlassian.com/git/tutorials/dotfiles) at `~/.dotfiles`.
 
-```
-git clone --bare git@github.com:Mazon/dotfiles.git $HOME/.dotfiles
-alias dot='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
-dot checkout
-dot config status.showUntrackedFiles no
-```
-
 ## Overview
 
 | Category | Tool | Notes |
