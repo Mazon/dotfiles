@@ -4,6 +4,9 @@
 # === Allow gitignore itself ===
 !.gitignore
 
+# === README ===
+!README.md
+
 # === Allowlisted dotfiles ===
 #!.gitconfig
 
