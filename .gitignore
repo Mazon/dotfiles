@@ -1,0 +1,141 @@
+# === Ignore everything by default ===
+*
+
+# === Allow gitignore itself ===
+!.gitignore
+
+# === Allowlisted dotfiles ===
+!.zshrc
+!.gitconfig
+
+# === Allow .config subdirs (must allow parent to traverse) ===
+!.config/
+.config/*
+
+!.config/nvim/
+!.config/nvim/**
+
+!.config/alacritty/
+!.config/alacritty/**
+
+!.config/fuzzel/
+!.config/fuzzel/**
+
+!.config/mango/
+!.config/mango/**
+
+!.config/tmux/
+!.config/tmux/**
+
+!.config/waybar/
+!.config/waybar/**
+
+!.config/wlogout/
+!.config/wlogout/**
+
+!.config/swaync/
+!.config/swaync/**
+
+!.config/starship.toml
+
+!.config/btop/
+!.config/btop/**
+
+!.config/rofi/
+!.config/rofi/**
+
+!.config/htop/
+!.config/htop/**
+
+# local bin
+!.local/
+.local/*
+!.local/bin/
+!.local/bin/**
+
+# pi (with selective exclusions for sensitive/generated content)
+!.pi/
+!.pi/**
+.pi/agent/settings.json
+.pi/agent/auth.json
+.pi/tasks
+.pi/agent/observability/history.jsonl
+.pi/agent/sessions
+.pi/agent/pi-crash.log
+.pi/agent/npm
+.pi/agent/bin
+
+# === Sensitive files — always ignore ===
+# SSH keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+*.pem
+*.key
+
+# Credentials / secrets
+.env
+.env.*
+credentials.json
+secrets.json
+*.secret
+.netrc
+.npmrc
+.pypirc
+.zshenv
+
+# Auth / tokens
+.authinfo
+.authinfo.gpg
+.tokens
+*.token
+
+# GPG
+gnupg/
+.gnupg/
+
+# SSH config (may contain private keys inline)
+.ssh/
+
+# Browser data
+.mozilla/
+.google-chrome/
+.brave/
+
+# Cloud provider creds
+.aws/
+.azure/
+.gcloud/
+.config/gcloud/
+
+# Local / cache / temp
+.cache/
+.tmp/
+.temp/
+*.swp
+*.swo
+*~
+
+# Shell history (may contain secrets in commands)
+.bash_history
+.zsh_history
+.zHistory
+.python_history
+.node_repl_history
+
+# Git credentials store
+.git-credentials
+.gitconfig.local
+
+# Other common sensitive
+.gnupg
+.password-store
+.pass
+.kwallet
+# Android debug keys
+.android/
+
+# Android debug keys
+.android/adbkey
+.android/adbkey.pub
