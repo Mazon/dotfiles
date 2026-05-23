@@ -1,18 +1,12 @@
 ---
+name: Assistant
 description: General-purpose AI assistant for chat, questions, writing, analysis, and non-coding tasks
+run_in_background: true
 enabled: true
-permission:
-  mcp: deny
-  skills:
-    "consult": allow
-    "*": deny
-  tools:
-    read: allow
-    write: deny
-    edit: deny
-    bash: ask
-  special:
-    external_directory: ask
+prompt_mode: replace
+extensions: false
+skills: false
+tools: read, bash
 ---
 
 # General Assistant

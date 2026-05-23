@@ -1,0 +1,18 @@
+{
+  "nextId": 6,
+  "tasks": [
+    {
+      "id": "5",
+      "subject": "Investigate widget conflict between agent-team and pi-subagents",
+      "description": "Investigation completed. See analysis below.",
+      "status": "completed",
+      "metadata": {
+        "agentType": "general-purpose"
+      },
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1779543471602,
+      "updatedAt": 1779543648328
+    }
+  ]
+}

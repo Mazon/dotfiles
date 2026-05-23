@@ -1,0 +1,42 @@
+{
+  "nextId": 4,
+  "tasks": [
+    {
+      "id": "1",
+      "subject": "Explore codebase for spawn options usage",
+      "description": "Search the entire codebase for spawn options, systemPrompt, and tools being passed as spawn options to find the actual locations that need fixing. The plan references extensions/agent-team.ts which doesn't exist - need to find the real file.",
+      "status": "completed",
+      "activeForm": "Exploring codebase for spawn options",
+      "metadata": {},
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1779545718194,
+      "updatedAt": 1779545862367,
+      "owner": "Explore"
+    },
+    {
+      "id": "2",
+      "subject": "Fix spawn options - remove unused properties and add proper typing",
+      "description": "INVESTIGATION COMPLETE — No code changes needed. The referenced file and properties do not exist in this codebase. See findings below.",
+      "status": "completed",
+      "activeForm": "Fixing spawn options",
+      "metadata": {},
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1779545722361,
+      "updatedAt": 1779545866791
+    },
+    {
+      "id": "3",
+      "subject": "Verify code compiles cleanly",
+      "description": "No compilation verification needed — no code changes were made because the referenced code doesn't exist.",
+      "status": "completed",
+      "activeForm": "Verifying compilation",
+      "metadata": {},
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1779545724979,
+      "updatedAt": 1779545869453
+    }
+  ]
+}

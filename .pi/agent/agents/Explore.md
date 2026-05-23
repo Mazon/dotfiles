@@ -1,39 +1,12 @@
 ---
+name: Explore
 description: Explore Agent - fast read-only codebase search and pattern discovery
+run_in_background: true
 enabled: true
-permission:
-  tools:
-    read: allow
-    bash: allow
-    write: deny
-    edit: deny
-  bash:
-    "*": ask
-    "cd": allow
-    "git *": allow
-    "diff": allow
-    "echo *": allow
-    "tree": allow
-    "sort *": allow
-    "uniq *": allow
-    "fd *": allow
-    "ag *": allow
-    "grep *": allow
-    "ls *": allow
-    "find *": allow
-    "rg *": allow
-    "cat *": allow
-    "head *": allow
-    "tail *": allow
-    "wc *": allow
-    "which *": allow
-    "file *": allow
-    "pwd": allow
-  skills:
-    "consult": allow
-  mcp: deny
-  special:
-    external_directory: ask
+prompt_mode: replace
+extensions: false
+skills: false
+tools: read, bash
 ---
 
 # Explore Agent

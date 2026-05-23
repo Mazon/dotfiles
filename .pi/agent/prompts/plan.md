@@ -20,7 +20,12 @@ Use the `Agent` tool with:
 - `description`: "Plan: <brief summary of the goal>"
 - `prompt`: the full goal text above, prefixed with: "Analyze this goal and create a comprehensive, step-by-step implementation plan. Explore the codebase to understand the current architecture and dependencies. Break the plan into concrete, ordered steps with clear acceptance criteria. Identify risks, edge cases, and dependencies between steps.\n\n"
 
-Do NOT create the plan yourself. Delegate entirely to the subagent. Once the subagent finishes, present the plan to the user for review and ask if they'd like to proceed with execution using /do.
+The Plan agent is read-only and will return the full plan in its response. After the subagent finishes:
+
+1. **Present the summary** — Show the Planning Summary section to the user.
+2. **Suggest next steps** — Ask the user if they'd like to proceed by running `/save-plan` to save the plan to a file and populate the task tracker.
+
+Do NOT save the plan yourself. Delegate saving and task creation to `/save-plan`.
 
 ---
 
@@ -44,12 +49,9 @@ Use the `Agent` tool with:
 - `subagent_type`: "Plan"
 - `description`: "Plan task #<ID>: <subject>"
 - `prompt`: the goal text from Step 2, prefixed with: "Analyze this goal and create a comprehensive, step-by-step implementation plan. Explore the codebase to understand the current architecture and dependencies. Break the plan into concrete, ordered steps with clear acceptance criteria. Identify risks, edge cases, and dependencies between steps.\n\n"
-- **Important**: Instruct the subagent to save the resulting plan file to `.pi/plans/task-<ID>-<slug>.md`, where `<slug>` is derived from the task subject: lowercase, spaces replaced with hyphens, all special characters removed (only a-z, 0-9, and hyphens). For example, task #5 with subject "Fix login bug" → `.pi/plans/task-5-fix-login-bug.md`.
 
-**Step 4 — Update the task**
+The Plan agent is read-only and will return the full plan in its response. **You are responsible for persisting the plan.**
 
-After the subagent finishes and the plan file is saved, call `TaskUpdate` with the task ID and set `metadata.planPath` to the saved plan file path (e.g. `.pi/plans/task-5-fix-login-bug.md`).
+**Step 4 — Present to user**
 
-**Step 5 — Present to user**
-
-Present the plan to the user for review. Include the task ID and subject in your summary. Ask if they'd like to proceed with execution using `/do`.
+Show the Planning Summary to the user. Explain that the plan is ready, and ask if they'd like to proceed by running `/save-plan` to persist the plan and create the required execution tasks in the task tracker.

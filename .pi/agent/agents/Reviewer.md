@@ -1,47 +1,12 @@
 ---
+name: Reviewer
 description: Reviewer - conservative code review focused on correctness and security
+run_in_background: true
 enabled: true
-permission:
-  mcp: deny
-  skills:
-    "consult": allow
-    "review-task": allow
-    "*": deny
-  tools:
-    TaskCreate: allow
-    TaskList: allow
-    TaskGet: allow
-    TaskUpdate: allow
-    TaskOutput: allow
-    TaskStop: allow
-    read: allow
-    write: deny
-    edit: deny
-    bash: allow
-  bash:
-    "*": ask
-    "cd": allow
-    "git *": allow
-    "diff": allow
-    "echo *": allow
-    "tree": allow
-    "sort *": allow
-    "uniq *": allow
-    "fd *": allow
-    "ag *": allow
-    "grep *": allow
-    "ls *": allow
-    "find *": allow
-    "rg *": allow
-    "cat *": allow
-    "head *": allow
-    "tail *": allow
-    "wc *": allow
-    "which *": allow
-    "file *": allow
-    "pwd": allow
-  special:
-    external_directory: ask
+prompt_mode: replace
+extensions: false
+skills: false
+tools: TaskCreate, TaskList, TaskGet, TaskUpdate, TaskOutput, TaskStop, read, bash
 ---
 
 # Reviewer

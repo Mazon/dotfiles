@@ -1,0 +1,20 @@
+{
+  "nextId": 7,
+  "tasks": [
+    {
+      "id": "6",
+      "subject": "Enhance widget renderCard() for live activity display",
+      "description": "You need to modify extensions/agent-team.ts to enhance the renderCard() function for live activity display. Here are the detailed steps:\n\n## Step 1: Explore the file\nRead extensions/agent-team.ts to understand the current code. Also read .pi/plans/plan-fix-agent-team-widgets.md for the full plan.\n\n## Step 2: Add turnCount to AgentState interface\nFind the AgentState interface (around line 39) and add `turnCount: number;` after `toolCount: number;`\n\n## Step 3: Initialize turnCount everywhere AgentState is created\nSearch for ALL occurrences of `toolCount: 0` in the file. At each location, add `turnCount: 0,` right after the toolCount line. There may be multiple locations - find them all.\n\n## Step 4: Increment turnCount in onTurnEnd callback\nFind the onTurnEnd callback (around line 505). Add `state.turnCount++;` inside it, incrementing the turn counter each time a turn ends.\n\n## Step 5: Update renderCard() function\nUpdate the renderCard() function (around line 331) with these changes:\n\n### 5a. Animated spinner for running agents\nReplace the static `●` status indicator for running agents with an animated spinner using characters `◐◓◑◒` cycling via `const spinnerChars = \"◐◓◑◒\"; const spinner = spinnerChars[Math.floor(Date.now() / 500) % 4];`\n\n### 5b. Show tool count\nDisplay tool count as `🔧 ${state.toolCount}` somewhere visible - either next to status or as a separate line element.\n\n### 5c. Show turn count\nDisplay turn count as `Turn ${state.turnCount}` somewhere visible.\n\n### 5d. Differentiate work line\n- When `status === \"idle\"` or `status === \"done\"`: show the task description (from state.task or def.description)\n- When `status === \"running\"`: prefix the current activity with `▸ ` to indicate live activity. If lastWork is set, show it with accent color/bold.\n\n### 5e. Keep compact\nThe card should remain compact for grid layout. Don't add too many lines - combine info where possible (e.g., status line could show: `spinner Running · 12s · 🔧 5 · Turn 3`)\n\n## Step 6: Verify\nAfter making all changes, verify by:\n1. Reading the modified file to confirm all changes are correct\n2. Check that TypeScript compiles: `npx tsc --noEmit extensions/agent-team.ts` or similar\n3. Ensure there are no syntax errors\n\n## Acceptance Criteria:\n- Running agents show animated spinner character (◐◓◑◒ cycling)\n- Tool use count (🔧 N) is visible and updates in real-time\n- Turn count is displayed\n- Idle agents show their description; running agents show current activity with ▸ prefix\n- Card remains compact\n- Code compiles without errors",
+      "status": "in_progress",
+      "activeForm": "Implementing renderCard enhancements",
+      "metadata": {
+        "agentType": "Do"
+      },
+      "blocks": [],
+      "blockedBy": [],
+      "createdAt": 1779547099353,
+      "updatedAt": 1779547119836,
+      "owner": "Do"
+    }
+  ]
+}
