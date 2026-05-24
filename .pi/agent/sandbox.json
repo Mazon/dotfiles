@@ -1,11 +1,11 @@
 {
   "enabled": true,
   "network": {
-    "allowedDomains": ["github.com", "*.github.com", "npmjs.org", "*.npmjs.org"],
+    "allowedDomains": ["nordiclight.org"],
     "deniedDomains": []
   },
   "filesystem": {
-    "denyRead":  [".env", ".env.*", "*.pem", "*.key", "~/.ssh", "~/.aws", "~/.gnupg"],
+    "denyRead":  [".env", ".env.*", "*.pem", "*.key", "~/.ssh", "~/.aws", "~/.gnupg", "~/.config"],
     "allowRead": [],
     "allowWrite": [".", "/tmp", "~/.npm", "~/.cache", "~/.cargo/registry", "~/.gradle/caches", "~/.m2/repository"],
     "denyWrite": [".env", ".env.*", "*.pem", "*.key",

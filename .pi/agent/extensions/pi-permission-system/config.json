@@ -6,8 +6,6 @@
 
   "permission": {
     "*": "ask",
-    "path": { "*": "allow" },
-
     "read": "allow",
     "grep": "allow",
     "find": "allow",
@@ -61,7 +59,7 @@
       "jq *": "allow",
       "yq *": "allow",
       "bat *": "allow",
-      "printf *": "allow",
+      "printf *": "ask",
       "file *": "allow",
       "stat *": "allow",
       "du *": "allow",
@@ -75,7 +73,7 @@
       "sha1sum *": "allow",
       "xxd *": "allow",
       "hexdump *": "allow",
-      "base64 *": "allow",
+      "base64 *": "ask",
       "od *": "allow",
       "pwd": "allow",
       "whoami": "allow",
@@ -85,8 +83,8 @@
       "hostname": "allow",
       "which *": "allow",
       "type *": "allow",
-      "env": "allow",
-      "printenv *": "allow",
+      "env": "ask",
+      "printenv *": "ask",
       "id": "allow",
       "seq *": "allow",
       "test *": "allow",
