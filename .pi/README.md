@@ -58,7 +58,7 @@ Each agent defines its own permission block that **replaces** (not merges with) 
 | Agent | Write | Edit | Bash | Isolation |
 |-------|-------|------|------|-----------|
 | **Do** | ✅ Allow | ✅ Allow | Allow (npm, cargo, git, python…) | **Worktree** — changes in separate git worktree, merged on success |
-| **Plan** | ✅ Plans only | ❌ Deny | Deny (`*`) / Allow (git, rg, cat…) | Background |
+| **Plan** | Ask | ❌ Deny | Deny (`*`) / Allow (git, rg, cat…) | Background |
 | **Explore** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
 | **Reviewer** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
 | **Assistant** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
