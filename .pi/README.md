@@ -1,23 +1,19 @@
-# ~/.pi
-
 **Secure, agent-based AI coding configuration for [pi](https://github.com/nicepkg/pi-coding-agent)**
 
-🔒 Sandboxed · 🛡️ Permission-Gated · 🌳 Worktree Isolated · 🎨 Aurora Abyss Theme
+Sandboxed | Permission-Gated | Worktree Isolated | Aurora Abyss Theme
 
 ---
 
-## Quick Start — Core Workflow
+## Usage
 
 ```text
 /idea "Fix login bug"    →  capture as a pending task
-/plan #1                 →  explore codebase, save plan, create dependency-linked tasks
-/do-next                 →  auto-pick & execute the next unblocked task in a worktree
-/do-all                  →  run all pending tasks in parallel, wave by wave
+/plan                    →  explore codebase, save plan, create dependency-linked tasks
+/do                      →  The executor commands
 /skill:review            →  review changes for correctness & security
-/skill:git-pr            →  commit + push + open pull request
 ```
 
-> Start with `/idea`, refine with `/plan`, execute with `/do-next` or `/do-all`, ship with `/skill:git-pr`.
+> Start with `/idea`, refine with `/plan`, execute with `/do`, ship with `/skill:git-pr`.
 
 ---
 
@@ -25,7 +21,7 @@
 
 > Every agent action is constrained by three independent layers: OS-level sandboxing, a default-deny permission system, and per-agent isolation policies.
 
-### 🔒 OS-Level Sandbox (Bubblewrap)
+### OS-Level Sandbox
 
 | Layer | Policy |
 |-------|--------|
@@ -40,42 +36,29 @@
 
 **Sensitive files (read-denied):** `.env`, `.env.*`, `*.pem`, `*.key`, `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config`
 
-### 🛡️ Permission System
+### Permission System
+
+Whitelist only.
 
 | Rule | Access |
 |------|--------|
 | Default (`*`) | **Ask** — every action requires approval |
-| `rm -rf *` | **Deny** — non-overridable, even for Do agent |
-| `sudo *` | **Deny** — non-overridable |
 | Read tools (`read`, `grep`, `find`) | Allow |
 | Write / Edit | Ask (global), overridden per-agent |
-| Yolo mode | **Disabled** |
 
 Each agent defines its own permission block that **replaces** (not merges with) the global defaults — agents get only the capabilities they need.
 
-### 🌳 Agent Isolation
+### Agent Isolation
 
 | Agent | Write | Edit | Bash | Isolation |
 |-------|-------|------|------|-----------|
-| **Do** | ✅ Allow | ✅ Allow | Allow (npm, cargo, git, python…) | **Worktree** — changes in separate git worktree, merged on success |
-| **Plan** | Ask | ❌ Deny | Deny (`*`) / Allow (git, rg, cat…) | Background |
-| **Explore** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
-| **Reviewer** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
-| **Assistant** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
+| **Do** | Allow | Allow | Allow (npm, cargo, git, python...) | **Worktree** -- changes in separate git worktree, merged on success |
+| **Plan** | Ask (`*`) | Deny | Deny (`*`) / Allow (git, rg, cat...) | Background |
+| **Explore** | Deny | Deny | Ask (`*`) | Background |
+| **Reviewer** | Deny | Deny | Ask (`*`) | Background |
+| **Assistant** | Deny | Deny | Ask (`*`) | Background |
 
 > The Do agent is the **only** agent that can modify your codebase — and it does so in an isolated git worktree that must be merged explicitly.
-
----
-
-## Agents
-
-| Agent | Purpose | File Access |
-|-------|---------|-------------|
-| **Do** | Implement, build, test — executes tasks | ✅ Full (worktree) |
-| **Plan** | Explore codebase → save plan → create tasks | 📝 Plans only |
-| **Explore** | Fast read-only code search & pattern discovery | 🔒 Read-only |
-| **Reviewer** | Code review — correctness & security | 🔒 Read-only |
-| **Assistant** | Chat, Q&A, writing, analysis | 🔒 Read-only |
 
 ---
 
@@ -100,25 +83,42 @@ Each agent defines its own permission block that **replaces** (not merges with) 
 |-------|-------------|
 | `git-commit` | Stage all changes + commit with auto-generated message |
 | `git-pr` | Branch + commit + push + open pull request |
-| `git-merge` | Verify build → merge branch → update task status |
-| `review` | Structured code review with severity ratings (Critical → Info) |
-| `debug` | Root-cause analysis → creates independent fix tasks |
+| `git-merge` | Verify build, merge branch, update task status |
+| `review` | Structured code review with severity ratings (Critical to Info) |
+| `debug` | Root-cause analysis, creates independent fix tasks |
 | `ask-user` | Structured decision handshake for high-stakes choices |
-| `librarian` | Research open-source libraries with source code citations |
+
+---
+
+## Misc Extensions
+
+Extensions add custom commands, tools, themes, and UI enhancements. The following are installed and active:
+
+### pi-usage-stats
+
+Tracks token and cost usage per session and per project. Data is stored locally under `agent/extensions/pi-usage-stats/logs/`.
+
+### split-editor
+
+Configures the integrated editor split for file review during agent sessions. Uses `nvim` in a vertical 50% split.
+
 
 ---
 
 ## Models
 
+Currently configured providers are z.ai, Google Gemini, and llama.cpp. The default model is `glm-5.1` via z.ai. Available models:
+
 | Provider | Model | Notes |
 |----------|-------|-------|
-| **zai** *(default)* | `glm-5.1` | Default model, high thinking |
-| zai | `glm-5-turbo` | Fast variant |
-| zai | `glm-5v-turbo` | Vision |
-| google | `gemini-3.1-pro-preview` | |
-| google | `gemini-3.5-flash` | |
-| google | `gemini-3.1-flash-lite` | |
-| llama-cpp *(local)* | Auto-discovered | Local models via llama.cpp server |
+| z.ai | glm-5.1 | Default, high reasoning |
+| z.ai | glm-5-turbo | Fast responses |
+| z.ai | glm-5v-turbo | Vision-capable |
+| Google | gemini-3.1-pro-preview | Pro-tier Gemini |
+| Google | gemini-3.1-flash-lite | Lightweight flash |
+| Google | gemini-3.5-flash | Latest flash model |
+
+> The exact set of models will vary by user and available API keys.
 
 ---
 
@@ -126,13 +126,10 @@ Each agent defines its own permission block that **replaces** (not merges with) 
 
 | Setting | Value | Why |
 |---------|-------|-----|
-| Theme | **Aurora Abyss** | Custom dark theme — deep navy base, lavender primary, teal secondary |
-| Default model | `zai/glm-5.1` | High thinking enabled for deep reasoning |
 | Compaction | Disabled | Full conversation context retained |
 | Thinking block | Hidden | Clean output, thinking happens silently |
-| Web search | `summary-review` | Fetch → summarize → review workflow |
-| Follow-up mode | `one-at-a-time` | One question at a time, no barrage |
-| Double-escape | Interrupt | Two taps kills the running agent |
-| Spinner | Minimal | No animation, no verb display |
-
-> **Theme colors:** `#191724` base · `#c4a7e7` primary · `#9ccfd8` secondary · `#eb6f92` accent · `#f6c177` warning
+| Web search | `summary-review` | Fetch, summarize, review workflow |
+| Theme | Aurora Abyss | Custom dark pastel palette |
+| Double-escape | `interrupt` | Two quick escapes interrupts the running agent |
+| Hardware cursor | Disabled | Uses software cursor for terminal compatibility |
+| Install telemetry | Disabled | No data sent on package installs |
