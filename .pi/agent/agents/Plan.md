@@ -8,8 +8,8 @@ extensions: false
 skills: false
 tools: TaskCreate, TaskList, TaskGet, TaskUpdate, read, grep, find, ls, bash, write
 permission:
-  write: allow
-  edit: deny
+  write: ask
+  edit: ask
   bash:
     "*": ask
 ---
