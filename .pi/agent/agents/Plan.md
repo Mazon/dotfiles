@@ -7,6 +7,11 @@ prompt_mode: replace
 extensions: false
 skills: false
 tools: read, grep, find, ls, bash
+permission:
+  write: deny
+  edit: deny
+  bash:
+    "*": ask
 ---
 
 # Planning Agent

@@ -6,7 +6,12 @@ enabled: true
 prompt_mode: replace
 extensions: false
 skills: false
-tools: read, bash
+tools: read, grep, find, ls, bash
+permission:
+  write: deny
+  edit: deny
+  bash:
+    "*": ask
 ---
 
 # Explore Agent

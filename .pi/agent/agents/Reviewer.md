@@ -6,7 +6,12 @@ enabled: true
 prompt_mode: replace
 extensions: false
 skills: false
-tools: TaskCreate, TaskList, TaskGet, TaskUpdate, TaskOutput, TaskStop, read, bash
+tools: TaskCreate, TaskList, TaskGet, TaskUpdate, TaskOutput, TaskStop, read, grep, find, ls, bash
+permission:
+  write: deny
+  edit: deny
+  bash:
+    "*": ask
 ---
 
 # Reviewer

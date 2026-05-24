@@ -8,6 +8,52 @@ prompt_mode: replace
 extensions: true
 skills: true
 tools: TaskCreate, TaskList, TaskGet, TaskUpdate, TaskOutput, TaskStop, TaskExecute, read, bash, edit, write
+permission:
+  write: allow
+  edit: allow
+  bash:
+    npm *: allow
+    npx *: allow
+    pnpm *: allow
+    yarn *: allow
+    node *: allow
+    tsc *: allow
+    tsx *: allow
+    jest *: allow
+    vitest *: allow
+    make *: allow
+    cmake *: allow
+    cargo *: allow
+    go *: allow
+    python *: allow
+    pip *: allow
+    uv *: allow
+    cp *: allow
+    mv *: allow
+    mkdir *: allow
+    touch *: allow
+    chmod *: allow
+    ln *: allow
+    tar *: allow
+    unzip *: allow
+    curl *: ask
+    wget *: ask
+    git add *: allow
+    git commit *: allow
+    git checkout *: allow
+    git stash *: allow
+    git pull *: allow
+    git push *: ask
+    git merge *: allow
+    git rebase *: allow
+    git reset *: ask
+    git cherry-pick *: allow
+    git branch *: allow
+    git tag *: allow
+    git log *: allow
+    git show *: allow
+    git rm *: allow
+    docker *: ask
 ---
 
 # Task Execution Agent

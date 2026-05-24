@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "network": {
+    "allowedDomains": ["github.com", "*.github.com", "npmjs.org", "*.npmjs.org"],
+    "deniedDomains": []
+  },
+  "filesystem": {
+    "denyRead":  [".env", ".env.*", "*.pem", "*.key", "~/.ssh", "~/.aws", "~/.gnupg"],
+    "allowRead": [],
+    "allowWrite": [".", "/tmp", "~/.npm", "~/.cache", "~/.cargo/registry", "~/.gradle/caches", "~/.m2/repository"],
+    "denyWrite": [".env", ".env.*", "*.pem", "*.key",
+                  "~/.bashrc", "~/.zshrc", "~/.profile", "~/.bash_profile",
+                  "~/.ssh", "~/.gitconfig",
+                  "~/Library/LaunchAgents", "~/Library/LaunchDaemons"]
+  }
+}
+

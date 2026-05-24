@@ -70,6 +70,8 @@
 .pi/agent/npm
 .pi/agent/bin
 .pi/.pi
+.pi/agent/extensions/pi-permission-system/logs/pi-permission-system-permission-review.jsonl
+
 
 # === Sensitive files — always ignore ===
 # SSH keys
