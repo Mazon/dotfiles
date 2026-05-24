@@ -1,21 +1,22 @@
 /**
  * Do Executor Extension — Unified plan execution via the Agent tool
  *
- * Registers /do command with modes:
- *   /do <task-id>               — execute task by ID
+ * Registers commands:
+ *   /do <task-id>    — execute a single task by ID
+ *   /do-next         — find and execute the next unblocked pending task
+ *   /do-all          — execute all pending tasks in dependency/wave order
  *
  * Task IDs can be bare numbers (5) or #prefixed (#5).
  *
- * The extension programmatically generates precise
- * instructions for the LLM to call the Agent tool. After completion,
- * it instructs the LLM to merge worktree branches into main, clean up merged branches,
- * to code-review.
+ * The extension programmatically generates precise instructions for the LLM
+ * to call the Agent tool with worktree isolation. After completion, it
+ * instructs the LLM to merge worktree branches, clean up, and review.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { readFileSync, existsSync, readdirSync } from "node:fs";
-import { resolve, basename, join } from "node:path";
+import { readFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 
 // --- Types ---
 
@@ -131,6 +132,36 @@ function escapeRegex(str: string): string {
 	return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+// --- Shared Helpers ---
+
+function buildTaskExecutionPrompt(taskId: number, subject: string, description: string, planPath?: string): string {
+	return (
+		`Execute task #${taskId}: ${subject}\n\n` +
+		`${description}\n\n` +
+		(planPath ? `Full plan context is available at: ${planPath}\n\n` : "") +
+		`Implement this step by step. After each step, verify before proceeding. Report a summary when complete.`
+	);
+}
+
+function buildAgentInstructions(taskId: number, planPath?: string): string {
+	return (
+		`Execute task #${taskId}.\n\n` +
+		`Steps:\n\n` +
+		`1. Call \`TaskGet\` with task ID ${taskId} to get the task's subject, description, and metadata.\n` +
+		`2. Launch a single Do agent:\n` +
+		`   - \`subagent_type\`: "Do"\n` +
+		`   - \`description\`: "<task subject>"\n` +
+		`   - \`prompt\`: The task subject + description + plan path reference\n` +
+		`   - \`run_in_background\`: true\n` +
+		`   - \`isolation\`: "worktree"\n\n` +
+		`3. Wait for the agent to complete using \`get_subagent_result\` with \`wait: true\`.\n` +
+		`4. After completion:\n` +
+		`   - Merge the worktree branch into the primary branch (main/master/develop)\n` +
+		`   - Call \`TaskUpdate\` with \`{ "taskId": "${taskId}", "status": "completed" }\`\n` +
+		`   - Report a summary`
+	);
+}
+
 // --- Extension ---
 
 export default function (pi: ExtensionAPI) {
@@ -183,43 +214,83 @@ export default function (pi: ExtensionAPI) {
 		},
 	});
 
-	// Register /do command
+	// --- /do <task-id> ---
 	pi.registerCommand("do", {
-		description: "Execute a task: /do <task-id>. Task IDs can be bare numbers (5) or #prefixed (#5).",
+		description:
+			"Execute a single task by ID. Usage: /do <task-id>. Task IDs can be bare numbers (5) or #prefixed (#5).",
 		handler: async (args, ctx) => {
 			const trimmed = (args ?? "").trim();
 			const taskIdMatch = trimmed.match(/^#?(\d+)$/);
-			
+
 			if (!taskIdMatch) {
 				ctx.ui.notify(
 					"Usage: /do <task-id>\n" +
-					"Examples:\n" +
-					"  /do 5    — execute task #5\n" +
-					"  /do #12  — execute task #12",
-					"warning"
+						"Examples:\n" +
+						"  /do 5    — execute task #5\n" +
+						"  /do #12  — execute task #12\n\n" +
+						"Also available:\n" +
+						"  /do-next — execute the next available task\n" +
+						"  /do-all  — execute all pending tasks in wave order",
+					"warning",
 				);
 				return;
 			}
-			
+
 			const taskId = parseInt(taskIdMatch[1], 10);
-			
+			pi.sendUserMessage(buildAgentInstructions(taskId));
+		},
+	});
+
+	// --- /do-next ---
+	pi.registerCommand("do-next", {
+		description:
+			"Find the next unblocked pending task and execute it. If no tasks are available, reports the current board status.",
+		handler: async (_args, _ctx) => {
 			pi.sendUserMessage(
-				`Execute task #${taskId}.\n\n` +
-				`Execute these steps:\n\n` +
-				`1. Call \`TaskGet\` with task ID ${taskId} to get the task's subject, description, and metadata.\n` +
-				`2. Launch a single Do agent directly using the task's details:\n\n` +
-				`   Use the \`Agent\` tool with:\n` +
-				`   - \`subagent_type\`: "Do"\n` +
-				`   - \`description\`: "<task subject>"\n` +
-				`   - \`prompt\`: "Execute this task: <task subject>\\n\\n<task description>\\n\\n<if metadata.planPath exists, include: 'Full plan context is available at: metadata.planPath'>\\n\\nImplement this step by step. After each step, verify before proceeding. Report a summary when complete."\n` +
-				`   - \`isBackground\`: true\n` +
-				`   - \`isolation\`: "worktree"\n\n` +
-				`3. Wait for the agent to complete using \`get_subagent_result\` with \`wait: true\`.\n` +
-				`4. After the agent completes:\n` +
-				`   - Determine the primary branch (e.g. by running \`git branch --show-current\` before, or falling back to main/master/develop)\n` +
-				`   - Merge the worktree branch into the primary branch\n` +
-				`   - Call \`TaskUpdate\` with \`{ "taskId": "${taskId}", "status": "completed" }\`\n` +
-				`   - Report a summary`
+				"Find and execute the next available task.\n\n" +
+					"Steps:\n\n" +
+					"1. Call `TaskList` to get all tasks.\n" +
+					"2. Find the first task that is `pending` with an empty `blockedBy` list (no unmet dependencies).\n" +
+					"3. If found:\n" +
+					"   - Call `TaskGet` to get full details\n" +
+					"   - Launch a Do agent with worktree isolation\n" +
+					"   - Wait for completion, merge branch, mark task completed\n" +
+					"   - Report summary\n" +
+					"4. If no unblocked pending task found:\n" +
+					"   - Report which tasks are pending and what they're blocked by\n" +
+					"   - Suggest: add tasks with /idea, plan with /plan, or check /tasks",
+			);
+		},
+	});
+
+	// --- /do-all ---
+	pi.registerCommand("do-all", {
+		description:
+			"Execute all pending tasks respecting dependency/wave order. Tasks within the same wave run in parallel. Stops on failure.",
+		handler: async (_args, _ctx) => {
+			pi.sendUserMessage(
+				"Execute all pending tasks in wave/dependency order.\n\n" +
+					"Steps:\n\n" +
+					"1. Call `TaskList` to get all tasks with their statuses and dependencies.\n" +
+					"2. Group pending tasks by their wave/dependency level:\n" +
+					"   - Tasks with no dependencies → Wave 1 (can run in parallel)\n" +
+					"   - Tasks blocked only by Wave 1 tasks → Wave 2\n" +
+					"   - And so on...\n" +
+					"3. If no pending tasks, report that and stop.\n" +
+					"4. For each wave, in order:\n" +
+					"   a. Launch Do agents for all tasks in the wave simultaneously (run_in_background: true, isolation: worktree)\n" +
+					"   b. Wait for all agents in the wave to complete using `get_subagent_result`\n" +
+					"   c. If any agent fails:\n" +
+					"      - Report the failure\n" +
+					"      - Mark the failed task as in_progress with error details\n" +
+					"      - STOP — do not proceed to the next wave\n" +
+					"   d. For each successful agent:\n" +
+					"      - Merge the worktree branch into the primary branch\n" +
+					"      - Call `TaskUpdate` with status: completed\n" +
+					"5. After all waves complete, report a full summary:\n" +
+					"   - Tasks completed vs failed\n" +
+					"   - Suggest running /skill:review on completed tasks\n\n" +
+					"Important: Within a wave, launch all agents FIRST, then wait for all of them. Do not launch and wait one at a time within a wave.",
 			);
 		},
 	});

@@ -1,172 +1,138 @@
-# ~/.pi — Personal Pi Configuration
+# ~/.pi
 
-Configuration for [pi](https://github.com/nicepkg/pi-coding-agent), the AI coding agent.
+**Secure, agent-based AI coding configuration for [pi](https://github.com/nicepkg/pi-coding-agent)**
+
+🔒 Sandboxed · 🛡️ Permission-Gated · 🌳 Worktree Isolated · 🎨 Aurora Abyss Theme
+
+---
+
+## Quick Start — Core Workflow
+
+```text
+/idea "Fix login bug"    →  capture as a pending task
+/plan #1                 →  explore codebase, save plan, create dependency-linked tasks
+/do-next                 →  auto-pick & execute the next unblocked task in a worktree
+/do-all                  →  run all pending tasks in parallel, wave by wave
+/skill:review            →  review changes for correctness & security
+/skill:git-pr            →  commit + push + open pull request
+```
+
+> Start with `/idea`, refine with `/plan`, execute with `/do-next` or `/do-all`, ship with `/skill:git-pr`.
+
+---
+
+## Security Architecture
+
+> Every agent action is constrained by three independent layers: OS-level sandboxing, a default-deny permission system, and per-agent isolation policies.
+
+### 🔒 OS-Level Sandbox (Bubblewrap)
+
+| Layer | Policy |
+|-------|--------|
+| **Network** | Deny-by-default. No direct internet access — proxied through local allowlist |
+| **PID namespace** | Isolated — agents cannot see host processes |
+| **Seccomp filter** | UNIX domain socket creation blocked via BPF |
+| **Root filesystem** | Read-only (`--ro-bind / /`) |
+
+**Protected paths (write-masked):** `~/.ssh`, `~/.gnupg`, `~/.config`, `~/.bashrc`, `~/.zshrc`, `~/.profile`, `~/.gitconfig`
+
+**Hidden (replaced with `/dev/null`):** `.env`, `.env.*`
+
+**Sensitive files (read-denied):** `.env`, `.env.*`, `*.pem`, `*.key`, `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config`
+
+### 🛡️ Permission System
+
+| Rule | Access |
+|------|--------|
+| Default (`*`) | **Ask** — every action requires approval |
+| `rm -rf *` | **Deny** — non-overridable, even for Do agent |
+| `sudo *` | **Deny** — non-overridable |
+| Read tools (`read`, `grep`, `find`) | Allow |
+| Write / Edit | Ask (global), overridden per-agent |
+| Yolo mode | **Disabled** |
+
+Each agent defines its own permission block that **replaces** (not merges with) the global defaults — agents get only the capabilities they need.
+
+### 🌳 Agent Isolation
+
+| Agent | Write | Edit | Bash | Isolation |
+|-------|-------|------|------|-----------|
+| **Do** | ✅ Allow | ✅ Allow | Allow (npm, cargo, git, python…) | **Worktree** — changes in separate git worktree, merged on success |
+| **Plan** | ✅ Plans only | ❌ Deny | Deny (`*`) / Allow (git, rg, cat…) | Background |
+| **Explore** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
+| **Reviewer** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
+| **Assistant** | ❌ Deny | ❌ Deny | Ask (`*`) | Background |
+
+> The Do agent is the **only** agent that can modify your codebase — and it does so in an isolated git worktree that must be merged explicitly.
+
+---
+
+## Agents
+
+| Agent | Purpose | File Access |
+|-------|---------|-------------|
+| **Do** | Implement, build, test — executes tasks | ✅ Full (worktree) |
+| **Plan** | Explore codebase → save plan → create tasks | 📝 Plans only |
+| **Explore** | Fast read-only code search & pattern discovery | 🔒 Read-only |
+| **Reviewer** | Code review — correctness & security | 🔒 Read-only |
+| **Assistant** | Chat, Q&A, writing, analysis | 🔒 Read-only |
+
+---
+
+## Slash Commands
+
+| Command | What | Delegates To |
+|---------|------|-------------|
+| `/idea <text>` | Capture an idea as a pending task | Direct (TaskCreate) |
+| `/plan <goal \| #id>` | Explore → plan → save → create tasks | Plan |
+| `/do <task-id>` | Execute a single task in a worktree | Do |
+| `/do-next` | Auto-pick and execute the next unblocked task | Do |
+| `/do-all` | Execute all pending tasks in wave order (parallel) | Do |
+| `/ask <question>` | Route to assistant for chat/analysis | Assistant |
+| `/init` | Initialize project (git, .gitignore, README) | Do |
+| `/grill-me <topic>` | Interview-style design deep-dive | Reviewer |
+
+---
+
+## Skills
+
+| Skill | What It Does |
+|-------|-------------|
+| `git-commit` | Stage all changes + commit with auto-generated message |
+| `git-pr` | Branch + commit + push + open pull request |
+| `git-merge` | Verify build → merge branch → update task status |
+| `review` | Structured code review with severity ratings (Critical → Info) |
+| `debug` | Root-cause analysis → creates independent fix tasks |
+| `ask-user` | Structured decision handshake for high-stakes choices |
+| `librarian` | Research open-source libraries with source code citations |
+
+---
 
 ## Models
 
 | Provider | Model | Notes |
 |----------|-------|-------|
-| **zai** (default) | `glm-5.1` | Default model, high thinking |
-| zai | `glm-5-turbo` | Faster variant |
-| zai | `glm-5v-turbo` | Vision model |
+| **zai** *(default)* | `glm-5.1` | Default model, high thinking |
+| zai | `glm-5-turbo` | Fast variant |
+| zai | `glm-5v-turbo` | Vision |
 | google | `gemini-3.1-pro-preview` | |
-| google | `gemini-3.1-flash-lite` | |
 | google | `gemini-3.5-flash` | |
-| llama-cpp (local) | auto-discovered | Local models via llama.cpp server |
+| google | `gemini-3.1-flash-lite` | |
+| llama-cpp *(local)* | Auto-discovered | Local models via llama.cpp server |
 
-## Agents
+---
 
-| Agent | Purpose | Isolation | Edits Files? |
-|-------|---------|-----------|-------------|
-| **Assistant** | Chat, Q&A, writing, analysis | Background | No |
-| **Explore** | Read-only code search & pattern discovery | Background | No |
-| **Plan** | Gathers context → creates actionable plans | Foreground | No |
-| **Do** | Implements, builds, tests | Background + worktree | Yes |
-| **Reviewer** | Code review (correctness & security) | Background | No |
+## Configuration Highlights
 
-## Skills
+| Setting | Value | Why |
+|---------|-------|-----|
+| Theme | **Aurora Abyss** | Custom dark theme — deep navy base, lavender primary, teal secondary |
+| Default model | `zai/glm-5.1` | High thinking enabled for deep reasoning |
+| Compaction | Disabled | Full conversation context retained |
+| Thinking block | Hidden | Clean output, thinking happens silently |
+| Web search | `summary-review` | Fetch → summarize → review workflow |
+| Follow-up mode | `one-at-a-time` | One question at a time, no barrage |
+| Double-escape | Interrupt | Two taps kills the running agent |
+| Spinner | Minimal | No animation, no verb display |
 
-| Command | What It Does | Delegates To |
-|---------|-------------|-------------|
-| `/skill:review` | Review PR, branch, task, or working tree | Reviewer |
-| `/skill:debug` | Root-cause analysis → creates fix tasks | general-purpose |
-| `/skill:git-commit` | Stage + commit with auto-generated message | Do |
-| `/skill:git-pr` | Branch + commit + push + open PR | Do |
-| `/skill:git-merge` | Verify build → merge → update tasks | Do |
-
-## Slash Commands
-
-| Command | Purpose | Delegates To |
-|---------|---------|-------------|
-| `/init` | Initialize project (git, .gitignore, AGENTS.md, README.md) | Do |
-| `/plan <goal \| task-id>` | Create an implementation plan | Plan |
-| `/do <plan-file \| task-id>` | Execute a plan or task (auto/multi/single modes) | Do (via extension) |
-| `/ask <question>` | Route to assistant for chat/analysis | Assistant |
-| `/add-task <title>` | Add a pending task | Direct (TaskCreate) |
-| `/grill-me <topic>` | Interview-style design deep-dive | Reviewer |
-
-## `/do` Command Modes
-
-The `do-executor` extension provides flexible plan execution:
-
-```
-/do <task-id>                 — auto-detect: multi if waves exist, single otherwise
-/do <plan-file>               — execute a saved plan file
-/do -single <plan \| task>    — one agent for the whole plan
-/do -multi <plan \| task>     — agents per wave (parallel within waves)
-```
-
-Task IDs can be bare numbers (`5`) or `#`-prefixed (`#5`). Plans are auto-discovered from `.pi/plans/task-<id>-*.md`.
-
-## Task Workflow
-
-Tasks track work through `pending → in_progress → completed`.
-
-```
-/add-task "Fix login bug"     → creates a pending task
-/plan <task-id>               → Plan agent explores + writes plan to .pi/plans/
-  ↳ review the plan
-/do <task-id>                 → Do agent executes in an isolated worktree
-/skill:review <task-id>       → Reviewer checks the code
-/skill:git-pr                 → commit + open PR
-```
-
-Tasks support dependencies (`addBlocks`/`addBlockedBy`) and parallel execution — completed tasks auto-trigger unblocked dependents.
-
-## Custom Extensions
-
-### `do-executor` — Plan & Task Execution
-
-Registers the `/do` command and the `parse_plan_waves` tool. Parses plan files programmatically (waves, tasks, specs) and generates precise instructions for the LLM to dispatch Do subagents with proper worktree isolation, branch merging, and task status updates.
-
-### `llama-cpp` — Local Model Provider
-
-Custom provider for locally-running [llama.cpp](https://github.com/ggerganov/llama.cpp) models. Auto-discovers models from the server at `$LLAMA_CPP_URL` (default `localhost:8080/v1`). Falls back to a generic model entry if the server isn't running at startup.
-
-## Packages
-
-| Package | Purpose |
-|---------|---------|
-| `@tintinweb/pi-subagents` | Subagent orchestration |
-| `pi-permission-system` | Per-agent tool/bash/skill permissions |
-| `@tmustier/pi-usage-extension` | Usage stats tracking |
-| `@tintinweb/pi-tasks` | Task management |
-| `@e9n/pi-gmail` | Gmail integration (unread notifications every 5 min) |
-| `@e9n/pi-webserver` | HTTP API for pi (port 3100, manual start) |
-| `pi-ask-user` | Structured user decision prompts |
-| `pi-web-access` | Web search & content fetching |
-| `pi-observability` | Performance metrics (TPS, context usage, cost) |
-| `pi-skills-sh` | Shell skill support |
-
-## Directory Structure
-
-```
-~/.pi/
-├── README.md                       # This file
-├── settings.json                   # Top-level UI settings (spinner config)
-├── web-search.json                 # Web search workflow config
-├── agent/
-│   ├── settings.json               # Main config: models, packages, providers, integrations
-│   ├── auth.json                   # Provider credentials (gitignored)
-│   ├── pi-permissions.jsonc        # Global permission policy
-│   ├── pi-tps.json                 # Observability/powerline segment config
-│   ├── agents/
-│   │   ├── Assistant.md            # General-purpose chat agent
-│   │   ├── Explore.md              # Read-only code search agent
-│   │   ├── Plan.md                 # Planning agent
-│   │   ├── Do.md                   # Code execution agent
-│   │   └── Reviewer.md             # Code review agent
-│   ├── skills/
-│   │   ├── debug/SKILL.md          # Root-cause analysis → fix tasks
-│   │   ├── git-commit/SKILL.md     # Auto-commit workflow
-│   │   ├── git-merge/SKILL.md      # Branch merge workflow
-│   │   ├── git-pr/SKILL.md         # PR creation workflow
-│   │   └── review/SKILL.md         # Code review lifecycle
-│   ├── prompts/
-│   │   ├── add-task.md             # /add-task command
-│   │   ├── ask.md                  # /ask command
-│   │   ├── grill-me.md             # /grill-me command
-│   │   ├── init.md                 # /init command
-│   │   └── plan.md                 # /plan command
-│   ├── extensions/
-│   │   ├── do-executor/index.ts    # /do command + parse_plan_waves tool
-│   │   ├── llama-cpp.ts            # Local llama.cpp provider
-│   │   ├── package.json            # Extension package config
-│   │   └── pi-usage-stats/         # Usage stats settings
-│   ├── observability/
-│   │   └── settings.json           # Observability display config
-│   └── sessions/                   # Session history (jsonl)
-├── tasks/                          # Task storage
-└── subagent-schedules/             # Scheduled subagent jobs
-```
-
-## Key Config Files
-
-| File | What's In It |
-|------|-------------|
-| `agent/settings.json` | Models, packages, theme, compaction, integrations |
-| `agent/auth.json` | Provider credentials (gitignored, uses env vars) |
-| `agent/pi-permissions.jsonc` | Global default policy + per-tool/bash rules |
-| `agent/pi-tps.json` | Observability segments (TPS, context, cost display) |
-| `settings.json` | UI-level settings (spinner behavior) |
-| `web-search.json` | Web search workflow mode |
-| `.pi/tasks/` | Task storage |
-| `.pi/plans/` | Implementation plans |
-
-## Permissions Model
-
-Global defaults in `pi-permissions.jsonc`:
-- **Read-only tools** (`read`, `grep`, `find`, `ls`) — always allowed
-- **Task tools** — mostly allowed, `TaskExecute` requires confirmation
-- **Destructive tools** (`write`, `edit`) — require confirmation
-- **Bash** — read-only commands allowed, everything else requires confirmation
-- **Skills** — `review` allowed, others require confirmation
-
-Each agent overrides these with its own permission block (which replaces, not merges, the global defaults).
-
-## Extending Pi
-
-- **Agent:** `agent/agents/<Name>.md` — Markdown + YAML frontmatter with description and permissions
-- **Skill:** `agent/skills/<name>/SKILL.md` — Workflow that delegates to a subagent
-- **Prompt:** `agent/prompts/<name>.md` — Named prompt with `$ARGUMENTS` placeholder
-- **Extension:** `agent/extensions/<name>.ts` — TypeScript plugin using `ExtensionAPI`
+> **Theme colors:** `#191724` base · `#c4a7e7` primary · `#9ccfd8` secondary · `#eb6f92` accent · `#f6c177` warning
