@@ -2,7 +2,7 @@
   "lastChangelogVersion": "0.75.4",
   "defaultProvider": "zai",
   "defaultModel": "glm-5.1",
-  "defaultThinkingLevel": "low",
+  "defaultThinkingLevel": "medium",
   "enabledModels": [
     "zai/glm-5.1",
     "zai/glm-5-turbo",
