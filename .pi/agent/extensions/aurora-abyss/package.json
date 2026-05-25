@@ -1,9 +1,0 @@
-{
-  "name": "aurora-abyss",
-  "version": "1.0.0",
-  "description": "Aurora Abyss — A dark, immersive theme for the pi TUI featuring a minimal 8-shade pastel palette.",
-  "keywords": ["pi-package"],
-  "pi": {
-    "themes": ["./themes"]
-  }
-}
