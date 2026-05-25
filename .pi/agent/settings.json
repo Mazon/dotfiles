@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.75.4",
-  "defaultProvider": "llama-server",
-  "defaultModel": "Qwen3.6-27B-Q6_K-MTP.gguf",
+  "defaultProvider": "zai",
+  "defaultModel": "glm-5.1",
   "defaultThinkingLevel": "low",
   "enabledModels": [
     "zai/glm-5.1",
@@ -108,7 +108,7 @@
       }
     }
   },
-  "powerline": "ascii",
+  "powerline": "compact",
   "enableInstallTelemetry": false,
   "quietStartup": true,
   "warnings": {
