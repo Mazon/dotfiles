@@ -1,5 +1,6 @@
 #!/bin/bash
-~/Documents/llama-mtp/llama.cpp/build/bin/llama-server \
+#~/Documents/llama-mtp/llama.cpp/build/bin/llama-server \
+/usr/local/bin/llama-server \
   --model /home/mazon/llama/models/Qwen3.6-27B-Q6_K-MTP.gguf \
   --n-gpu-layers -1 \
   --ctx-size 131072 \

@@ -1,7 +1,8 @@
 {
   "lastChangelogVersion": "0.75.4",
+  "showLastPrompt": false,
   "defaultProvider": "zai",
-  "defaultModel": "glm-5.1",
+  "defaultModel": "glm-5-turbo",
   "defaultThinkingLevel": "medium",
   "enabledModels": [
     "zai/glm-5.1",
@@ -24,7 +25,9 @@
     "npm:pi-claude-sandbox",
     "npm:@gotgenes/pi-permission-system",
     "npm:pi-side-chat",
-    "npm:pi-llama-cpp"
+    "npm:pi-llama-cpp",
+    "npm:pi-simple-memory",
+    "npm:@alexanderfortin/pi-zai-usage"
   ],
   "theme": "Aurora Abyss",
   "compaction": {
@@ -94,7 +97,7 @@
           "notification.tmuxNativeClientTty": true,
           "notification.tmuxPassthrough": true,
           "notification.piUi": true,
-          "notification.oscProtocol": "auto",
+          "notification.oscProtocol": "osc777",
           "compaction.includePreviousSummary": true,
           "compaction.notify": true,
           "compaction.remoteEnabled": false,
@@ -108,7 +111,16 @@
       }
     }
   },
-  "powerline": "compact",
+  "powerline": {
+    "preset": "compact",
+    "customItems": {
+      "zai_usage": {
+        "statusKey": "zai-usage",
+        "position": "right",
+        "hideWhenMissing": true
+      }
+    }
+  },
   "enableInstallTelemetry": false,
   "quietStartup": true,
   "warnings": {
