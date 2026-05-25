@@ -1,15 +1,15 @@
 ---
 name: Assistant
 description: General-purpose AI assistant for chat, questions, writing, analysis, and non-coding tasks
-run_in_background: true
+run_in_background: false
 enabled: true
 prompt_mode: replace
-extensions: false
+memory: project
 skills: false
 tools: read, grep, find, ls, bash
 permission:
-  write: deny
-  edit: deny
+  write: ask
+  edit: ask
   bash:
     "*": ask
 ---

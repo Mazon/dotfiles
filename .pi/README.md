@@ -1,6 +1,6 @@
 **Secure, agent-based AI coding configuration for [pi](https://github.com/nicepkg/pi-coding-agent)**
 
-Sandboxed | Permission-Gated | Worktree Isolated | Aurora Abyss Theme
+Sandboxed | Permission-Gated | Worktree Isolated | Smooth defaults
 
 ---
 

@@ -1,0 +1,117 @@
+{
+  "lastChangelogVersion": "0.75.4",
+  "defaultProvider": "llama-server",
+  "defaultModel": "Qwen3.6-27B-Q6_K-MTP.gguf",
+  "defaultThinkingLevel": "low",
+  "enabledModels": [
+    "zai/glm-5.1",
+    "zai/glm-5-turbo",
+    "google/gemini-3.1-pro-preview",
+    "google/gemini-3.1-flash-lite",
+    "zai/glm-5v-turbo",
+    "llama-server/Qwen3.6-27B-Q6_K-MTP.gguf"
+  ],
+  "packages": [
+    "npm:@tintinweb/pi-subagents",
+    "npm:@tmustier/pi-usage-extension",
+    "npm:@tintinweb/pi-tasks",
+    "npm:pi-ask-user",
+    "npm:pi-web-access",
+    "npm:pi-skills-sh",
+    "npm:@vanillagreen/pi-qol",
+    "npm:@vanillagreen/pi-extension-manager",
+    "npm:pi-powerline-footer",
+    "npm:pi-claude-sandbox",
+    "npm:@gotgenes/pi-permission-system",
+    "npm:pi-side-chat",
+    "npm:pi-llama-cpp"
+  ],
+  "theme": "Aurora Abyss",
+  "compaction": {
+    "enabled": false
+  },
+  "hideThinkingBlock": true,
+  "enableSkillCommands": true,
+  "showHardwareCursor": false,
+  "terminal": {
+    "showTerminalProgress": false
+  },
+  "treeFilterMode": "default",
+  "transport": "auto",
+  "followUpMode": "one-at-a-time",
+  "branchSummary": {
+    "skipPrompt": false,
+    "reserveTokens": 8192
+  },
+  "doubleEscapeAction": "none",
+  "pi-webserver": {
+    "autostart": false,
+    "port": 3100,
+    "auth": "${PI_WEBSERVER_AUTH}",
+    "apiToken": "${PI_WEBSERVER_API_TOKEN}",
+    "apiReadToken": "${PI_WEBSERVER_API_TOKEN}"
+  },
+  "images": {
+    "blockImages": false
+  },
+  "vstack": {
+    "extensionManager": {
+      "disabledItems": [],
+      "config": {
+        "@vanillagreen/pi-qol": {
+          "replaceFooter": false,
+          "compactPrompt": false,
+          "sessionAutoRename.model": "zai/glm-5-turbo",
+          "showSessionNameTitle": false,
+          "enabled": true,
+          "showSessionNameWindow": false,
+          "inputBottomPaddingLines": 10,
+          "showDirtyMarker": true,
+          "permissionGate.enabled": false,
+          "permissionGate.commands": "rm -Rf",
+          "permissionGate.previewLines": 12,
+          "permissionGate.previewChars": 1200,
+          "newlineOnShiftEnter": true,
+          "newlineFallbackKey": "ctrl+j",
+          "pendingQueue.asciiGreen": true,
+          "showImageChips": true,
+          "showAttachmentCountInStatus": true,
+          "enableSessionNameCommand": true,
+          "sessionAutoRename.enabled": true,
+          "sessionAutoRename.fallbackModel": "current",
+          "sessionAutoRename.fallback": "truncate",
+          "sessionAutoRename.prefix": "",
+          "sessionAutoRename.maxInputChars": 2000,
+          "sessionSearch.previewSnippets": 6,
+          "notification.enabled": true,
+          "notification.onAgentReady": true,
+          "notification.onQuestion": true,
+          "notification.onTaskComplete": true,
+          "notification.onCritical": true,
+          "notification.tmux": false,
+          "notification.tmuxWindowMark": false,
+          "notification.tmuxWindowMarkText": "!",
+          "notification.tmuxNativeClientTty": true,
+          "notification.tmuxPassthrough": true,
+          "notification.piUi": true,
+          "notification.oscProtocol": "auto",
+          "compaction.includePreviousSummary": true,
+          "compaction.notify": true,
+          "compaction.remoteEnabled": false,
+          "thinkingTimer.enabled": true,
+          "workingIndicator.mode": "animated",
+          "compaction.model": "zai/glm-5-turbo",
+          "statusline.enabled": false,
+          "compaction.customEnabled": false,
+          "compaction.profile": "balanced"
+        }
+      }
+    }
+  },
+  "powerline": "ascii",
+  "enableInstallTelemetry": false,
+  "quietStartup": true,
+  "warnings": {
+    "anthropicExtraUsage": true
+  }
+}

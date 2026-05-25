@@ -61,7 +61,6 @@
 # pi (with selective exclusions for sensitive/generated content)
 !.pi/
 !.pi/**
-.pi/agent/settings.json
 .pi/agent/auth.json
 .pi/tasks
 .pi/agent/observability/history.jsonl
@@ -71,6 +70,8 @@
 .pi/agent/bin
 .pi/.pi
 .pi/agent/extensions/pi-permission-system/logs/pi-permission-system-permission-review.jsonl
+.pi/agent/.vstack-update-cache.json
+
 
 
 # === Sensitive files — always ignore ===
