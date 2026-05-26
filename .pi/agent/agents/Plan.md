@@ -6,7 +6,7 @@ enabled: true
 prompt_mode: replace
 extensions: false
 skills: false
-tools: TaskCreate, TaskList, TaskGet, TaskUpdate, read, grep, find, ls, bash, write
+tools: TaskCreate, TaskList, TaskGet, TaskUpdate, read, grep, find, ls, bash, write, ask_user
 permission:
   write: ask
   edit: ask
