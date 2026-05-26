@@ -18,9 +18,9 @@ $ARGUMENTS
 Use the `Agent` tool with:
 - `subagent_type`: "Plan"
 - `description`: "Plan: <brief summary of the goal>"
-- `prompt`: the full goal text above, prefixed with: "Analyze this goal and create a comprehensive, step-by-step implementation plan. Explore the codebase to understand the current architecture and dependencies. Break the plan into concrete, ordered steps with clear acceptance criteria. Identify risks, edge cases, and dependencies between steps.\n\nSave the plan to .pi/plans/ and create tasks in the task tracker with proper dependency links.\n\n"
+- `prompt`: the full goal text above
 
-The Plan agent will explore the codebase, save the plan to `.pi/plans/`, create tasks with dependencies, and return a summary. Present the summary to the user.
+The Plan agent will handle all planning methodology (context gathering, dependency analysis, plan creation, task creation). Present the returned summary to the user.
 
 ---
 
@@ -43,6 +43,6 @@ Construct the goal text from the resolved task:
 Use the `Agent` tool with:
 - `subagent_type`: "Plan"
 - `description`: "Plan task #<ID>: <subject>"
-- `prompt`: the goal text from Step 2, prefixed with: "Analyze this goal and create a comprehensive, step-by-step implementation plan. Explore the codebase to understand the current architecture and dependencies. Break the plan into concrete, ordered steps with clear acceptance criteria. Identify risks, edge cases, and dependencies between steps.\n\nSave the plan to .pi/plans/ and create tasks in the task tracker with proper dependency links.\n\n"
+- `prompt`: the goal text from Step 2
 
-The Plan agent will handle saving and task creation. Present the summary to the user.
+The Plan agent will handle all planning methodology (context gathering, dependency analysis, plan creation, task creation). Present the returned summary to the user.
