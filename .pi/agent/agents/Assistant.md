@@ -6,7 +6,7 @@ enabled: true
 prompt_mode: replace
 memory: project
 skills: false
-tools: read, grep, find, ls, bash
+tools: read, grep, find, ls, bash, ask_user
 permission:
   write: ask
   edit: ask

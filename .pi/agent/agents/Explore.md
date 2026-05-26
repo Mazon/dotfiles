@@ -6,7 +6,7 @@ enabled: true
 prompt_mode: replace
 extensions: false
 skills: false
-tools: read, grep, find, ls, bash
+tools: read, grep, find, ls, bash, ask_user
 permission:
   write: deny
   edit: deny

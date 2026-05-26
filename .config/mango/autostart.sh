@@ -57,7 +57,7 @@ flameshot &
 
 # Apps
 firefox 2>&1 &
-alacritty -e "tmux" 2>&1 &
+kitty -e "tmux" 2>&1 &
 signal-desktop --password-store='kwallet6' 2>&1 &
 #steam 2>&1 &
 

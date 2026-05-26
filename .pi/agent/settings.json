@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.75.4",
   "showLastPrompt": false,
-  "defaultProvider": "llama-server",
-  "defaultModel": "Qwen3.6-27B-Q6_K-MTP.gguf",
+  "defaultProvider": "zai",
+  "defaultModel": "glm-5.1",
   "defaultThinkingLevel": "medium",
   "enabledModels": [
     "zai/glm-5.1",
@@ -46,7 +46,7 @@
     "skipPrompt": false,
     "reserveTokens": 8192
   },
-  "doubleEscapeAction": "tree",
+  "doubleEscapeAction": "none",
   "pi-webserver": {
     "autostart": false,
     "port": 3100,
@@ -90,7 +90,7 @@
           "notification.onAgentReady": true,
           "notification.onQuestion": true,
           "notification.onTaskComplete": true,
-          "notification.onCritical": true,
+          "notification.onCritical": false,
           "notification.tmux": false,
           "notification.tmuxWindowMark": false,
           "notification.tmuxWindowMarkText": "!",
