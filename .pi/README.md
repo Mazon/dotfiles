@@ -130,6 +130,6 @@ Currently configured providers are z.ai, Google Gemini, and llama.cpp. The defau
 | Thinking block | Hidden | Clean output, thinking happens silently |
 | Web search | `summary-review` | Fetch, summarize, review workflow |
 | Theme | Aurora Abyss | Custom dark pastel palette |
-| Double-escape | `interrupt` | Two quick escapes interrupts the running agent |
+| Double-escape | `none` | Double-escape interrupt is disabled |
 | Hardware cursor | Disabled | Uses software cursor for terminal compatibility |
 | Install telemetry | Disabled | No data sent on package installs |

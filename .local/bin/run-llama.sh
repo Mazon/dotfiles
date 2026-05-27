@@ -6,8 +6,8 @@
   --n-gpu-layers -1 \
   --ctx-size 131072 \
   --parallel 1 \
-  --batch-size 1024 \
-  --ubatch-size 512 \
+  --batch-size 512 \
+  --ubatch-size 256 \
   --no-mmap \
   --flash-attn on \
   --jinja \
