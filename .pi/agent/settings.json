@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.75.4",
   "showLastPrompt": false,
-  "defaultProvider": "llama-server",
-  "defaultModel": "Qwen3.6-27B-Q6_K-MTP.gguf",
+  "defaultProvider": "zai",
+  "defaultModel": "glm-5.1",
   "defaultThinkingLevel": "high",
   "enabledModels": [
     "zai/glm-5.1",
@@ -24,10 +24,10 @@
     "npm:pi-powerline-footer",
     "npm:pi-claude-sandbox",
     "npm:@gotgenes/pi-permission-system",
-    "npm:pi-side-chat",
     "npm:pi-llama-cpp",
     "npm:pi-simple-memory",
-    "npm:@alexanderfortin/pi-zai-usage"
+    "npm:@alexanderfortin/pi-zai-usage",
+    "npm:pi-msgpack-rpc"
   ],
   "theme": "Aurora Abyss",
   "compaction": {

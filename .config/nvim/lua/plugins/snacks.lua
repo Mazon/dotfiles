@@ -23,8 +23,6 @@ return {
         style = 'input',
         position = 'float',
         relative = 'editor',
-        row = 2,
-        col = 0,
         width = 60,
         border = 'rounded',
         title_pos = 'center',
@@ -209,6 +207,22 @@ return {
         Snacks.terminal()
       end,
       desc = 'Toggle terminal (default)',
+    },
+    -- build
+    {
+      '<C-b>',
+      function()
+        Snacks.terminal('zig build', {
+          cwd = vim.fn.getcwd(),
+          win = {
+            style = 'float',
+            width = 0.9,
+            height = 0.7,
+          },
+          auto_close = false,
+        })
+      end,
+      desc = 'Build (zig build)',
     },
     -- words navigation
     {

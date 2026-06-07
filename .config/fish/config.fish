@@ -7,6 +7,11 @@ set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
 set -gx EDITOR nvim
 fish_add_path ~/.local/bin
 
+# ── GPG Agent + Nitrokey SSH ────────────────────────────
+set -gx GPG_TTY (tty)
+set -gx SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+gpgconf --launch gpg-agent
+
 # ── fzf ──────────────────────────────────────────────────
 set -gx FZF_DEFAULT_COMMAND "fd --type f --hidden --follow --exclude .git"
 set -gx FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND

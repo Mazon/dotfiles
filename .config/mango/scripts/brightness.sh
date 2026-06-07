@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Change brightness level with swayosd-client.
 # Usage: brightness.sh [up|down]

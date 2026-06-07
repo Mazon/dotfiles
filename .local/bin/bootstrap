@@ -86,6 +86,7 @@ install_arch() {
         ripgrep
         unzip
         tar
+        prettier
         base-devel
     )
     info "Installing core CLI tools..."

@@ -3,6 +3,7 @@ return {
   dependencies = 'rafamadriz/friendly-snippets',
   version = '*',
   opts = {
+    fuzzy = { implementation = 'prefer_rust_with_warning' },
     keymap = { preset = 'super-tab' },
     signature = { enabled = true },
     appearance = { use_nvim_cmp_as_default = true },
@@ -14,18 +15,18 @@ return {
         auto_show = true,
         auto_show_delay_ms = 500,
       },
-      cmdline = {
-        sources = function()
-          local type = vim.fn.getcmdtype()
-          if type == '/' or type == '?' then
-            return { 'buffer' }
-          end
-          if type == ':' then
-            return { 'cmdline' }
-          end
-          return {}
-        end,
-      },
+    },
+    cmdline = {
+      sources = function()
+        local type = vim.fn.getcmdtype()
+        if type == '/' or type == '?' then
+          return { 'buffer' }
+        end
+        if type == ':' then
+          return { 'cmdline' }
+        end
+        return {}
+      end,
     },
   },
 }

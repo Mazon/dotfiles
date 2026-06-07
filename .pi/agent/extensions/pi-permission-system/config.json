@@ -12,7 +12,7 @@
     "ls": "allow",
 
     "write": "ask",
-    "edit": "ask",
+    "edit": "allow",
 
     "ask_user": "allow",
     "ask_*": "allow",
@@ -26,6 +26,7 @@
     "TaskExecute": "allow",
     "get_subagent_result": "allow",
     "parse_plan_waves": "allow",
+    "nvim_apply_edit": "allow",
 
     "bash": {
       "*": "ask",
@@ -88,12 +89,13 @@
       "id": "allow",
       "seq *": "allow",
       "test *": "allow",
+      "bwrap *": "allow",
       "rm -rf *": "deny",
       "sudo *": "deny"
     },
 
     "mcp": { "*": "ask" },
     "skill": { "*": "ask" },
-    "external_directory": "ask"
+    "external_directory": "allow"
   }
 }
