@@ -12,7 +12,7 @@
     "ls": "allow",
 
     "write": "ask",
-    "edit": "allow",
+    "edit": "ask",
 
     "ask_user": "allow",
     "ask_*": "allow",
