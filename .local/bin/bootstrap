@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # bootstrap — install all dependencies tracked in dotfiles.
-# Supports: Arch Linux (pacman), macOS (brew).
+# Supports: Arch Linux (pacman + AUR).
 #
 # Usage:
 #   chmod +x ~/.local/bin/bootstrap
@@ -12,17 +12,16 @@
 #   - Terminal/font:  alacritty, nerd fonts (Iosevka)
 #   - TUI:            btop, htop
 #   - Dev tools:      git, tmux-plugin-manager, gitmux
-#   - macOS extras:   rectangle, signal, firefox
+#   - Browser:        librewolf (AUR)
+#   - Apps:           signal-desktop
 #
-#   Linux-only (Wayland/mango compositor):
+#   Wayland/mango compositor:
 #     mango-wm, waybar, wlogout, swaync, fuzzel, swaybg,
 #     swaylock, swayidle, swayosd, sway-audio-idle-inhibit,
 #     wl-clip-persist, cliphist, wl-paste, wlsunset, wlr-randr,
 #     dimland, grim, slurp, swappy, pamixer, playerctl,
 #     blueman, network-manager-applet, xfce-polkit, fcitx5,
 #     Bibata-Modern-Ice cursor theme
-#
-#   macOS alternatives for shared tools are handled via brew.
 
 set -euo pipefail
 
@@ -36,16 +35,12 @@ err()   { printf "${RED}[✗]${NC} %s\n" "$*"; }
 has() { command -v "$1" &>/dev/null; }
 
 # ── detect OS ──────────────────────────────────────────────────────────────────
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    OS="macos"
-elif [[ -f /etc/arch-release ]]; then
-    OS="arch"
-else
-    err "Unsupported OS. Only Arch Linux and macOS are supported."
+if [[ ! -f /etc/arch-release ]]; then
+    err "Unsupported OS. Only Arch Linux is supported."
     exit 1
 fi
 
-info "Detected OS: $OS"
+info "Detected OS: Arch Linux"
 
 # ── package manager setup ──────────────────────────────────────────────────────
 setup_pacman() {
@@ -53,14 +48,18 @@ setup_pacman() {
     sudo pacman -Syu --noconfirm
 }
 
-setup_brew() {
-    if ! has brew; then
-        info "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        eval "$(brew shellenv)"
+# ── AUR helper (paru) ──────────────────────────────────────────────────────────
+install_paru() {
+    if has paru; then
+        info "paru already installed."
+        return 0
     fi
-    info "Updating Homebrew..."
-    brew update
+    info "Installing paru (AUR helper)..."
+    local tmpdir
+    tmpdir=$(mktemp -d)
+    git clone https://aur.archlinux.org/paru-bin.git "$tmpdir/paru-bin"
+    (cd "$tmpdir/paru-bin" && makepkg -si --noconfirm)
+    rm -rf "$tmpdir"
 }
 
 # ── install functions ──────────────────────────────────────────────────────────
@@ -76,17 +75,17 @@ install_arch() {
         fd
         bat
         zoxide
+        eza
         gitmux
         btop
-        htop
         git
         curl
-        wget
         jq
         ripgrep
         unzip
         tar
-        prettier
+        gdu
+        nodejs
         base-devel
     )
     info "Installing core CLI tools..."
@@ -94,7 +93,7 @@ install_arch() {
 
     # ── Terminal & fonts ───────────────────────────────────────────────────
     local terminal=(
-        alacritty
+        kitty
         ttf-iosevka-nerd
     )
     info "Installing terminal & fonts..."
@@ -164,10 +163,18 @@ install_arch() {
         fi
     done
 
-    # ── Apps ───────────────────────────────────────────────────────────────
+    # ── Apps (official repos) ─────────────────────────────────────────────
     local apps=(
-        firefox
         signal-desktop
+        thunderbird
+        darktable
+        qalc
+        keepassxc
+        flameshot
+        gnupg
+        xorg-xrdb
+        steam
+        mpv
     )
     info "Installing apps..."
     for pkg in "${apps[@]}"; do
@@ -177,44 +184,18 @@ install_arch() {
             warn "Skipping '$pkg' (not in repos — may need AUR)"
         fi
     done
-}
 
-install_macos() {
-    # ── Core CLI tools ─────────────────────────────────────────────────────
-    local cli=(
-        fish
-        neovim
-        tmux
-        starship
-        fzf
-        fd
-        bat
-        zoxide
-        gitmux
-        btop
-        htop
-        git
-        jq
-        ripgrep
-        curl
-        wget
+    # ── pi.dev coding agent ───────────────────────────────────────────────
+    info "Installing pi.dev coding agent..."
+    npm install -g @earendil-works/pi-coding-agent
+
+    # ── Apps (AUR) ─────────────────────────────────────────────────────────
+    local aur_apps=(
+        librewolf-bin
+        himalaya-bin
     )
-    info "Installing core CLI tools..."
-    brew install "${cli[@]}"
-
-    # ── Terminal & fonts ───────────────────────────────────────────────────
-    info "Installing terminal & fonts..."
-    brew install --cask alacritty
-    brew install --cask font-iosevka-nerd-font
-
-    # ── Apps ───────────────────────────────────────────────────────────────
-    local apps=(
-        firefox
-        signal
-        rectangle
-    )
-    info "Installing apps..."
-    brew install --cask "${apps[@]}"
+    info "Installing AUR apps via paru..."
+    paru -S --needed --noconfirm "${aur_apps[@]}"
 }
 
 # ── tmux plugin manager ────────────────────────────────────────────────────────
@@ -243,6 +224,29 @@ set_fish_default() {
     fi
 }
 
+# ── shell aliases (fish) ──────────────────────────────────────────────────────
+setup_aliases() {
+    local fish_dir="$HOME/.config/fish"
+    mkdir -p "$fish_dir"
+    local aliases_file="$fish_dir/conf.d/aliases.fish"
+
+    info "Setting up shell aliases..."
+    cat > "$aliases_file" << 'EOF'
+# ── Modern tool aliases ───────────────────────────────────────────────────
+alias cat="bat --paging=never"
+alias ls="eza"
+alias ll="eza -l --icons"
+alias la="eza -la --icons"
+alias lt="eza --tree --level=2"
+alias find="fd"
+alias grep="rg"
+
+# zoxide replaces cd (init adds z, zi commands and wraps cd)
+zoxide init fish | source
+EOF
+    info "Aliases written to $aliases_file"
+}
+
 # ── clone dotfiles if missing ─────────────────────────────────────────────────
 clone_dotfiles() {
     if [[ ! -d "$HOME/.dotfiles" ]]; then
@@ -265,21 +269,18 @@ main() {
     clone_dotfiles
 
     # 2. Package manager
-    case "$OS" in
-        arch)  setup_pacman ;;
-        macos) setup_brew   ;;
-    esac
+    setup_pacman
 
-    # 3. Install packages
-    case "$OS" in
-        arch)  install_arch  ;;
-        macos) install_macos ;;
-    esac
+    # 3. Install AUR helper
+    install_paru
 
-    # 4. Cross-platform setup
+    # 4. Install packages
+    install_arch
+
+    # 5. Cross-platform setup
     install_tpm
 
-    # 5. Optional: set fish as default shell
+    # 7. Optional: set fish as default shell
     if ! has fish; then
         warn "fish not found, skipping default shell setup"
     else
@@ -289,7 +290,10 @@ main() {
         fi
     fi
 
-    # 6. Install tmux plugins
+    # 8. Shell aliases
+    setup_aliases
+
+    # 9. Install tmux plugins
     info "Installing tmux plugins..."
     "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 
