@@ -84,8 +84,9 @@
       "hostname": "allow",
       "which *": "allow",
       "type *": "allow",
-      "env": "ask",
-      "printenv *": "ask",
+      "env *": "allow",
+      "env": "allow",
+      "printenv *": "allow",
       "id": "allow",
       "seq *": "allow",
       "test *": "allow",
@@ -96,6 +97,10 @@
 
     "mcp": { "*": "ask" },
     "skill": { "*": "ask" },
-    "external_directory": "allow"
+    "external_directory": {
+      "*": "ask",
+      "/opt/homebrew/bin/bash": "allow",
+      "/opt/homebrew/Cellar/bash/*/bin/bash": "allow"
+    }
   }
 }
