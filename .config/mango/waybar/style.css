@@ -1,8 +1,10 @@
-
-/* --- Color Definitions (Dracula) --- */
+/* ──────────────────────────────────────────────────────────────
+   Dracula Waybar — Unified & Polished
+   ────────────────────────────────────────────────────────────── */
 @define-color foreground   #f8f8f2;
-@define-color background   rgba(30, 31, 41, 0.9);
-@define-color surface      rgba(68, 71, 90, 0.5);
+@define-color background   rgba(30, 31, 41, 0.92);
+@define-color surface      rgba(68, 71, 90, 0.55);
+@define-color surface-alt  rgba(98, 104, 138, 0.45);
 @define-color gray         #44475a;
 @define-color red          #ff5555;
 @define-color green        #50fa7b;
@@ -10,9 +12,9 @@
 @define-color purple       #bd93f9;
 @define-color pink         #ff79c6;
 @define-color cyan         #8be9fd;
-@define-color black        #000000;
-@define-color arch_blue    #89b4fa;
+@define-color blue         #89b4fa;
 
+/* --- Global Reset --- */
 * {
     border: none;
     border-radius: 0;
@@ -25,108 +27,163 @@ window#waybar {
     background: transparent;
 }
 
-/* --- Left Group: Workspaces & Logic --- */
-#workspaces {
+/* ──────────────────────────────────────────────────────────────
+   LEFT + CENTER — Workspace logic → Workspaces → Layout
+   A single connected pill across left and center groups.
+   ────────────────────────────────────────────────────────────── */
+
+/* Window tags — left cap */
+#custom-workspace-logic {
     background: @background;
+    color: @foreground;
     margin: 5px 0 5px 15px;
-    padding: 0 5px;
+    padding: 0 15px;
     border-radius: 10px 0 0 10px;
     border: 1px solid @gray;
     border-right: none;
 }
 
-#workspaces button {
+/* Workspace pill — middle segment */
+#workspaces,
+#ext-workspaces {
+    background: @background;
     color: @foreground;
-    padding: 0 10px;
-    /* Increase font size slightly to match visual weight of the bar */
-    font-size: 17px; 
+    margin: 5px 0;
+    padding: 0 5px;
+    border-top: 1px solid @gray;
+    border-bottom: 1px solid @gray;
+    border-left: none;
+    border-right: none;
 }
 
-#workspaces button.active {
+#workspaces button,
+#ext-workspaces button {
+    color: @foreground;
+    padding: 0 10px;
+    font-size: 17px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover,
+#ext-workspaces button:hover {
+    color: @purple;
+    background: rgba(189, 147, 249, 0.15);
+    border-radius: 5px;
+}
+
+#workspaces button.active,
+#ext-workspaces button.active {
     color: @green;
-    background: @surface;
+    background: rgba(80, 250, 123, 0.15);
     border-radius: 5px;
     margin: 4px 2px;
 }
 
-#window {
-    background: @surface;
-    color: @foreground;
-    margin: 5px 10px 5px 0;
-    padding: 0 15px;
-    border-radius: 0 10px 10px 0; /* Round only the right side */
-    border: 1px solid @gray;
-    border-left: 1px solid @gray;
-}
-
-
-#custom-workspace-logic {
-    background: @surface;
-    color: @foreground;
+/* Layout indicator — right cap of the pill */
+#layout {
+    background: @background;
+    color: @purple;
     margin: 5px 15px 5px 0;
     padding: 0 15px;
     border-radius: 0 10px 10px 0;
     border: 1px solid @gray;
-    /* No border-left to make it look connected to workspaces */
+    border-left: none;
 }
 
-/* --- The Seamless Right "Super-Strip" --- */
-/* Unified logic: No margins between these modules */
+/* ──────────────────────────────────────────────────────────────
+   RIGHT STRIP — One seamless pill, uniform background
+   ────────────────────────────────────────────────────────────── */
 
-#pulseaudio, #tray, #backlight, #clock, #custom-swaync, #custom-power {
+#pulseaudio,
+#pulseaudio.microphone,
+#backlight,
+#tray,
+#clock,
+#custom-swaync,
+#custom-power {
     background: @background;
     margin-top: 5px;
     margin-bottom: 5px;
     padding: 0 12px;
     border-top: 1px solid @gray;
     border-bottom: 1px solid @gray;
-}
-
-/* 1. Audio & Tray Fusion (Start of Strip) */
-#pulseaudio, #tray {
-    background: @surface;
     border-left: 1px solid @gray;
+    transition: all 0.25s ease;
 }
 
+/* Left cap — rounded left */
 #pulseaudio {
     color: @yellow;
     border-radius: 10px 0 0 10px;
+    border-left: 1px solid @gray;
+    margin-left: 0;
 }
 
+/* Backlight */
+#backlight {
+    color: @purple;
+}
+
+/* System tray */
 #tray {
+    color: @foreground;
     padding: 0 10px;
 }
 
-/* 2. Backlight & Clock */
+/* Clock */
 #clock {
     color: @cyan;
-    background: @surface;
-    border-left: 1px solid @gray;
 }
 
-/* 3. Notification Center */
+/* Notification bell */
 #custom-swaync {
-    color: @arch_blue;
-    border-left: 1px solid @gray;
+    color: @blue;
 }
 
-/* 4. End of Strip (Power) */
+/* Power button — right cap, rounded right */
 #custom-power {
     color: @red;
-    border-left: 1px solid @gray;
     border-radius: 0 10px 10px 0;
     border-right: 1px solid @gray;
-    margin-right: 20px; /* Safe distance from screen edge */
+    margin-right: 15px;
     padding-right: 15px;
 }
 
-/* --- Tooltip Polish --- */
+/* --- Hover States --- */
+#pulseaudio:hover,
+#pulseaudio.microphone:hover,
+#backlight:hover,
+#clock:hover,
+#custom-swaync:hover {
+    background: @surface-alt;
+}
+
+#tray:hover {
+    background: @surface-alt;
+}
+
+#custom-power:hover {
+    color: @pink;
+    background: rgba(255, 85, 85, 0.15);
+}
+
+#custom-swaync:hover {
+    color: @cyan;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   TOOLTIPS
+   ────────────────────────────────────────────────────────────── */
+
 tooltip {
-    background: @black;
+    background: @background;
     border: 1px solid @purple;
     border-radius: 8px;
 }
 
 tooltip label {
-    padding: 5px;
+    color: @foreground;
+    padding: 5px 8px;
 }
+
+

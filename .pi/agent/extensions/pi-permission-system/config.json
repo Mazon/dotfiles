@@ -26,6 +26,7 @@
     "TaskExecute": "allow",
     "get_subagent_result": "allow",
     "parse_plan_waves": "allow",
+    "nvim_apply_edit": "allow",
 
     "bash": {
       "*": "ask",
@@ -89,6 +90,7 @@
       "id": "allow",
       "seq *": "allow",
       "test *": "allow",
+      "bwrap *": "allow",
       "rm -rf *": "deny",
       "sudo *": "deny"
     },

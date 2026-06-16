@@ -1,7 +1,7 @@
 {
   "enabled": true,
   "network": {
-    "allowedDomains": ["localhost"],
+    "allowedDomains": ["localhost","127.0.0.1"],
     "deniedDomains": []
   },
   "filesystem": {

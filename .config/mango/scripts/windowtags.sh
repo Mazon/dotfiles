@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Get tag data from mango IPC
 DATA=$(mmsg -g -t -c)
