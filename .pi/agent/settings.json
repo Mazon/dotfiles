@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.75.4",
+  "lastChangelogVersion": "0.79.4",
   "showLastPrompt": false,
   "defaultProvider": "zai",
   "defaultModel": "glm-5.1",
@@ -13,21 +13,19 @@
     "llama-server/Qwen3.6-27B-Q6_K-MTP.gguf"
   ],
   "packages": [
-    "npm:@tintinweb/pi-subagents",
-    "npm:@tmustier/pi-usage-extension",
-    "npm:@tintinweb/pi-tasks",
-    "npm:pi-ask-user",
-    "npm:pi-web-access",
-    "npm:pi-skills-sh",
-    "npm:@vanillagreen/pi-qol",
-    "npm:@vanillagreen/pi-extension-manager",
-    "npm:pi-powerline-footer",
-    "npm:pi-claude-sandbox",
-    "npm:@gotgenes/pi-permission-system",
-    "npm:pi-llama-cpp",
-    "npm:pi-simple-memory",
-    "npm:@alexanderfortin/pi-zai-usage",
-    "npm:pi-msgpack-rpc"
+    "extensions/@tintinweb/pi-subagents",
+    "extensions/@tmustier/pi-usage-extension",
+    "extensions/@tintinweb/pi-tasks",
+    "extensions/pi-ask-user",
+    "extensions/pi-web-access",
+    "extensions/pi-skills-sh",
+    "extensions/@vanillagreen/pi-qol",
+    "extensions/@vanillagreen/pi-extension-manager",
+    "extensions/@gotgenes/pi-permission-system",
+    "extensions/pi-claude-sandbox",
+    "extensions/@alexanderfortin/pi-zai-usage",
+    "extensions/custom-footer.ts",
+    "extensions/pi-msgpack-rpc"
   ],
   "theme": "Aurora Abyss",
   "compaction": {
@@ -47,13 +45,6 @@
     "reserveTokens": 8192
   },
   "doubleEscapeAction": "none",
-  "pi-webserver": {
-    "autostart": false,
-    "port": 3100,
-    "auth": "${PI_WEBSERVER_AUTH}",
-    "apiToken": "${PI_WEBSERVER_API_TOKEN}",
-    "apiReadToken": "${PI_WEBSERVER_API_TOKEN}"
-  },
   "images": {
     "blockImages": false
   },
@@ -108,16 +99,6 @@
           "compaction.customEnabled": false,
           "compaction.profile": "balanced"
         }
-      }
-    }
-  },
-  "powerline": {
-    "preset": "compact",
-    "customItems": {
-      "zai_usage": {
-        "statusKey": "zai-usage",
-        "position": "right",
-        "hideWhenMissing": true
       }
     }
   },

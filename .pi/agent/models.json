@@ -1,0 +1,25 @@
+{
+  "providers": {
+    "vllm": {
+      "baseUrl": "http://localhost:8000/v1",
+      "api": "openai-completions",
+      "apiKey": "vllm",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "thinkingFormat": "qwen-chat-template"
+      },
+      "models": [
+        {
+          "id": "sakamakismile/Qwen3.6-27B-Text-NVFP4-MTP",
+          "name": "Qwen3.6 27B Text (vLLM)",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 163840,
+          "maxTokens": 32768,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        }
+      ]
+    }
+  }
+}
