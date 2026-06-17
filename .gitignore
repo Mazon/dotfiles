@@ -76,6 +76,11 @@
 .pi/.pi
 .pi/agent/extensions/pi-permission-system/logs/pi-permission-system-permission-review.jsonl
 .pi/agent/.vstack-update-cache.json
+.pi/.bashrc
+.pi/zshrc
+.pi/.env
+.pi/.gitconfig
+.pi/.gitignore
 
 
 
