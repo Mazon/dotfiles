@@ -62,7 +62,16 @@
  */
 
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmdirSync,
+  statSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { SandboxManager, type SandboxRuntimeConfig } from "@carderne/sandbox-runtime";
@@ -422,6 +431,13 @@ function createSandboxedBashOps(): BashOperations {
         signal?.addEventListener("abort", onAbort, { once: true });
 
         child.on("close", (code) => {
+          // Remove the 0-byte bwrap mount-point placeholders (ghost dotfiles
+          // like .bashrc/.gitconfig/.mcp.json) created for non-existent deny
+          // paths. No-op when nothing was created. Must never throw into the
+          // command result, so swallow errors.
+          try {
+            SandboxManager.cleanupAfterCommand();
+          } catch {}
           if (timeoutHandle) clearTimeout(timeoutHandle);
           signal?.removeEventListener("abort", onAbort);
 
@@ -486,6 +502,10 @@ async function retryBashCommand(
     });
 
     child.on("close", (code) => {
+      // Remove ghost dotfiles created as bwrap mount points for this retry.
+      try {
+        SandboxManager.cleanupAfterCommand();
+      } catch {}
       signal?.removeEventListener("abort", onAbort);
       const output = Buffer.concat(chunks).toString("utf8");
       if (signal?.aborted) {
@@ -497,12 +517,62 @@ async function retryBashCommand(
   });
 }
 
+// ── Orphan ghost-file sweep ─────────────────────────────────────────────────
+// bwrap creates 0-byte placeholders for non-existent deny paths (the runtime's
+// DANGEROUS_FILES / DANGEROUS_DIRECTORIES lists) so it can --ro-bind /dev/null
+// over them. If the previous pi session was killed before its cleanup ran,
+// these empty "ghost" dotfiles (.bashrc, .gitconfig, .mcp.json, .vscode, .idea,
+// ...) are left behind in the project CWD. This best-effort sweep removes any
+// such orphans. It runs in the host process (not inside a bwrap namespace), so
+// the files are not busy here even though they are EBUSY from within a sandboxed
+// shell. Safe: only removes regular files that are empty and only empty dirs —
+// identical criteria to the runtime's own cleanupBwrapMountPoints().
+const GHOST_FILE_NAMES = [
+  ".gitconfig",
+  ".gitmodules",
+  ".bashrc",
+  ".bash_profile",
+  ".zshrc",
+  ".zprofile",
+  ".profile",
+  ".ripgreprc",
+  ".mcp.json",
+];
+const GHOST_DIR_NAMES = [".vscode", ".idea"];
+
+function sweepOrphanGhostFiles(cwd: string = process.cwd()) {
+  if (process.platform !== "linux") return;
+  for (const name of GHOST_FILE_NAMES) {
+    try {
+      const p = join(cwd, name);
+      const st = statSync(p);
+      if (st.isFile() && st.size === 0) unlinkSync(p);
+    } catch {
+      // absent / busy / non-empty — ignore
+    }
+  }
+  for (const name of GHOST_DIR_NAMES) {
+    try {
+      const p = join(cwd, name);
+      const st = statSync(p);
+      if (st.isDirectory() && readdirSync(p).length === 0) rmdirSync(p);
+    } catch {
+      // absent / busy / non-empty — ignore
+    }
+  }
+}
+
 export default function (pi: ExtensionAPI) {
   pi.registerFlag("no-sandbox", {
     description: "Disable OS-level sandboxing for bash commands",
     type: "boolean",
     default: false,
   });
+
+  // Self-heal: remove orphan ghost dotfiles left by a previous session that
+  // exited uncleanly (SIGKILL / container teardown). Runs once at load in the
+  // host process where these files are not mounted, so unlink succeeds.
+  sweepOrphanGhostFiles();
 
   let sandboxEnabled = false;
   let sandboxInitialized = false;

@@ -1,124 +1,102 @@
-**Secure, agent-based AI coding configuration for [pi](https://github.com/nicepkg/pi-coding-agent)**
+# pi · Agent Coding Configuration
 
-Sandboxed | Permission-Gated | Worktree Isolated | Smooth defaults
+A secure, agent-based AI coding setup built on [pi](https://github.com/nicepkg/pi-coding-agent).
+
+**Sandboxed** · **Permission-gated** · **Worktree-isolated**
+
+Every agent runs inside an OS-level sandbox, behind a default-deny permission system, with the only code-modifying agent confined to an isolated git worktree.
 
 ---
 
-## Usage
+## Workflow
 
-```text
-/idea "Fix login bug"    →  capture as a pending task
-/plan                    →  explore codebase, save plan, create dependency-linked tasks
-/do                      →  The executor commands
-/skill:review            →  review changes for correctness & security
+The configuration is built around a small, opinionated flow:
+
+```
+/idea "Fix login bug"   →  capture as a pending task
+/plan                   →  explore codebase, save plan, create dependency-linked tasks
+/do                     →  execute tasks in an isolated worktree
+/skill:git-pr           →  branch, commit, push, open a pull request
 ```
 
-> Start with `/idea`, refine with `/plan`, execute with `/do`, ship with `/skill:git-pr`.
-
----
-
-## Security Architecture
-
-> Every agent action is constrained by three independent layers: OS-level sandboxing, a default-deny permission system, and per-agent isolation policies.
-
-### OS-Level Sandbox
-
-| Layer | Policy |
-|-------|--------|
-| **Network** | Deny-by-default. No direct internet access — proxied through local allowlist |
-| **PID namespace** | Isolated — agents cannot see host processes |
-| **Seccomp filter** | UNIX domain socket creation blocked via BPF |
-| **Root filesystem** | Read-only (`--ro-bind / /`) |
-
-**Protected paths (write-masked):** `~/.ssh`, `~/.gnupg`, `~/.config`, `~/.bashrc`, `~/.zshrc`, `~/.profile`, `~/.gitconfig`
-
-**Hidden (replaced with `/dev/null`):** `.env`, `.env.*`
-
-**Sensitive files (read-denied):** `.env`, `.env.*`, `*.pem`, `*.key`, `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config`
-
-### Permission System
-
-Whitelist only.
-
-| Rule | Access |
-|------|--------|
-| Default (`*`) | **Ask** — every action requires approval |
-| Read tools (`read`, `grep`, `find`) | Allow |
-| Write / Edit | Ask (global), overridden per-agent |
-
-Each agent defines its own permission block that **replaces** (not merges with) the global defaults — agents get only the capabilities they need.
-
-### Agent Isolation
-
-| Agent | Write | Edit | Bash | Isolation |
-|-------|-------|------|------|-----------|
-| **Do** | Allow | Allow | Allow (npm, cargo, git, python...) | **Worktree** -- changes in separate git worktree, merged on success |
-| **Plan** | Ask (`*`) | Deny | Deny (`*`) / Allow (git, rg, cat...) | Background |
-| **Explore** | Deny | Deny | Ask (`*`) | Background |
-| **Reviewer** | Deny | Deny | Ask (`*`) | Background |
-| **Assistant** | Deny | Deny | Ask (`*`) | Background |
-
-> The Do agent is the **only** agent that can modify your codebase — and it does so in an isolated git worktree that must be merged explicitly.
+> Capture with `/idea` · refine with `/plan` · execute with `/do` · ship with `/skill:git-pr`.
 
 ---
 
 ## Slash Commands
 
-| Command | What | Delegates To |
-|---------|------|-------------|
-| `/idea <text>` | Capture an idea as a pending task | Direct (TaskCreate) |
-| `/plan <goal \| #id>` | Explore → plan → save → create tasks | Plan |
+| Command | Action | Delegates to |
+|---------|--------|--------------|
+| `/idea <text>` | Capture an idea as a pending task | Direct |
+| `/plan <goal \| #id>` | Explore → plan → create linked tasks | Plan |
 | `/do <task-id>` | Execute a single task in a worktree | Do |
-| `/do-next` | Auto-pick and execute the next unblocked task | Do |
-| `/do-all` | Execute all pending tasks in wave order (parallel) | Do |
-| `/ask <question>` | Route to assistant for chat/analysis | Assistant |
-| `/init` | Initialize project (git, .gitignore, README) | Do |
+| `/do-next` | Pick and execute the next unblocked task | Do |
+| `/do-all` | Execute all pending tasks in wave order | Do |
+| `/ask <question>` | Route chat / analysis to an assistant | Assistant |
+| `/init` | Initialize a project (git, README, .gitignore) | Do |
 | `/grill-me <topic>` | Interview-style design deep-dive | Reviewer |
-
----
 
 ## Skills
 
-| Skill | What It Does |
-|-------|-------------|
-| `git-commit` | Stage all changes + commit with auto-generated message |
-| `git-pr` | Branch + commit + push + open pull request |
+| Skill | What it does |
+|-------|--------------|
+| `git-commit` | Stage all changes + commit with an auto-generated message |
+| `git-pr` | Branch + commit + push + open a pull request |
 | `git-merge` | Verify build, merge branch, update task status |
-| `review` | Structured code review with severity ratings (Critical to Info) |
+| `review` | Structured code review with severity ratings |
 | `debug` | Root-cause analysis, creates independent fix tasks |
-| `ask-user` | Structured decision handshake for high-stakes choices |
+| `ask-user` | Decision handshake for high-stakes choices |
 
 ---
 
-## Misc Extensions
+## Security Architecture
 
-Extensions add custom commands, tools, themes, and UI enhancements. The following are installed and active:
+Agent actions are constrained by three independent layers.
 
-### pi-usage-stats
+### 1. OS-Level Sandbox
 
-Tracks token and cost usage per session and per project. Data is stored locally under `agent/extensions/pi-usage-stats/logs/`.
+| Layer | Policy |
+|-------|--------|
+| Network | Deny-by-default; only `localhost` / `127.0.0.1` allowed |
+| PID namespace | Isolated — agents cannot see host processes |
+| Seccomp filter | UNIX domain socket creation blocked via BPF |
+| Root filesystem | Read-only bind mount |
 
-### split-editor
+**Write-masked:** `~/.ssh`, `~/.gnupg`, `~/.config`, `~/.bashrc`, `~/.zshrc`, `~/.profile`, `~/.gitconfig`
+**Read-denied:** `.env*`, `*.pem`, `*.key`, `~/.ssh`, `~/.aws`, `~/.gnupg`, `~/.config`, `*credentials*.json`, `*.tfstate`, `~/.kube/`, and more
 
-Configures the integrated editor split for file review during agent sessions. Uses `nvim` in a vertical 50% split.
+### 2. Permission System
 
+Whitelist-only. Read tools (`read`, `grep`, `find`) are allowed; everything else requires approval. Each agent defines its own permission block that **replaces** — not merges with — the global defaults, so agents receive only the capabilities they need.
+
+### 3. Agent Isolation
+
+| Agent | Write | Edit | Bash | Isolation |
+|-------|:-----:|:----:|------|-----------|
+| **Do** | ✓ | ✓ | Allow (npm, cargo, git, python…) | **Worktree** — merged on success |
+| **Plan** | Ask | ✗ | Deny (allow: git, rg, cat…) | Background |
+| **Explore** | ✗ | ✗ | Ask | Background |
+| **Reviewer** | ✗ | ✗ | Ask | Background |
+| **Assistant** | ✗ | ✗ | Ask | Background |
+
+> The **Do** agent is the only agent that can modify your codebase — and it does so in an isolated git worktree that must be merged explicitly.
 
 ---
 
 ## Models
 
-Currently configured providers are z.ai, Google Gemini, and llama.cpp. The default model is `glm-5.1` via z.ai. Available models:
+Default: **`zai/glm-5.1`** (high reasoning). Available models:
 
 | Provider | Model | Notes |
 |----------|-------|-------|
-| z.ai | glm-5.1 | Default, high reasoning |
-| z.ai | glm-5-turbo | Fast responses |
-| z.ai | glm-5v-turbo | Vision-capable |
-| Google | gemini-3.1-pro-preview | Pro-tier Gemini |
-| Google | gemini-3.1-flash-lite | Lightweight flash |
-| Google | gemini-3.5-flash | Latest flash model |
+| z.ai | `glm-5.1` | Default, high reasoning |
+| z.ai | `glm-5-turbo` | Fast responses |
+| z.ai | `glm-5v-turbo` | Vision-capable |
+| Google | `gemini-3.1-pro-preview` | Pro-tier Gemini |
+| Google | `gemini-3.1-flash-lite` | Lightweight flash |
+| llama-server | `Qwen3.6-27B-Q6_K-MTP` | Local, self-hosted |
 
-> The exact set of models will vary by user and available API keys.
+> The exact set of models varies by user and available API keys.
 
 ---
 
@@ -127,9 +105,40 @@ Currently configured providers are z.ai, Google Gemini, and llama.cpp. The defau
 | Setting | Value | Why |
 |---------|-------|-----|
 | Compaction | Disabled | Full conversation context retained |
-| Thinking block | Hidden | Clean output, thinking happens silently |
-| Web search | `summary-review` | Fetch, summarize, review workflow |
+| Thinking block | Hidden | Clean output; reasoning happens silently |
+| Web search | `summary-review` | Fetch → summarize → review workflow |
 | Theme | Aurora Abyss | Custom dark pastel palette |
-| Double-escape | `none` | Double-escape interrupt is disabled |
-| Hardware cursor | Disabled | Uses software cursor for terminal compatibility |
-| Install telemetry | Disabled | No data sent on package installs |
+| Thinking level | `high` | Default to deeper reasoning |
+| Telemetry | Disabled | No data sent on package installs |
+
+---
+
+## Extensions
+
+A curated set of extensions is installed and active:
+
+- **pi-claude-sandbox** — OS-level sandboxing (network, filesystem, PID namespace, seccomp).
+- **pi-permission-system** — default-deny, per-agent permission gates.
+- **pi-ask-user** — structured decision handshake for high-stakes choices.
+- **pi-tasks / pi-subagents** — task tracking and parallel subagent execution.
+- **pi-skills-sh** — shell-driven skills (`git-commit`, `review`, `debug`, …).
+- **pi-web-access** — web search and the `librarian` research skill.
+- **pi-nvim-buffer / pi-msgpack-rpc** — Neovim editor integration.
+- **pi-qol** — quality-of-life UI: notifications, session rename, pending queue.
+- **pi-usage-stats / pi-zai-usage** — local token and cost tracking per session.
+
+---
+
+## Layout
+
+```
+agent/
+├── agents/      # Do, Plan, Explore, Reviewer, Assistant
+├── extensions/  # installed extensions and providers
+├── prompts/     # slash command prompts (idea, plan, init, …)
+├── skills/      # reviewable, composable skills
+├── themes/      # Aurora Abyss palette
+├── models.json  # custom model providers
+├── sandbox.json # filesystem / network sandbox policy
+└── settings.json
+```
