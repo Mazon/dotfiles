@@ -52,6 +52,8 @@
 !.config/fish/
 !.config/fish/**
 
+!.config/kitty/kitty.conf
+
 # local bin
 !.local/
 .local/*
@@ -61,6 +63,9 @@
 # pi (with selective exclusions for sensitive/generated content)
 !.pi/
 !.pi/**
+# pi: extension dependencies — huge and regenerable via `npm install`
+.pi/**/node_modules/
+.pi/**/node_modules/**
 .pi/agent/auth.json
 .pi/tasks
 .pi/agent/observability/history.jsonl

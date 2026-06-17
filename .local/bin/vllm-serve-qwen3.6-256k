@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# Serve Qwen3.6-27B-Text-NVFP4-MTP on one RTX 5090 (32 GB), single-user
+set -euo pipefail
+
+MODEL_DIR="${HOME}/llama/models/Qwen3.6-27B-Text-NVFP4-MTP"
+SERVED_NAME="sakamakismile/Qwen3.6-27B-Text-NVFP4-MTP"
+
+# ─── THE config block (the only place to change) ───────────────────────────
+MAX_MODEL_LEN=163840          # context length
+KV_BYTES_PER_TOKEN=40265      # fp8 rate incl. paged-attn overhead (NOT the
+                              # naive 32768; back-solved from a vLLM error:
+                              # "160000 tokens = 6.0 GiB" on this model)
+PREFIX_CUSHION_GIB=2          # extra KV pool for prefix caching
+GPU_MEM_UTIL=0.98             # 0.95 → ~30.4 GiB usable on a 32 GB card
+BATCHED_TOKENS=4096          # prefill chunk; 2× 8192 → faster long-prompt TTFT
+MTP_N=3                       # speculative draft length (try 4 for more tok/s)
+# ───────────────────────────────────────────────────────────────────────────
+
+[[ -d "$MODEL_DIR" ]] || { echo "Model directory not found: $MODEL_DIR" >&2; exit 1; }
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True   # tight-memory capture
+
+# KV pool = one full-seq KV + prefix cushion. PINNED because this DeltaNet
+# hybrid (48 linear-attn + 16 full-attn layers) makes vLLM's profiler miscount
+# the Triton autotune peak as persistent KV demand and OOM at graph capture.
+GIB=1073741824
+KV_CACHE_BYTES=$(( MAX_MODEL_LEN * KV_BYTES_PER_TOKEN + PREFIX_CUSHION_GIB * GIB ))
+
+echo ">>> vLLM: ctx=${MAX_MODEL_LEN}, kv-pool=$(( KV_CACHE_BYTES / GIB )) GiB, batched=${BATCHED_TOKENS}, mtp_n=${MTP_N}, gpu-mem-util=${GPU_MEM_UTIL}" >&2
+
+exec vllm serve "$MODEL_DIR" \
+  --served-model-name "$SERVED_NAME" \
+  --trust-remote-code \
+  --gpu-memory-utilization "$GPU_MEM_UTIL" \
+  --max-model-len "$MAX_MODEL_LEN" \
+  --max-num-seqs 1 \
+  --max-num-batched-tokens "$BATCHED_TOKENS" \
+  --language-model-only \
+  --dtype auto \
+  --quantization modelopt \
+  --kv-cache-dtype fp8 \
+  --kv-cache-memory-bytes "$KV_CACHE_BYTES" \
+  --enable-prefix-caching \
+  --reasoning-parser qwen3 \
+  --enable-auto-tool-choice \
+  --tool-call-parser qwen3_xml \
+  --default-chat-template-kwargs '{"enable_thinking":true}' \
+  --overide-generation-config '{"temperature":0.6,"top_p":0.95,"top_k":20,"presence_penalty":0.0,"repetition_penality":1.0}' \
+  --speculative-config "{\"method\":\"qwen3_5_mtp\",\"num_speculative_tokens\":${MTP_N}}"
