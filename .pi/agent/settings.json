@@ -2,7 +2,7 @@
   "lastChangelogVersion": "0.79.4",
   "showLastPrompt": false,
   "defaultProvider": "zai",
-  "defaultModel": "glm-5.1",
+  "defaultModel": "glm-5.2",
   "defaultThinkingLevel": "high",
   "enabledModels": [
     "zai/glm-5.1",
@@ -10,9 +10,11 @@
     "google/gemini-3.1-pro-preview",
     "google/gemini-3.1-flash-lite",
     "zai/glm-5v-turbo",
-    "llama-server/Qwen3.6-27B-Q6_K-MTP.gguf"
+    "zai/glm-5.2"
   ],
   "packages": [
+    "extensions/@gotgenes/pi-permission-system",
+    "extensions/pi-claude-sandbox",
     "extensions/@tintinweb/pi-subagents",
     "extensions/@tmustier/pi-usage-extension",
     "extensions/@tintinweb/pi-tasks",
@@ -21,9 +23,6 @@
     "extensions/pi-skills-sh",
     "extensions/@vanillagreen/pi-qol",
     "extensions/@vanillagreen/pi-extension-manager",
-    "extensions/@gotgenes/pi-permission-system",
-    "extensions/pi-claude-sandbox",
-    "extensions/@alexanderfortin/pi-zai-usage",
     "extensions/custom-footer.ts",
     "extensions/pi-msgpack-rpc"
   ],
