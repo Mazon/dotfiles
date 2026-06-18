@@ -1,3 +1,5 @@
+import { tryRequestPermissionDecisionViaAskUser } from "./permission-ask-user-dialog";
+
 export type PermissionDecisionState =
   | "approved"
   | "approved_for_session"
@@ -25,6 +27,13 @@ const APPROVE_OPTION = "Yes";
 const APPROVE_FOR_SESSION_OPTION = "Yes, for this session";
 const DENY_OPTION = "No";
 const DENY_WITH_REASON_OPTION = "No, provide reason";
+
+export {
+  APPROVE_OPTION,
+  APPROVE_FOR_SESSION_OPTION,
+  DENY_OPTION,
+  DENY_WITH_REASON_OPTION,
+};
 
 export function normalizePermissionDenialReason(
   value: unknown,
@@ -75,6 +84,19 @@ export async function requestPermissionDecisionFromUi(
   message: string,
   options?: RequestPermissionOptions,
 ): Promise<PermissionPromptDecision> {
+  // Prefer the rich pi-ask-user prompt UI when available so permission prompts
+  // match the ask_user tool's look. Returns null when unavailable or on UI
+  // error → fall back to the built-in selector below (never block on UI).
+  const viaAskUser = await tryRequestPermissionDecisionViaAskUser(
+    ui,
+    title,
+    message,
+    options,
+  );
+  if (viaAskUser !== null) {
+    return viaAskUser;
+  }
+
   const sessionOption = options?.sessionLabel ?? APPROVE_FOR_SESSION_OPTION;
   const decisionOptions = [
     APPROVE_OPTION,

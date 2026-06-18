@@ -54,6 +54,8 @@ permission:
     git show *: allow
     git rm *: allow
     docker *: ask
+    rm -rf *: deny
+    sudo *: deny
 ---
 
 # Task Execution Agent

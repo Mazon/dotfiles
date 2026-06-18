@@ -85,16 +85,17 @@ Whitelist-only. Read tools (`read`, `grep`, `find`) are allowed; everything else
 
 ## Models
 
-Default: **`zai/glm-5.1`** (high reasoning). Available models:
+Default: **`zai/glm-5.2`** (high reasoning). Available models:
 
 | Provider | Model | Notes |
 |----------|-------|-------|
-| z.ai | `glm-5.1` | Default, high reasoning |
+| z.ai | `glm-5.2` | Default, high reasoning |
+| z.ai | `glm-5.1` | High reasoning |
 | z.ai | `glm-5-turbo` | Fast responses |
 | z.ai | `glm-5v-turbo` | Vision-capable |
 | Google | `gemini-3.1-pro-preview` | Pro-tier Gemini |
 | Google | `gemini-3.1-flash-lite` | Lightweight flash |
-| llama-server | `Qwen3.6-27B-Q6_K-MTP` | Local, self-hosted |
+| vllm | `Qwen3.6-27B-Text-NVFP4-MTP` | Local, self-hosted (defined; enable in settings to use) |
 
 > The exact set of models varies by user and available API keys.
 

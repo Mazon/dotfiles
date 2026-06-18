@@ -12,6 +12,8 @@ permission:
   edit: deny
   bash:
     "*": ask
+    rm -rf *: deny
+    sudo *: deny
 ---
 
 # Reviewer

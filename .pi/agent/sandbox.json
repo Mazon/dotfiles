@@ -15,6 +15,7 @@
       ".env.test",
       ".env.*.local",
       "*.env",
+      "~/.zshenv",
       "~/.ssh",
       "~/.ssh/",
       "~/.aws",
@@ -54,11 +55,11 @@
       "*.dump"
     ],
     "allowRead": [],
-    "allowWrite": [".", "/tmp", "~/.npm", "~/.cache", "~/.cargo/registry", "~/.gradle/caches", "~/.m2/repository"],
+    "allowWrite": [".", "/tmp"],
     "denyWrite": [".env", ".env.*", "*.pem", "*.key",
                   "~/.bashrc", "~/.zshrc", "~/.profile", "~/.bash_profile",
                   "~/.ssh", "~/.gitconfig",
-                  "~/Library/LaunchAgents", "~/Library/LaunchDaemons"]
+                  "~/Library/LaunchAgents", "~/Library/LaunchDaemons", "~/.zshenv", "secrets.yaml"]
   }
 }
 

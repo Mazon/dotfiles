@@ -12,6 +12,8 @@ permission:
   edit: ask
   bash:
     "*": ask
+    rm -rf *: deny
+    sudo *: deny
 ---
 
 # General Assistant

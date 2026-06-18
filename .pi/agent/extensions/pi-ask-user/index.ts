@@ -993,6 +993,7 @@ class AskComponent extends Container {
    private keybindings: KeybindingsManager;
    private shortcuts: ResolvedAskShortcuts;
    private onDone: (result: AskUIResult | null) => void;
+   private boxTitle: string;
 
    private mode: AskMode = "select";
    private pendingSelections: string[] = [];
@@ -1033,11 +1034,12 @@ class AskComponent extends Container {
       displayMode: AskDisplayMode,
       tui: TUI,
       theme: Theme,
-      keybindings: KeybindingsManager,
-      shortcuts: ResolvedAskShortcuts,
-      onDone: (result: AskUIResult | null) => void,
-   ) {
-      super();
+          keybindings: KeybindingsManager,
+          shortcuts: ResolvedAskShortcuts,
+          onDone: (result: AskUIResult | null) => void,
+          boxTitle: string = "ask_user",
+       ) {
+          super();
 
       this.question = question;
       this.context = context;
@@ -1049,15 +1051,16 @@ class AskComponent extends Container {
       this.tui = tui;
       this.theme = theme;
       this.keybindings = keybindings;
-      this.shortcuts = shortcuts;
-      this.onDone = onDone;
+          this.shortcuts = shortcuts;
+          this.onDone = onDone;
+          this.boxTitle = boxTitle;
 
       // Layout skeleton
-      this.addChild(new BoxBorderTop(
-         (s: string) => theme.fg("accent", s),
-         "ask_user",
-         (s: string) => theme.fg("dim", theme.bold(s)),
-      ));
+         this.addChild(new BoxBorderTop(
+            (s: string) => theme.fg("accent", s),
+            this.boxTitle,
+            (s: string) => theme.fg("dim", theme.bold(s)),
+         ));
       this.addChild(new Spacer(1));
 
       this.titleText = new Text("", 1, 0);
@@ -1124,7 +1127,7 @@ class AskComponent extends Container {
       return rawLines.map((line, index) => {
          if (index === 0 || index === rawLines.length - 1) {
             // Box top/bottom borders already rendered at innerWidth — re-render at full width
-            if (index === 0) return new BoxBorderTop(borderColor, "ask_user", titleColor).render(width)[0];
+            if (index === 0) return new BoxBorderTop(borderColor, this.boxTitle, titleColor).render(width)[0];
             return new BoxBorderBottom(borderColor, `v${ASK_USER_VERSION}`, (s: string) => this.theme.fg("dim", s)).render(width)[0];
          }
          const padded = truncateToWidth(line, innerWidth, "", true);
@@ -1473,7 +1476,187 @@ async function askViaDialogs(
    return createSelectionResponse([selected], comment);
 }
 
+/**
+ * Options for {@link presentAskPrompt}. Mirrors the `ask_user` tool params so the
+ * same rich UI can be driven by other extensions (e.g. a permission system)
+ * without re-implementing the component.
+ */
+export interface PresentAskPromptOptions {
+   question: string;
+   context?: string;
+   options?: AskOptionInput[];
+   allowMultiple?: boolean;
+   allowFreeform?: boolean;
+   allowComment?: boolean;
+   displayMode?: AskDisplayMode;
+   overlayToggleKey?: string | null;
+   commentToggleKey?: string | null;
+   timeout?: number;
+   /** Label rendered in the top-left of the bordered box (default: "ask_user"). */
+   boxTitle?: string;
+   /** When aborted, the prompt resolves as cancelled (null). Wired into the overlay path. */
+   signal?: AbortSignal;
+}
+
+/**
+ * Cross-extension presenter contract. Published on
+ * `globalThis[Symbol.for("pi-ask-user:presentPrompt")]` so other extensions
+ * can reuse this UI without a hard import path (see pi-permission-system's
+ * `globalThis` service-accessor pattern).
+ */
+export type AskUserPresenter = (
+   ctx: { hasUI?: boolean; ui: any },
+   opts: PresentAskPromptOptions,
+) => Promise<AskUIResult | null>;
+
+/**
+ * Show the ask_user UI and resolve with the user's response (or null when
+ * cancelled). Encapsulates the rich custom component, the overlay-toggle
+ * shortcut, the RPC/headless dialog fallback, and the freeform-only input —
+ * everything except tool-specific result shaping and event emission, so it can
+ * be reused both by the `ask_user` tool and by other extensions.
+ *
+ * `displayMode` defaults to `PI_ASK_USER_DISPLAY_MODE` then `"overlay"`, exactly
+ * like the tool, so callers that omit it always match the user's configured
+ * ask_user rendering mode.
+ */
+export async function presentAskPrompt(
+   ctx: { hasUI?: boolean; ui: any },
+   opts: PresentAskPromptOptions,
+): Promise<AskUIResult | null> {
+   const {
+      question,
+      context,
+      options: rawOptions = [],
+      allowMultiple = false,
+      allowFreeform = true,
+      allowComment = false,
+      displayMode,
+      overlayToggleKey,
+      commentToggleKey,
+      timeout,
+      boxTitle = "ask_user",
+      signal,
+   } = opts;
+
+   const envMode = process.env.PI_ASK_USER_DISPLAY_MODE;
+   const envDisplayMode: AskDisplayMode | undefined =
+      envMode === "overlay" || envMode === "inline" ? envMode : undefined;
+   const effectiveDisplayMode: AskDisplayMode = displayMode ?? envDisplayMode ?? "overlay";
+   const shortcuts: ResolvedAskShortcuts = {
+      overlayToggle: resolveShortcut(
+         overlayToggleKey,
+         process.env.PI_ASK_USER_OVERLAY_TOGGLE_KEY,
+         DEFAULT_OVERLAY_TOGGLE_KEY,
+      ),
+      commentToggle: resolveShortcut(
+         commentToggleKey,
+         process.env.PI_ASK_USER_COMMENT_TOGGLE_KEY,
+         DEFAULT_COMMENT_TOGGLE_KEY,
+      ),
+   };
+   const options = normalizeOptions(rawOptions);
+   const normalizedContext = context?.trim() || undefined;
+   const ui = ctx.ui;
+
+   // Freeform-only: no option list, just a text input.
+   if (options.length === 0) {
+      const prompt = normalizedContext ? `${question}\n\nContext:\n${normalizedContext}` : question;
+      const answer = await ui.input(prompt, "Type your answer...", timeout ? { timeout } : undefined);
+      return createFreeformResponse(answer);
+   }
+
+   let overlayHandle: OverlayHandle | undefined;
+   let removeOverlayInputListener: (() => void) | undefined;
+   let hasAnnouncedHide = false;
+   try {
+      const customFactory = (tui: TUI, theme: Theme, keybindings: KeybindingsManager, done: (result: AskUIResult | null) => void) => {
+         if (signal) {
+            const onAbort = () => done(null);
+            signal.addEventListener("abort", onAbort, { once: true });
+         }
+
+         if (timeout && timeout > 0) {
+            setTimeout(() => done(null), timeout);
+         }
+
+         return new AskComponent(
+            question,
+            normalizedContext,
+            options,
+            allowMultiple,
+            allowFreeform,
+            allowComment,
+            effectiveDisplayMode,
+            tui,
+            theme,
+            keybindings,
+            shortcuts,
+            done,
+            boxTitle,
+         );
+      };
+
+      // Register a raw terminal input listener for the overlay-toggle key so the
+      // overlay can be toggled even while it is hidden (hidden overlays do not
+      // receive input). Inline mode does not need this because the prompt is
+      // already non-modal. Skipped entirely if the user disabled the shortcut.
+      const overlayToggle = shortcuts.overlayToggle;
+      if (
+         effectiveDisplayMode === "overlay"
+         && !overlayToggle.disabled
+         && typeof ui.onTerminalInput === "function"
+      ) {
+         removeOverlayInputListener = ui.onTerminalInput((data: string) => {
+            if (!overlayToggle.matches(data) || !overlayHandle) return undefined;
+            const nextHidden = !overlayHandle.isHidden();
+            overlayHandle.setHidden(nextHidden);
+            if (nextHidden && !hasAnnouncedHide) {
+               hasAnnouncedHide = true;
+               ui.notify?.(`ask_user hidden — press ${overlayToggle.spec} to reopen`, "info");
+            }
+            return { consume: true };
+         });
+      }
+
+      const customResult = await ui.custom<AskUIResult | null>(
+         customFactory,
+         buildCustomUIOptions(effectiveDisplayMode, (handle: OverlayHandle) => {
+            overlayHandle = handle;
+         }),
+      );
+
+      if (customResult !== undefined) {
+         return customResult;
+      }
+      // RPC/headless mode: degrade to select()/input() dialog protocol
+      return await askViaDialogs(ui, question, normalizedContext, options, allowMultiple, allowFreeform, allowComment, timeout);
+   } finally {
+      removeOverlayInputListener?.();
+   }
+}
+
+/**
+ * globalThis symbols used to hand the ask_user UI to other extensions without a
+ * hard import path (mirrors pi-permission-system's service-accessor pattern).
+ * Consumers should feature-detect via {@link getAskUserPresenter} rather than
+ * reading these directly.
+ */
+export const ASK_USER_PRESENT_SYMBOL = Symbol.for("pi-ask-user:presentPrompt");
+export const ASK_USER_VERSION_SYMBOL = Symbol.for("pi-ask-user:version");
+
+/** Feature-detect the cross-extension ask_user presenter, if published. */
+export function getAskUserPresenter(): AskUserPresenter | undefined {
+   const fn = (globalThis as Record<symbol, unknown>)[ASK_USER_PRESENT_SYMBOL];
+   return typeof fn === "function" ? (fn as AskUserPresenter) : undefined;
+}
+
 export default function(pi: ExtensionAPI) {
+   // Publish the presenter for cross-extension reuse (e.g. pi-permission-system
+   // rendering permission prompts with the same UI). Idempotent across reloads.
+   (globalThis as Record<symbol, unknown>)[ASK_USER_PRESENT_SYMBOL] = presentAskPrompt;
+   (globalThis as Record<symbol, unknown>)[ASK_USER_VERSION_SYMBOL] = ASK_USER_VERSION;
+
    pi.registerTool({
       name: "ask_user",
       label: "Ask User",
@@ -1543,188 +1726,102 @@ export default function(pi: ExtensionAPI) {
          ),
       }),
 
-      async execute(_toolCallId, params, signal, onUpdate, ctx) {
-         if (signal?.aborted) {
-            return {
-               content: [{ type: "text", text: "Cancelled" }],
-               details: { question: params.question, options: [], response: null, cancelled: true } as AskToolDetails,
-            };
-         }
+          async execute(_toolCallId, params, signal, onUpdate, ctx) {
+             if (signal?.aborted) {
+                return {
+                   content: [{ type: "text", text: "Cancelled" }],
+                   details: { question: params.question, options: [], response: null, cancelled: true } as AskToolDetails,
+                };
+             }
 
-         const {
-            question,
-            context,
-            options: rawOptions = [],
-            allowMultiple = false,
-            allowFreeform = true,
-            allowComment = false,
-            displayMode,
-            overlayToggleKey,
-            commentToggleKey,
-            timeout,
-         } = params as AskParams;
-         const envMode = process.env.PI_ASK_USER_DISPLAY_MODE;
-         const envDisplayMode: AskDisplayMode | undefined =
-            envMode === "overlay" || envMode === "inline" ? envMode : undefined;
-         const effectiveDisplayMode: AskDisplayMode = displayMode ?? envDisplayMode ?? "overlay";
-         const shortcuts: ResolvedAskShortcuts = {
-            overlayToggle: resolveShortcut(
-               overlayToggleKey,
-               process.env.PI_ASK_USER_OVERLAY_TOGGLE_KEY,
-               DEFAULT_OVERLAY_TOGGLE_KEY,
-            ),
-            commentToggle: resolveShortcut(
-               commentToggleKey,
-               process.env.PI_ASK_USER_COMMENT_TOGGLE_KEY,
-               DEFAULT_COMMENT_TOGGLE_KEY,
-            ),
-         };
-         const options = normalizeOptions(rawOptions);
-         const normalizedContext = context?.trim() || undefined;
+             const {
+                question,
+                context,
+                options: rawOptions = [],
+                allowMultiple = false,
+                allowFreeform = true,
+                allowComment = false,
+                displayMode,
+                overlayToggleKey,
+                commentToggleKey,
+                timeout,
+             } = params as AskParams;
+             const options = normalizeOptions(rawOptions);
+             const normalizedContext = context?.trim() || undefined;
 
-         if (!ctx.hasUI || !ctx.ui) {
-            const optionText = options.length > 0 ? `\n\nOptions:\n${formatOptionsForMessage(options)}` : "";
-            const freeformHint = allowFreeform ? "\n\nYou can also answer freely." : "";
-            const commentHint = allowComment ? "\n\nAfter choosing an option, you may add an optional comment." : "";
-            const contextText = normalizedContext ? `\n\nContext:\n${normalizedContext}` : "";
-            return {
-               content: [
-                  {
-                     type: "text",
-                     text: `Ask requires interactive mode. Please answer:\n\n${question}${contextText}${optionText}${freeformHint}${commentHint}`,
-                  },
-               ],
-               isError: true,
-               details: { question, context: normalizedContext, options, response: null, cancelled: true } as AskToolDetails,
-            };
-         }
+             if (!ctx.hasUI || !ctx.ui) {
+                const optionText = options.length > 0 ? `\n\nOptions:\n${formatOptionsForMessage(options)}` : "";
+                const freeformHint = allowFreeform ? "\n\nYou can also answer freely." : "";
+                const commentHint = allowComment ? "\n\nAfter choosing an option, you may add an optional comment." : "";
+                const contextText = normalizedContext ? `\n\nContext:\n${normalizedContext}` : "";
+                return {
+                   content: [
+                      {
+                         type: "text",
+                         text: `Ask requires interactive mode. Please answer:\n\n${question}${contextText}${optionText}${freeformHint}${commentHint}`,
+                      },
+                   ],
+                   isError: true,
+                   details: { question, context: normalizedContext, options, response: null, cancelled: true } as AskToolDetails,
+                };
+             }
 
-         if (options.length === 0) {
-            const prompt = normalizedContext ? `${question}\n\nContext:\n${normalizedContext}` : question;
-            const answer = await ctx.ui.input(prompt, "Type your answer...", timeout ? { timeout } : undefined);
-            const response = createFreeformResponse(answer);
+             if (options.length > 0) {
+                onUpdate?.({
+                   content: [{ type: "text", text: "Waiting for user input..." }],
+                   details: { question, context: normalizedContext, options, response: null, cancelled: false },
+                });
+             }
 
-            if (!response) {
-               return {
-                  content: [{ type: "text", text: "User cancelled the question" }],
-                  details: { question, context: normalizedContext, options, response: null, cancelled: true } as AskToolDetails,
-               };
-            }
+             let result: AskUIResult | null;
+             try {
+                result = await presentAskPrompt(ctx, {
+                   question,
+                   context: normalizedContext,
+                   options: rawOptions,
+                   allowMultiple,
+                   allowFreeform,
+                   allowComment,
+                   displayMode,
+                   overlayToggleKey,
+                   commentToggleKey,
+                   timeout,
+                   signal,
+                });
+             } catch (error) {
+                const message =
+                   error instanceof Error ? `${error.message}\n${error.stack ?? ""}` : String(error);
+                return {
+                   content: [{ type: "text", text: `Ask tool failed: ${message}` }],
+                   isError: true,
+                   details: { error: message },
+                };
+             }
 
-            pi.events.emit("ask:answered", { question, context: normalizedContext, response });
-            return {
-               content: [{ type: "text", text: `User answered: ${formatResponseSummary(response)}` }],
-               details: { question, context: normalizedContext, options, response, cancelled: false } as AskToolDetails,
-            };
-         }
+             if (result === null) {
+                pi.events.emit("ask:cancelled", { question, context: normalizedContext, options });
+                return {
+                   content: [{ type: "text", text: "User cancelled the question" }],
+                   details: { question, context: normalizedContext, options, response: null, cancelled: true } as AskToolDetails,
+                };
+             }
 
-         onUpdate?.({
-            content: [{ type: "text", text: "Waiting for user input..." }],
-            details: { question, context: normalizedContext, options, response: null, cancelled: false },
-         });
-
-         let result: AskUIResult | null;
-         let overlayHandle: OverlayHandle | undefined;
-         let removeOverlayInputListener: (() => void) | undefined;
-         let hasAnnouncedHide = false;
-         try {
-            const customFactory = (tui: TUI, theme: Theme, keybindings: KeybindingsManager, done: (result: AskUIResult | null) => void) => {
-               if (signal) {
-                  const onAbort = () => done(null);
-                  signal.addEventListener("abort", onAbort, { once: true });
-               }
-
-               if (timeout && timeout > 0) {
-                  setTimeout(() => done(null), timeout);
-               }
-
-               return new AskComponent(
-                  question,
-                  normalizedContext,
-                  options,
-                  allowMultiple,
-                  allowFreeform,
-                  allowComment,
-                  effectiveDisplayMode,
-                  tui,
-                  theme,
-                  keybindings,
-                  shortcuts,
-                  done,
-               );
-            };
-
-            // Register a raw terminal input listener for the overlay-toggle key so the
-            // overlay can be toggled even while it is hidden (hidden overlays do not
-            // receive input). Inline mode does not need this because the prompt is
-            // already non-modal. Skipped entirely if the user disabled the shortcut.
-            const overlayToggle = shortcuts.overlayToggle;
-            if (
-               effectiveDisplayMode === "overlay"
-               && !overlayToggle.disabled
-               && typeof ctx.ui.onTerminalInput === "function"
-            ) {
-               removeOverlayInputListener = ctx.ui.onTerminalInput((data) => {
-                  if (!overlayToggle.matches(data) || !overlayHandle) return undefined;
-                  const nextHidden = !overlayHandle.isHidden();
-                  overlayHandle.setHidden(nextHidden);
-                  if (nextHidden && !hasAnnouncedHide) {
-                     hasAnnouncedHide = true;
-                     ctx.ui.notify?.(`ask_user hidden — press ${overlayToggle.spec} to reopen`, "info");
-                  }
-                  return { consume: true };
-               });
-            }
-
-            const customResult = await ctx.ui.custom<AskUIResult | null>(
-               customFactory,
-               buildCustomUIOptions(effectiveDisplayMode, (handle) => {
-                  overlayHandle = handle;
-               }),
-            );
-
-            if (customResult !== undefined) {
-               result = customResult;
-            } else {
-               // RPC/headless mode: degrade to select()/input() dialog protocol
-               result = await askViaDialogs(ctx.ui, question, normalizedContext, options, allowMultiple, allowFreeform, allowComment, timeout);
-            }
-         } catch (error) {
-            const message =
-               error instanceof Error ? `${error.message}\n${error.stack ?? ""}` : String(error);
-            return {
-               content: [{ type: "text", text: `Ask tool failed: ${message}` }],
-               isError: true,
-               details: { error: message },
-            };
-         } finally {
-            removeOverlayInputListener?.();
-         }
-
-         if (result === null) {
-            pi.events.emit("ask:cancelled", { question, context: normalizedContext, options });
-            return {
-               content: [{ type: "text", text: "User cancelled the question" }],
-               details: { question, context: normalizedContext, options, response: null, cancelled: true } as AskToolDetails,
-            };
-         }
-
-         pi.events.emit("ask:answered", {
-            question,
-            context: normalizedContext,
-            response: result,
-         });
-         return {
-            content: [{ type: "text", text: `User answered: ${formatResponseSummary(result)}` }],
-            details: {
-               question,
-               context: normalizedContext,
-               options,
-               response: result,
-               cancelled: false,
-            } as AskToolDetails,
-         };
-      },
+             pi.events.emit("ask:answered", {
+                question,
+                context: normalizedContext,
+                response: result,
+             });
+             return {
+                content: [{ type: "text", text: `User answered: ${formatResponseSummary(result)}` }],
+                details: {
+                   question,
+                   context: normalizedContext,
+                   options,
+                   response: result,
+                   cancelled: false,
+                } as AskToolDetails,
+             };
+          },
 
       renderCall(args, theme) {
          const question = (args.question as string) || "";

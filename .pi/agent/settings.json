@@ -24,7 +24,10 @@
     "extensions/@vanillagreen/pi-qol",
     "extensions/@vanillagreen/pi-extension-manager",
     "extensions/custom-footer.ts",
-    "extensions/pi-msgpack-rpc"
+        "extensions/pi-msgpack-rpc",
+        "npm:@heyhuynhgiabuu/pi-pretty",
+    "npm:@heyhuynhgiabuu/pi-diff",
+    "npm:@tifan/pi-fixed-editor"
   ],
   "theme": "Aurora Abyss",
   "compaction": {
