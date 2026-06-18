@@ -1,5 +1,25 @@
 {
   "providers": {
+    "llama": {
+      "baseUrl": "http://localhost:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "llama",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        {
+          "id": "Qwen3.6-27B-Q6_K-MTP",
+          "name": "Qwen 3.6 27B (llama)",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 163840,
+          "maxTokens": 32768,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        }
+      ]
+    },
     "vllm": {
       "baseUrl": "http://localhost:8000/v1",
       "api": "openai-completions",

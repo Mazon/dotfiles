@@ -135,14 +135,13 @@
       "hostname": "allow",
       "which *": "allow",
       "type *": "allow",
-      "env": "allow",
-      "printenv *": "allow",
       "seq *": "allow",
       "test *": "allow",
       "head *": "allow",
       "true": "allow",
       "bwrap *": "allow",
       "ps *": "allow",
+      "pgrep *": "allow",
 
 
       "git *": "ask",

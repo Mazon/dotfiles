@@ -1,0 +1,146 @@
+{
+  "name": "@heyhuynhgiabuu/pi-diff",
+	"version": "0.6.2",
+  "description": "Shiki-powered terminal diff renderer for pi — syntax-highlighted, word-level diffs in split and unified views.",
+  "keywords": [
+    "diff",
+    "pi",
+    "pi-extension",
+    "pi-package",
+    "shiki",
+    "syntax-highlighting",
+    "terminal"
+  ],
+  "homepage": "https://github.com/buddingnewinsights/pi-diff#readme",
+  "bugs": {
+    "url": "https://github.com/buddingnewinsights/pi-diff/issues"
+  },
+  "license": "MIT",
+  "author": "huynhgiabuu",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buddingnewinsights/pi-diff.git"
+  },
+  "bin": {
+    "pi-diff-review": "./dist/cli.js"
+  },
+  "files": [
+    "dist/cli.d.ts",
+    "dist/cli.d.ts.map",
+    "dist/cli.js",
+    "dist/cli.js.map",
+    "dist/index.d.ts",
+    "dist/index.d.ts.map",
+    "dist/index.js",
+    "dist/index.js.map",
+    "dist/core/config.d.ts",
+    "dist/core/config.d.ts.map",
+    "dist/core/config.js",
+    "dist/core/config.js.map",
+    "dist/core/conflicts.d.ts",
+    "dist/core/conflicts.d.ts.map",
+    "dist/core/conflicts.js",
+    "dist/core/conflicts.js.map",
+    "dist/core/diff.d.ts",
+    "dist/core/diff.d.ts.map",
+    "dist/core/diff.js",
+    "dist/core/diff.js.map",
+    "dist/core/replace.d.ts",
+    "dist/core/replace.d.ts.map",
+    "dist/core/replace.js",
+    "dist/core/replace.js.map",
+    "dist/core/resolve-lines.d.ts",
+    "dist/core/resolve-lines.d.ts.map",
+    "dist/core/resolve-lines.js",
+    "dist/core/resolve-lines.js.map",
+    "dist/review/command.d.ts",
+    "dist/review/command.d.ts.map",
+    "dist/review/command.js",
+    "dist/review/command.js.map",
+    "dist/review/hunk-bridge.d.ts",
+    "dist/review/hunk-bridge.d.ts.map",
+    "dist/review/hunk-bridge.js",
+    "dist/review/hunk-bridge.js.map",
+    "dist/review/export.d.ts",
+    "dist/review/export.d.ts.map",
+    "dist/review/export.js",
+    "dist/review/export.js.map",
+    "dist/review/file-preview.d.ts",
+    "dist/review/file-preview.d.ts.map",
+    "dist/review/file-preview.js",
+    "dist/review/file-preview.js.map",
+    "dist/review/git.d.ts",
+    "dist/review/git.d.ts.map",
+    "dist/review/git.js",
+    "dist/review/git.js.map",
+    "dist/review/hunk-preview.d.ts",
+    "dist/review/hunk-preview.d.ts.map",
+    "dist/review/hunk-preview.js",
+    "dist/review/hunk-preview.js.map",
+    "dist/review/interactive.d.ts",
+    "dist/review/interactive.d.ts.map",
+    "dist/review/interactive.js",
+    "dist/review/interactive.js.map",
+    "dist/review/model.d.ts",
+    "dist/review/model.d.ts.map",
+    "dist/review/model.js",
+    "dist/review/model.js.map",
+    "dist/review/prompt.d.ts",
+    "dist/review/prompt.d.ts.map",
+    "dist/review/prompt.js",
+    "dist/review/prompt.js.map",
+    "dist/review/session.d.ts",
+    "dist/review/session.d.ts.map",
+    "dist/review/session.js",
+    "dist/review/session.js.map",
+    "dist/review/tui.d.ts",
+    "dist/review/tui.d.ts.map",
+    "dist/review/tui.js",
+    "dist/review/tui.js.map",
+    "media/",
+    "prompts/",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc && chmod +x dist/cli.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --fix src/",
+    "test": "vitest run src --passWithNoTests",
+    "test:watch": "vitest src --passWithNoTests"
+  },
+  "dependencies": {
+    "@shikijs/cli": "^4.0.2",
+    "diff": "^7.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.5",
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "@types/diff": "^7.0.2",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.18"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*"
+  },
+  "peerDependenciesMeta": {
+    "hunkdiff": {
+      "optional": true
+    }
+  },
+  "pi": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "prompts": [
+      "./prompts"
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+{
+	"version": 5,
+	"enabled": true,
+	"theme": "everforest-dark",
+	"icons": "nerd",
+	"editor": {
+		"minContentRows": 3,
+		"topMarginRows": 1
+	},
+	"display": {
+		"adaptive": true,
+		"showProvider": "auto",
+		"workspaceLabel": "smart"
+	},
+	"segments": [
+		{
+			"id": "git",
+			"enabled": true
+		},
+		{
+			"id": "cost",
+			"enabled": true
+		},
+		{
+			"id": "throughput",
+			"enabled": true
+		},
+		{
+			"id": "context",
+			"enabled": true
+		},
+		{
+			"id": "tokens",
+			"enabled": false
+		},
+		{
+			"id": "model",
+			"enabled": true
+		}
+	],
+	"model": {
+		"customNames": {},
+		"showThinking": "auto"
+	},
+	"git": {
+		"showDirty": true,
+		"showAheadBehind": true,
+		"shaMode": "off",
+		"timeoutMs": 1000,
+		"refreshDebounceMs": 1500,
+		"pollIntervalMs": 5000
+	},
+	"context": {
+		"display": "tokens",
+		"unknown": "show"
+	},
+	"cost": {
+		"hideZero": true
+	},
+	"tokens": {
+		"display": "input-output",
+		"cache": "auto"
+	},
+	"throughput": {
+		"precision": "auto"
+	}
+}

@@ -2,7 +2,7 @@
   "lastChangelogVersion": "0.79.4",
   "showLastPrompt": false,
   "defaultProvider": "zai",
-  "defaultModel": "glm-5.2",
+  "defaultModel": "glm-5.1",
   "defaultThinkingLevel": "high",
   "enabledModels": [
     "zai/glm-5.1",
@@ -10,7 +10,9 @@
     "google/gemini-3.1-pro-preview",
     "google/gemini-3.1-flash-lite",
     "zai/glm-5v-turbo",
-    "zai/glm-5.2"
+    "zai/glm-5.2",
+    "vllm/sakamakismile/Qwen3.6-27B-Text-NVFP4-MTP",
+    "llama/Qwen3.6-27B-Q6_K-MTP"
   ],
   "packages": [
     "extensions/@gotgenes/pi-permission-system",
@@ -20,16 +22,21 @@
     "extensions/@tintinweb/pi-tasks",
     "extensions/pi-ask-user",
     "extensions/pi-web-access",
-    "extensions/pi-skills-sh",
     "extensions/@vanillagreen/pi-qol",
     "extensions/@vanillagreen/pi-extension-manager",
     "extensions/custom-footer.ts",
-        "extensions/pi-msgpack-rpc",
-        "npm:@heyhuynhgiabuu/pi-pretty",
-    "npm:@heyhuynhgiabuu/pi-diff",
-    "npm:@tifan/pi-fixed-editor"
+    "extensions/redirect-guard",
+    "extensions/pi-msgpack-rpc",
+    "extensions/@heyhuynhgiabuu/pi-pretty",
+    "extensions/@heyhuynhgiabuu/pi-diff",
+    "extensions/@tifan/pi-fixed-editor",
+    "extensions/bordered-editor.ts",
+    "extensions/pi-llama-cpp",
+    "npm:pi-slopchop",
+    "git:github.com/savagelands-net/pi-cwd",
+    "npm:pi-glance"
   ],
-  "theme": "Aurora Abyss",
+  "theme": "dark",
   "compaction": {
     "enabled": false
   },
@@ -44,7 +51,7 @@
   "followUpMode": "one-at-a-time",
   "branchSummary": {
     "skipPrompt": false,
-    "reserveTokens": 8192
+    "reserveTokens": 16384
   },
   "doubleEscapeAction": "none",
   "images": {
@@ -58,10 +65,10 @@
           "replaceFooter": false,
           "compactPrompt": false,
           "sessionAutoRename.model": "zai/glm-5-turbo",
-          "showSessionNameTitle": false,
+          "showSessionNameTitle": true,
           "enabled": true,
-          "showSessionNameWindow": false,
-          "inputBottomPaddingLines": 10,
+          "showSessionNameWindow": true,
+          "inputBottomPaddingLines": 5,
           "showDirtyMarker": true,
           "permissionGate.enabled": false,
           "permissionGate.commands": "rm -Rf",
@@ -85,9 +92,9 @@
           "notification.onTaskComplete": true,
           "notification.onCritical": false,
           "notification.tmux": false,
-          "notification.tmuxWindowMark": false,
+          "notification.tmuxWindowMark": true,
           "notification.tmuxWindowMarkText": "!",
-          "notification.tmuxNativeClientTty": true,
+          "notification.tmuxNativeClientTty": false,
           "notification.tmuxPassthrough": true,
           "notification.piUi": true,
           "notification.oscProtocol": "osc777",
@@ -99,7 +106,9 @@
           "compaction.model": "zai/glm-5-turbo",
           "statusline.enabled": false,
           "compaction.customEnabled": false,
-          "compaction.profile": "balanced"
+          "compaction.profile": "balanced",
+          "notification.bell": true,
+          "notification.native": false
         }
       }
     }
@@ -108,5 +117,21 @@
   "quietStartup": true,
   "warnings": {
     "anthropicExtraUsage": true
+  },
+  "llamaServerUrl": "http://127.0.0.1:11434",
+  "archimedes.core": {
+    "mutedTheme": false,
+    "codeUnindent": true,
+    "labelText": "Thinking...",
+    "labelColor": "255,215,0",
+    "animationStyle": "horizontal"
+  },
+  "archimedes.footer": {
+    "splitThreshold": 150
+  },
+  "archimedes.diff": {
+    "diffTheme": "github-dark",
+    "diffSplitMinWidth": 150,
+    "diffSplitMinCodeWidth": 60
   }
 }

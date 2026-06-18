@@ -55,7 +55,7 @@
       "*.dump"
     ],
     "allowRead": [],
-    "allowWrite": [".", "/tmp"],
+    "allowWrite": [".", "/tmp/*"],
     "denyWrite": [".env", ".env.*", "*.pem", "*.key",
                   "~/.bashrc", "~/.zshrc", "~/.profile", "~/.bash_profile",
                   "~/.ssh", "~/.gitconfig",
