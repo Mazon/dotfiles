@@ -8,6 +8,19 @@ Every agent runs inside an OS-level sandbox, behind a default-deny permission sy
 
 ---
 
+## Setup on a new machine
+
+This config vendors extension **source** and committed `package-lock.json` files, but not `node_modules/` (~1 GB, platform-specific). After cloning, install the pinned runtime deps for every vendored extension:
+
+```bash
+~/.pi/install.sh          # npm ci against each committed lockfile (reproducible, integrity-checked)
+~/.pi/install.sh --check  # dry-run: list what would be installed
+```
+
+Requires `node` + `npm` on PATH. Extension devDependencies are omitted (`--omit=dev`); pi loads `.ts` via jiti so `typescript`/`vitest`/`biome` are not needed at runtime. pi-managed packages (`npm:` / `git:` entries in `settings.json`) are installed automatically by pi on first launch.
+
+---
+
 ## Workflow
 
 The configuration is built around a small, opinionated flow:

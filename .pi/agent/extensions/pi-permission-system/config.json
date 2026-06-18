@@ -142,6 +142,7 @@
       "head *": "allow",
       "true": "allow",
       "bwrap *": "allow",
+      "ps *": "allow",
 
 
       "git *": "ask",
@@ -168,6 +169,7 @@
       "git stash list*": "allow",
       "git reflog": "allow",
       "git reflog show *": "allow",
+      "git check-ignore": "allow",
 
       "find *": "allow",
       "find*-exec*": "ask",
