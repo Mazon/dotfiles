@@ -12,8 +12,9 @@
 #   - Terminal/font:  alacritty, nerd fonts (Iosevka)
 #   - TUI:            btop, htop
 #   - Dev tools:      git, tmux-plugin-manager, gitmux
-#   - Browser:        librewolf (AUR)
-#   - Apps:           signal-desktop
+    #   - Browser:        librewolf (AUR)
+    #   - Trading:        ib-tws-stable (AUR, Interactive Brokers desktop client)
+    #   - Apps:           signal-desktop
 #
 #   Wayland/mango compositor:
 #     mango-wm, waybar, wlogout, swaync, fuzzel, swaybg,
@@ -190,10 +191,11 @@ install_arch() {
     npm install -g @earendil-works/pi-coding-agent
 
     # ── Apps (AUR) ─────────────────────────────────────────────────────────
-    local aur_apps=(
-        librewolf-bin
-        himalaya-bin
-    )
+        local aur_apps=(
+            librewolf-bin
+            himalaya-bin
+            ib-tws-stable
+        )
     info "Installing AUR apps via paru..."
     paru -S --needed --noconfirm "${aur_apps[@]}"
 }

@@ -31,15 +31,15 @@ Given a search query or exploration task:
 
 | Tool | Use When | Example |
 |------|----------|---------|
-| **Glob** | Find files by name/pattern | `glob("**/*.test.ts")` |
-| **Grep** | Search file contents by regex | `grep("export const.*Config")` |
-| **Read** | Inspect specific files | `read(filePath="src/auth.ts")` |
-| **Bash (rg)** | Need context, complex regex | `rg "pattern" -C 3` |
+    | **find** | Find files by name/pattern | `find("**/*.test.ts")` |
+    | **grep** | Search file contents by regex | `grep("export const.*Config")` |
+    | **read** | Inspect specific files | `read("src/auth.ts")` |
+    | **Bash (rg)** | Need context, complex regex | `rg "pattern" -C 3` |
 
 ## Thoroughness Levels
 
 ### Quick
-- Use glob + grep with specific patterns
+- Use find + grep with specific patterns
 - Limit to obvious locations (src/, lib/, components/)
 - Return first 10–20 matches
 - No file reading unless needed
@@ -90,9 +90,9 @@ Given a search query or exploration task:
 | Class definitions | `rg "export (class\|interface) TargetName"` |
 | Function definitions | `rg "export (const\|function) targetName"` |
 | Imports | `rg "import.*TargetName.*from" -l` |
-| Tests | `glob("**/*.{test,spec}.{ts,tsx}")` |
-| Config files | `glob("**/*.config.{ts,js,json}")` |
-| API routes | `glob("**/app/**/route.ts")` |
+    | Tests | `find("**/*.{test,spec}.{ts,tsx}")` |
+    | Config files | `find("**/*.config.{ts,js,json}")` |
+    | API routes | `find("**/app/**/route.ts")` |
 
 ## Rules
 

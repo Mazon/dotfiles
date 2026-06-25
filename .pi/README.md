@@ -121,7 +121,7 @@ Default: **`zai/glm-5.2`** (high reasoning). Available models:
 | Compaction | Disabled | Full conversation context retained |
 | Thinking block | Hidden | Clean output; reasoning happens silently |
 | Web search | `summary-review` | Fetch → summarize → review workflow |
-| Theme | Aurora Abyss | Custom dark pastel palette |
+| Theme | `dark` (built-in) | Clean default; custom themes can be added in `agent/themes/` |
 | Thinking level | `high` | Default to deeper reasoning |
 | Telemetry | Disabled | No data sent on package installs |
 

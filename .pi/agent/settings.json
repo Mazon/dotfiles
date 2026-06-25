@@ -1,137 +1,101 @@
 {
-  "lastChangelogVersion": "0.79.4",
-  "showLastPrompt": false,
   "defaultProvider": "zai",
-  "defaultModel": "glm-5.1",
+  "defaultModel": "glm-5.2",
   "defaultThinkingLevel": "high",
   "enabledModels": [
+    "zai/glm-5.2",
     "zai/glm-5.1",
     "zai/glm-5-turbo",
+    "zai/glm-5v-turbo",
     "google/gemini-3.1-pro-preview",
     "google/gemini-3.1-flash-lite",
-    "zai/glm-5v-turbo",
-    "zai/glm-5.2",
     "vllm/sakamakismile/Qwen3.6-27B-Text-NVFP4-MTP",
     "llama/Qwen3.6-27B-Q6_K-MTP"
   ],
   "packages": [
     "extensions/@gotgenes/pi-permission-system",
-    "extensions/pi-claude-sandbox",
-    "extensions/@tintinweb/pi-subagents",
-    "extensions/@tmustier/pi-usage-extension",
-    "extensions/@tintinweb/pi-tasks",
-    "extensions/pi-ask-user",
-    "extensions/pi-web-access",
-    "extensions/@vanillagreen/pi-qol",
-    "extensions/@vanillagreen/pi-extension-manager",
-    "extensions/custom-footer.ts",
-    "extensions/redirect-guard",
-    "extensions/pi-msgpack-rpc",
-    "extensions/@heyhuynhgiabuu/pi-pretty",
     "extensions/@heyhuynhgiabuu/pi-diff",
-    "extensions/@tifan/pi-fixed-editor",
-    "extensions/bordered-editor.ts",
+    "extensions/@heyhuynhgiabuu/pi-pretty",
+    "extensions/@tintinweb/pi-subagents",
+    "extensions/@tintinweb/pi-tasks",
+    "extensions/@tmustier/pi-usage-extension",
+    "extensions/@vanillagreen/pi-extension-manager",
+    "extensions/@vanillagreen/pi-qol",
+    "extensions/pi-ask-user",
+    "extensions/pi-claude-sandbox",
     "extensions/pi-llama-cpp",
+    "extensions/pi-msgpack-rpc",
+    "extensions/pi-web-access",
+    "npm:pi-glance",
     "npm:pi-slopchop",
-    "git:github.com/savagelands-net/pi-cwd",
-    "npm:pi-glance"
+    "npm:@tifan/pi-fixed-editor"
   ],
   "theme": "dark",
   "compaction": {
     "enabled": false
   },
-  "hideThinkingBlock": true,
+  "hideThinkingBlock": false,
   "enableSkillCommands": true,
   "showHardwareCursor": false,
-  "terminal": {
-    "showTerminalProgress": false
-  },
   "treeFilterMode": "default",
   "transport": "auto",
   "followUpMode": "one-at-a-time",
+  "doubleEscapeAction": "tree",
+  "quietStartup": true,
+  "enableInstallTelemetry": false,
+  "showLastPrompt": false,
+  "terminal": {
+    "showTerminalProgress": false
+  },
+  "images": {
+    "blockImages": false
+  },
   "branchSummary": {
     "skipPrompt": false,
     "reserveTokens": 16384
   },
-  "doubleEscapeAction": "none",
-  "images": {
-    "blockImages": false
+  "warnings": {
+    "anthropicExtraUsage": true
   },
+  "llamaServerUrl": "http://127.0.0.1:11434",
+  "lastChangelogVersion": "0.79.4",
   "vstack": {
     "extensionManager": {
       "disabledItems": [],
       "config": {
         "@vanillagreen/pi-qol": {
-          "replaceFooter": false,
-          "compactPrompt": false,
-          "sessionAutoRename.model": "zai/glm-5-turbo",
-          "showSessionNameTitle": true,
           "enabled": true,
+          "sessionAutoRename.enabled": true,
+          "sessionAutoRename.model": "zai/glm-5-turbo",
+          "enableSessionNameCommand": true,
+          "showSessionNameTitle": false,
           "showSessionNameWindow": true,
+          "compaction.model": "zai/glm-5-turbo",
+          "compaction.notify": true,
+          "thinkingTimer.enabled": true,
+          "workingIndicator.mode": "animated",
           "inputBottomPaddingLines": 5,
           "showDirtyMarker": true,
-          "permissionGate.enabled": false,
-          "permissionGate.commands": "rm -Rf",
-          "permissionGate.previewLines": 12,
-          "permissionGate.previewChars": 1200,
           "newlineOnShiftEnter": true,
           "newlineFallbackKey": "ctrl+j",
-          "pendingQueue.asciiGreen": true,
           "showImageChips": true,
           "showAttachmentCountInStatus": true,
-          "enableSessionNameCommand": true,
-          "sessionAutoRename.enabled": true,
-          "sessionAutoRename.fallbackModel": "current",
-          "sessionAutoRename.fallback": "truncate",
-          "sessionAutoRename.prefix": "",
-          "sessionAutoRename.maxInputChars": 2000,
-          "sessionSearch.previewSnippets": 6,
+          "pendingQueue.asciiGreen": true,
           "notification.enabled": true,
           "notification.onAgentReady": true,
           "notification.onQuestion": true,
           "notification.onTaskComplete": true,
-          "notification.onCritical": false,
-          "notification.tmux": false,
-          "notification.tmuxWindowMark": true,
-          "notification.tmuxWindowMarkText": "!",
-          "notification.tmuxNativeClientTty": false,
-          "notification.tmuxPassthrough": true,
+          "notification.bell": true,
           "notification.piUi": true,
           "notification.oscProtocol": "osc777",
-          "compaction.includePreviousSummary": true,
-          "compaction.notify": true,
-          "compaction.remoteEnabled": false,
-          "thinkingTimer.enabled": true,
-          "workingIndicator.mode": "animated",
-          "compaction.model": "zai/glm-5-turbo",
+          "notification.tmuxWindowMark": true,
+          "notification.tmuxWindowMarkText": "!",
+          "notification.tmuxPassthrough": true,
           "statusline.enabled": false,
-          "compaction.customEnabled": false,
-          "compaction.profile": "balanced",
-          "notification.bell": true,
-          "notification.native": false
+          "replaceFooter": false,
+          "compactPrompt": false
         }
       }
     }
-  },
-  "enableInstallTelemetry": false,
-  "quietStartup": true,
-  "warnings": {
-    "anthropicExtraUsage": true
-  },
-  "llamaServerUrl": "http://127.0.0.1:11434",
-  "archimedes.core": {
-    "mutedTheme": false,
-    "codeUnindent": true,
-    "labelText": "Thinking...",
-    "labelColor": "255,215,0",
-    "animationStyle": "horizontal"
-  },
-  "archimedes.footer": {
-    "splitThreshold": 150
-  },
-  "archimedes.diff": {
-    "diffTheme": "github-dark",
-    "diffSplitMinWidth": 150,
-    "diffSplitMinCodeWidth": 60
   }
 }

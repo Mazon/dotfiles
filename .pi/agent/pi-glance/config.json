@@ -4,12 +4,12 @@
 	"theme": "everforest-dark",
 	"icons": "nerd",
 	"editor": {
-		"minContentRows": 3,
+		"minContentRows": 2,
 		"topMarginRows": 1
 	},
 	"display": {
 		"adaptive": true,
-		"showProvider": "auto",
+		"showProvider": "never",
 		"workspaceLabel": "smart"
 	},
 	"segments": [
@@ -19,7 +19,7 @@
 		},
 		{
 			"id": "cost",
-			"enabled": true
+			"enabled": false
 		},
 		{
 			"id": "throughput",

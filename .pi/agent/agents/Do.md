@@ -11,6 +11,7 @@ tools: TaskCreate, TaskList, TaskGet, TaskUpdate, TaskOutput, TaskStop, TaskExec
 permission:
   write: allow
   edit: allow
+  nvim_apply_edit: allow
   bash:
     npm *: allow
     npx *: allow

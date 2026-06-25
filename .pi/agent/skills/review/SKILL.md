@@ -19,8 +19,8 @@ Determine the review target from the argument:
 
 ## Delegation
 
-**Always delegate to the Reviewer subagent.** Use the `Agent` tool with:
-- `subagent_type`: "Reviewer"
+**Always delegate to the general-purpose subagent.** Use the `Agent` tool with:
+- `subagent_type`: "general-purpose"
 - `description`: "Review: <brief description of target>"
 - `prompt`: the review instructions below, customized for the target
 
@@ -60,10 +60,10 @@ git merge-base HEAD origin/<primary-branch> 2>/dev/null || git merge-base HEAD <
 git diff <merge-base>...HEAD
 ```
 
-### Step 3 — Launch the Reviewer Subagent
+### Step 3 — Launch the Review Subagent
 
 Use the `Agent` tool with:
-- `subagent_type`: "Reviewer"
+- `subagent_type`: "general-purpose"
 - `description`: "Review: <target description>"
 - `prompt`: "Review the following code changes. Focus on:
   1. Intent — What is the change trying to accomplish?
@@ -88,7 +88,7 @@ Present the review findings to the user. If the review was for a direct GitHub P
 
 #### Task Review
 
-After the Reviewer returns, check its findings:
+After the subagent returns, check its findings:
 
 **If NO critical or high issues:**
 - `TaskUpdate({ taskId: <task_id>, status: "completed" })`

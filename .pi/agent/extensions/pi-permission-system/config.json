@@ -12,7 +12,6 @@
     "write": "ask",
     "edit": "ask",
     "ask_user": "allow",
-    "ask_*": "allow",
     "TaskCreate": "allow",
     "TaskList": "allow",
     "TaskGet": "allow",
@@ -22,7 +21,7 @@
     "TaskExecute": "allow",
     "get_subagent_result": "allow",
     "parse_plan_waves": "allow",
-    "nvim_apply_edit": "allow",
+    "nvim_apply_edit": "ask",
     "path": {
       "*": "allow",
 
@@ -137,7 +136,6 @@
       "type *": "allow",
       "seq *": "allow",
       "test *": "allow",
-      "head *": "allow",
       "true": "allow",
       "bwrap *": "allow",
       "ps *": "allow",
@@ -195,7 +193,8 @@
   "*": "ask",
   "/opt/homebrew/bin/bash": "allow",
   "/opt/homebrew/Cellar/bash/*/bin/bash": "allow",
-  "/tmp": "allow"
+  "/tmp": "allow",
+  "/usr/lib/node_modules/pi-coding-agent/packages/coding-agent/dist/": "allow"
 }
 }
 }

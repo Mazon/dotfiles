@@ -81,6 +81,7 @@
 .pi/.env
 .pi/.gitconfig
 .pi/.gitignore
+.pi/agent/trust.json
 
 
 

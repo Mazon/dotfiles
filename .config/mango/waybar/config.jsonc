@@ -113,9 +113,18 @@
         "tooltip": false
     },
 
-    "custom/power": {
+        "custom/power": {
         "format": "⏻",
-        "on-click": "wlogout",
-        "tooltip": false
+        "tooltip": false,
+        "menu": "on-click",
+        "menu-file": "~/.config/mango/waybar/power_menu.xml",
+        "menu-actions": {
+            "lock":     "swaylock -f -c 000000",
+            "logout":   "mmsg -q",
+            "suspend":  "systemctl suspend",
+            "hibernate":"systemctl hibernate",
+            "reboot":   "reboot",
+            "shutdown": "shutdown -h now"
+        }
     }
 }
